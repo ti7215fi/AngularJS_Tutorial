@@ -1,2 +1,2 @@
 <span ng-show="value == 0">kostenlos</span>
-<span ng-show="value > 0">{{value | currency}}</span>
+<span ng-show="value > 0">{{(value | number:2) + "€"}}</span>
