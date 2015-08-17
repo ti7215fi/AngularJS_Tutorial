@@ -17,7 +17,7 @@
         
         <div ng-controller="CartCtrl">
             <div ng-hide="cart.getItems().length" class="alert alert-info">Ihr Warenkorb ist noch leer</div>
-            <div ng-show="cart.sum() >= 10.00" class="alert alert-success">Mindestbestellwert erreicht</div>
+            <div ng-show="cart.sum() >= 10.00" class="alert alert-success fade in">Mindestbestellwert erreicht</div>
             <div ng-show="cart.sum() < 10.00" class="alert alert-warning">Mindestbestellwert ist noch nicht erreicht, sie benötigen noch {{(10.00 - cart.sum() | number:2) + "€"}}</div>
             <table ng-show="cart.getItems().length" class="table">
                 <tr ng-repeat="item in cart.getItems() track by $index" class="cart-item">

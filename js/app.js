@@ -10,6 +10,7 @@ angular
 
 function CartFactory(){
     var items = [];
+
     var actions = {
       getItems: getItems,
       addArticle: addArticle,
@@ -32,6 +33,8 @@ function CartFactory(){
                 return total + article.price;
             }, 0);
     }
+    
+    
 };
 
 function ArticlesController($scope, $http, Cart)
@@ -65,14 +68,16 @@ function PriceFunction()
 
 function RouteFunction($routeProvider)
 {
-    var templateUrls = ['articles.html', 'about.html', 'impressum.html'];
+    var templateUrls = ['articles.html', 'about.html', 'impressum.html', 'profile.html'];
     
     $routeProvider
             .when('/',          { templateUrl: templateUrls[0]})
             .when('/about',     { templateUrl: templateUrls[1]})
             .when('/impressum', { templateUrl: templateUrls[2]})
+            .when('/profile',   { templateUrl: templateUrls[3]})
             .otherwise({ redirectTo: '/' });
 };
+
 
 
            
