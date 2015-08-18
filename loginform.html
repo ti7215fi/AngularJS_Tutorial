@@ -1,0 +1,46 @@
+<div>
+    <form class="form-horizontal">
+        <fieldset>
+
+            <!-- Form Name -->
+            <legend>Benutzeranmeldung</legend>
+
+            <!-- Text input-->
+            <div class="control-group">
+                <label class="control-label" for="username">Benutzername</label>
+                <div class="controls">
+                    <input id="username" name="username" placeholder="Benutzername" class="input-medium" type="text" ng-model="username">
+                    <p>Dein Benutzername {{ username }}</p>
+                </div>
+            </div>
+
+            <!-- Password input-->
+            <div class="control-group">
+                <label class="control-label" for="password">Passwort</label>
+                <div class="controls">
+                    <input id="password" name="password" placeholder="Passwort" class="input-medium" type="password" ng-model="password">
+
+                </div>
+            </div>
+
+            <!-- Button -->
+            <div class="control-group">
+                <label class="control-label" for="loginbutton"></label>
+                <div class="controls">
+                    <button id="loginbutton" name="loginbutton" class="btn btn-primary">Login</button>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+</div>
+
+<table class="table" ng-controller="UserCtrl">
+    <tr ng-repeat="u in user| filter:search" >
+        <td>{{u.getUsernameByID(1)}}</td>
+        <td>{{}}</td>
+        <td>{{}}</td>
+        <td><a href class="btn btn-default btn-sm" ng-click="">Hinzufügen</a></td>
+    </tr>
+</table>
+

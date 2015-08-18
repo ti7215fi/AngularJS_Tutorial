@@ -1,33 +1,41 @@
-        <form>
-            <input type="text" ng-model="search">
-            <p>Du suchst gerade nach: {{ search.toUpperCase() + "!" }}</p> 
-        </form>
+<form>
+    <input type="text" ng-model="search">
+    <p>Du suchst gerade nach: {{ search.toUpperCase() + "!"}}</p> 
+</form>
 
-        
-        <br>
-        
-        <table class="table" ng-controller="ArticlesCtrl">
-            <tr ng-repeat="article in articles | filter:search" >
-                <td>{{article.id}}</td>
-                <td>{{article.name}}</td>
-                <td><price value="article.price"/></td>
-                <td><a href class="btn btn-default btn-sm" ng-click="cart.addArticle(article);">Hinzufügen</a></td>
-            </tr>
-        </table>
-        
-        <div ng-controller="CartCtrl">
-            <div ng-hide="cart.getItems().length" class="alert alert-info">Ihr Warenkorb ist noch leer</div>
-            <div ng-show="cart.sum() >= 10.00" class="alert alert-success fade in">Mindestbestellwert erreicht</div>
-            <div ng-show="cart.sum() < 10.00" class="alert alert-warning">Mindestbestellwert ist noch nicht erreicht, sie benötigen noch {{(10.00 - cart.sum() | number:2) + "€"}}</div>
-            <table ng-show="cart.getItems().length" class="table">
-                <tr ng-repeat="item in cart.getItems() track by $index" class="cart-item">
-                    <td>{{item.name}}</td>
-                    <td>{{(item.price | number:2) + "€"}}</td>
-                </tr>
-                <tr>
-                    <td>{{cart.getItems().length}} Artikel</td>
-                    <td>{{(cart.sum() | number:2) + "€"}}</td>
-                    <td></td>
-                </tr>
-            </table>
-        </div>
+
+<br>
+
+<table class="table" ng-controller="ArticlesCtrl">
+    <tr ng-repeat="article in articles| filter:search" >
+        <td>{{article.id}}</td>
+        <td>{{article.name}}</td>
+        <td><price value="article.price"/></td>
+<td><a href class="btn btn-default btn-sm" ng-click="cart.addArticle(article);">Hinzufügen</a></td>
+</tr>
+</table>
+
+<div ng-controller="CartCtrl">
+    <div ng-hide="cart.getItems().length" class="alert alert-info">Ihr Warenkorb ist noch leer</div>
+    <div ng-show="cart.sum() >= 10.00" class="alert alert-success fade in">Mindestbestellwert erreicht</div>
+    <div ng-show="cart.sum() < 10.00" class="alert alert-warning">Mindestbestellwert ist noch nicht erreicht, sie benötigen noch {{(10.00 - cart.sum() | number:2) + "€"}}</div>
+    <table ng-show="cart.getItems().length" class="table">
+        <tr ng-repeat="item in cart.getItems() track by $index" class="cart-item">
+            <td>{{item.name}}</td>
+            <td>{{(item.price| number:2) + "€"}}</td>
+        </tr>
+        <tr>
+            <td>{{cart.getItems().length}} Artikel</td>
+            <td>{{(cart.sum() | number:2) + "€"}}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><a href class="btn btn-default btn-sm" ng-click=";">Bestellen</a></td>
+            <td><a href class="btn btn-default btn-sm" ng-click="cart.deleteArticles();">Zurücksetzen</a></td>
+        </tr>
+
+    </table>
+            <form action="db_connect.php" method="post" >
+            <input class="btn btn-default btn-sm" type="submit">
+        </form>
+</div>
