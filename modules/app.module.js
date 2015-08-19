@@ -1,2 +1,2 @@
-var app = angular.module('tutorialApp', ['ngAnimate', 'ngRoute']); 
+var app = angular.module('tutorialApp', ['ngAnimate', 'ngRoute', 'DatabaseModule']); 
 

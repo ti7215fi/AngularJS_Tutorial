@@ -35,7 +35,9 @@
         </tr>
 
     </table>
-            <form action="db_connect.php" method="post" >
-            <input class="btn btn-default btn-sm" type="submit">
-        </form>
+    
+    <div ng-controller="DatabaseController">
+        <a href class="btn btn-default btn-sm" ng-click="database.test();">Datenbankverbindung</a>
+    </div>
+
 </div>

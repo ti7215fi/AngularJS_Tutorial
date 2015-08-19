@@ -7,6 +7,7 @@ function CartFactory(){
 
     var actions = {
       getItems: getItems,
+      getLength: getLength,
       addArticle: addArticle,
       deleteArticles: deleteArticles,
       sum: sum
@@ -17,6 +18,11 @@ function CartFactory(){
     {
         return items;
     };
+    
+    function getLength()
+    {
+        return items.length;
+    }
     
     function addArticle(article){
         items.push(article);
