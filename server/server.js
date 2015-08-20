@@ -2,9 +2,52 @@
  * 
  * Setup ExpressJS
  */
-var express = require('express');
-var app     = express();
+var express         = require('express');
+var app             = express();
 
+var Mongodb         = require('mongodb');                           //import MongoDB Drivers
+var MongoClient     = Mongodb.MongoClient;                          //MongoClient interface to connect to the database
+var url             = 'mongodb://localhost:27017/pizzaservice';     //URL of the mongodb server
+
+app.use('/static', express.static('..'));
+app.use(function(req, res, next)
+{
+    MongoClient.connect(url, function(err, db){
+        if(err){
+            console.log('Unable to connect to the mongoDB server. Error', err);
+        } 
+        else{
+            console.log('MongoDB server running on', url);
+            req.db = db;
+            next();
+        }      
+    }); 
+});
+
+app.get('/pizzen', function(req, res){
+    var db          = req.db;
+    var collection  = db.collection('pizza');
+    
+    collection.find().toArray(function(err, docs) {            
+        console.log("Returned #" + docs.length + " documents");
+        
+        for(var Index = 0; Index < docs.length; ++Index)
+        {
+            docs[Index].price = (docs[Index].price).toFixed(2);
+            (docs[Index].price).toString();
+            docs[Index].price += "€";
+        }
+        
+        res.status(200).send(docs);
+    });  
+});
+
+app.listen(3000);
+console.log('Server running on port 3000');
+
+
+
+//--------------------------------------------------------------------------------------------------------------
 
 /**
  * 
@@ -13,38 +56,6 @@ var app     = express();
  * 2. Defining the URL to we need connect to (location of mongoDB server, URL containts the databasename)
  * 3. Connect to the database (Callback: DB-Object or Error)
  */
-var Mongodb     = require('mongodb');                           //import MongoDB Drivers
-var MongoClient = Mongodb.MongoClient;                          //MongoClient interface to connect to the database
-var url         = 'mongodb://localhost:27017/pizzaservice';     //URL of the mongodb server 
-
-MongoClient.connect(url, ConnectFunction);                      //try to connect to the mongoDB server        = 
-
-app.get('/', function(req, res){
-    res.send('hello world');
-});
-
-app.listen(3000);
-console.log('Server running on port 3000');
-
-
-function ConnectFunction(err, db)
-{
-    if(err)
-    {
-        console.log('Unable to connect to the mongoDB server. Error', err);
-    }
-    else
-    {
-        //some work with the database
-        console.log('MongoDB server running on', url);
-        
-           
-        db.close();
-    }
-};
-
-
-//--------------------------------------------------------------------------------------------------------------
 /**
  * MongoDB Informations:
  * - Data stores data in JSON format

@@ -8,9 +8,10 @@
 
 <table class="table" ng-controller="ArticlesCtrl">
     <tr ng-repeat="article in articles| filter:search" >
-        <td>{{article.id}}</td>
+        <td>{{article._id}}</td>
         <td>{{article.name}}</td>
-        <td><price value="article.price"/></td>
+        <!--<td><price value="article.price"/></td>-->
+        <td>{{article.price}}</td>
 <td><a href class="btn btn-default btn-sm" ng-click="cart.addArticle(article);">Hinzufügen</a></td>
 </tr>
 </table>
