@@ -2,15 +2,25 @@
  * 
  * Setup ExpressJS
  */
-var express         = require('express');
-var app             = express();
+var express         = require('express');                           //import ExpressJS Drivers
+var server          = express();
 
+/**
+ * 
+ * Setup MongoDB
+ * databasename:    pizzaservice
+ * port:            27017
+ */
 var Mongodb         = require('mongodb');                           //import MongoDB Drivers
 var MongoClient     = Mongodb.MongoClient;                          //MongoClient interface to connect to the database
 var url             = 'mongodb://localhost:27017/pizzaservice';     //URL of the mongodb server
 
-app.use('/static', express.static('..'));
-app.use(function(req, res, next)
+server.use('/static', express.static('..'));
+/**
+ * This function is to connect with the database.
+ * You can use req.db (running database) in every server function.
+ */
+server.use(function(req, res, next)
 {
     MongoClient.connect(url, function(err, db){
         if(err){
@@ -24,25 +34,44 @@ app.use(function(req, res, next)
     }); 
 });
 
-app.get('/pizzen', function(req, res){
+/**
+ * This function read the "pizza"-collection and write the data into an array.
+ * @param {type} param1
+ * @param {type} param2
+ * 
+ */
+server.get('/pizzen', function(req, res){
     var db          = req.db;
     var collection  = db.collection('pizza');
     
-    collection.find().toArray(function(err, docs) {            
-        console.log("Returned #" + docs.length + " documents");
+    collection.find().toArray(function(err, docs) {
         
-        for(var Index = 0; Index < docs.length; ++Index)
+        if(!err)
         {
-            docs[Index].price = (docs[Index].price).toFixed(2);
-            (docs[Index].price).toString();
-            docs[Index].price += "€";
-        }
+            console.log("Returned #" + docs.length + " documents");
         
-        res.status(200).send(docs);
-    });  
+            for(var Index = 0; Index < docs.length; ++Index)
+            {
+                docs[Index].price = (docs[Index].price).toFixed(2);
+                (docs[Index].price).toString();
+                docs[Index].price += "€";
+            }
+        
+            res.status(200).send(docs);
+        }
+        else
+        {
+            throw err;
+        }
+    });   
 });
 
-app.listen(3000);
+server.post('/pizzen', function(req, res){
+    res.send('POST request!');
+    console.log('POST activated');
+});
+
+server.listen(3000);
 console.log('Server running on port 3000');
 
 

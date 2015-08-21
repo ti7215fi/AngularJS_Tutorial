@@ -1,37 +1,12 @@
-app
-        .factory('UserF', UserFactory)
-        .controller('UserCtrl', UserController);
+(function () {
+    'use strict';
 
-function UserFactory(){
-    var user = [
-        ["admin","123"],
-        ["user","123"]
-    ];
-    
-    var actions = {
-        getUser : getUser,
-        getUsernameByID: getUsernameByID,
-        getPasswordByID: getPasswordByID
-    };
-    return actions;
-    
-    function getUser()
-    {
-        return user;
-    }
-    
-    function getUsernameByID(ID)
-    {
-        return user[ID][0];
-    }
-    
-    function getPasswordByID(ID)
-    {
-        return user[ID][1];
-    }
-}
+    angular
+            .module('tutorialApp')
+            .controller('UserController', UserController);
 
-function UserController($scope, User)
-{
-    $scope.user = User;
-}
+    function UserController($scope, User)
+    {
+        $scope.user = User;
+    }
+})();

@@ -1,47 +1,20 @@
-app
-        .factory('Cart', CartFactory)
-        .controller('CartCtrl', CartController);
+(function () {
 
-function CartFactory(){
-    var items = [];
+    'use strict'
 
-    var actions = {
-      getItems: getItems,
-      getLength: getLength,
-      addArticle: addArticle,
-      deleteArticles: deleteArticles,
-      sum: sum
-    };
-    return actions;
-    
-    function getItems()
-    {
-        return items;
-    };
-    
-    function getLength()
-    {
-        return items.length;
-    }
-    
-    function addArticle(article){
-        items.push(article);
-    };
-    
-    function deleteArticles(){
-        items.length = 0;
-    };
-    
-    function sum()
-    {
-        return items.reduce(function(total, article) {
-                return total + article.price;
-            }, 0);
-    }
-   
-};
+    angular
+            .module('tutorialApp')
+            .controller('CartController', CartController);
 
-function CartController($scope, Cart)
-{
-    $scope.cart = Cart;
-};
+    CartController.$inject = ['carthandler'];
+
+    /* @ngInject */
+    function CartController(carthandler)
+    {
+        var vm = this;
+        
+        return vm.cart = carthandler;
+    };
+})();
+
+

@@ -1,10 +1,21 @@
-app.controller('ArticlesCtrl', ArticlesController)
+(function () {
+    'use strict';
 
-function ArticlesController($scope, $http, Cart)
-{   
-   $http.get('/pizzen').then(function(articleResponse) {
-       console.log(articleResponse);
-       $scope.cart = Cart;
-       $scope.articles = articleResponse.data; 
-   });
-};
+    angular
+            .module('tutorialApp')
+            .controller('ArticlesController', ArticlesController);
+
+    ArticlesController.$inject = ['articlesdata'];
+
+    /* @ngInject */
+    function ArticlesController(articlesdata)
+    {
+        activate();
+        
+        /////////////////////
+        
+        function activate(){
+            return articlesdata.getArticles();
+        }
+    };
+})();
