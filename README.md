@@ -19,7 +19,7 @@
 #### ExpressJS
 
 **Installation erfolgte lokal im Projekt: app/server (gespeichert wird im Ordner node-modules)**
-npm install express
+* npm install express
 
 #### MongoDB
 
