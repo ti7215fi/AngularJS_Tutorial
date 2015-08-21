@@ -1,3 +1,7 @@
+/**
+ * @namespace Controller
+ * @description Handler für den Warenkorb
+ */
 (function () {
 
     'use strict'

@@ -1,3 +1,8 @@
+/**
+ * @namespace Controller
+ * @description Gibt ausgelesene Pizzen an die View weiter
+ * 
+ */
 (function () {
     'use strict';
 
@@ -6,8 +11,12 @@
             .controller('ArticlesController', ArticlesController);
 
     ArticlesController.$inject = ['articlesdata'];
-
-    /* @ngInject */
+    
+    /**
+     * @ngInject
+     * @param {type} articlesdata
+     * @returns {articles.controller_L6.ArticlesController}
+     */
     function ArticlesController(articlesdata)
     {
         activate();

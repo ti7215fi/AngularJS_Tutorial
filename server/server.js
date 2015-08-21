@@ -15,7 +15,7 @@ var Mongodb         = require('mongodb');                           //import Mon
 var MongoClient     = Mongodb.MongoClient;                          //MongoClient interface to connect to the database
 var url             = 'mongodb://localhost:27017/pizzaservice';     //URL of the mongodb server
 
-server.use('/static', express.static('..'));
+server.use('/static', express.static('../client'));
 /**
  * This function is to connect with the database.
  * You can use req.db (running database) in every server function.
@@ -64,11 +64,6 @@ server.get('/pizzen', function(req, res){
             throw err;
         }
     });   
-});
-
-server.post('/pizzen', function(req, res){
-    res.send('POST request!');
-    console.log('POST activated');
 });
 
 server.listen(3000);

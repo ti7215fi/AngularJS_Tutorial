@@ -1,3 +1,8 @@
+
+/**
+ * Carthandler Factory
+ * @namespace Factories
+ */
 (function () {
     'use strict';
 
@@ -5,7 +10,10 @@
             .module('tutorialApp')
             .factory('carthandler', carthandler);
 
-
+    /**
+     * @description Gibt Funktionen und Methoden für den Warenkorb aus
+     * @returns {carthandler.service_L6.carthandler.actions}
+     */        
     function carthandler() {
         var items = [];
 
