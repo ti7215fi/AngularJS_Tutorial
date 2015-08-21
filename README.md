@@ -37,19 +37,19 @@ npm install express
 #### NodeJS & ExpressJS
 
 **Skript startet Express-Webserver**
-node server.js *im Ordner app/server ausführen um das Skript zu starten (MongoDB muss zuvor gestartet werden)*
+* node server.js *im Ordner app/server ausführen um das Skript zu starten (MongoDB muss zuvor gestartet werden)*
 
 #### MongoDB
 
 **Starten des MongoDB Service:**
-sudo service mongod start
+* sudo service mongod start
 
 **Öffnen der MongoDB Shell:**
-mongo
+* mongo
 
 #### JSDoc
 
-jsdoc filename1 filename2 ...
+* jsdoc filename1 filename2 ...
 
 
 
