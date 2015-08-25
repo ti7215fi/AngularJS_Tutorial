@@ -2,9 +2,9 @@
  * 
  * Setup ExpressJS
  */
-var express         = require('express');                           //import ExpressJS Drivers
-var server          = express();
-var bodyParser      = require('body-parser');
+var express = require('express');                           //import ExpressJS Drivers
+var server = express();
+var bodyParser = require('body-parser');
 
 /**
  * 
@@ -12,9 +12,9 @@ var bodyParser      = require('body-parser');
  * databasename:    pizzaservice
  * port:            27017
  */
-var Mongodb         = require('mongodb');                           //import MongoDB Drivers
-var MongoClient     = Mongodb.MongoClient;                          //MongoClient interface to connect to the database
-var url             = 'mongodb://localhost:27017/pizzaservice';     //URL of the mongodb server
+var Mongodb = require('mongodb');                           //import MongoDB Drivers
+var MongoClient = Mongodb.MongoClient;                          //MongoClient interface to connect to the database
+var url = 'mongodb://localhost:27017/pizzaservice';     //URL of the mongodb server
 
 server.use('/static', express.static('../client'));
 server.use(bodyParser.json());                                      // to support JSON encoded bodies
@@ -22,18 +22,18 @@ server.use(bodyParser.json());                                      // to suppor
  * This function is to connect with the database.
  * You can use req.db (running database) in every server function.
  */
-server.use(function(req, res, next)
+server.use(function (req, res, next)
 {
-    MongoClient.connect(url, function(err, db){
-        if(err){
+    MongoClient.connect(url, function (err, db) {
+        if (err) {
             console.log('Unable to connect to the mongoDB server. Error', err);
-        } 
-        else{
+        }
+        else {
             console.log('MongoDB server running on', url);
             req.db = db;
             next();
-        }      
-    }); 
+        }
+    });
 });
 
 /**
@@ -42,30 +42,30 @@ server.use(function(req, res, next)
  * @param {type} param2
  * 
  */
-server.get('/pizzen', function(req, res){
-    var db          = req.db;
-    var collection  = db.collection('pizza');
-    
-    collection.find().toArray(function(err, docs) {
-        
-        if(!err)
+server.get('/pizzen', function (req, res) {
+    var db = req.db;
+    var collection = db.collection('pizza');
+
+    collection.find().toArray(function (err, docs) {
+
+        if (!err)
         {
             console.log("Returned #" + docs.length + " documents");
-        
-            for(var Index = 0; Index < docs.length; ++Index)
+
+            for (var Index = 0; Index < docs.length; ++Index)
             {
                 docs[Index].price = (docs[Index].price).toFixed(2);
                 (docs[Index].price).toString();
                 docs[Index].price += "€";
             }
-        
+
             res.status(200).send(docs);
         }
         else
         {
             throw err;
         }
-    });   
+    });
 });
 
 /**
@@ -73,43 +73,100 @@ server.get('/pizzen', function(req, res){
  * @param {type} request
  * @param {type} response
  */
-server.post('/orderFood', function(req, res){
-   var db           = req.db;
-   var collection   = db.collection('order');
-   var lastInsertedOrderID;
+server.post('/orderFood', function (req, res) {
+    var db = req.db;
+    var collection = db.collection('order');
+    var lastInsertedOrderID;
 
-   collection.find().toArray(function(err, docs){
-       
-       if(!err)
-       {
-           lastInsertedOrderID = docs[docs.length - 1].ordernumber;
-           lastInsertedOrderID += 1;
-           
-           for(var Index = 0; Index < req.body.length; ++ Index)
-           {
+    collection.find().toArray(function (err, docs) {
+
+        if (!err)
+        {
+            lastInsertedOrderID = docs[docs.length - 1].ordernumber;
+            lastInsertedOrderID += 1;
+
+            for (var Index = 0; Index < req.body.length; ++Index)
+            {
                 insertOrderIntoDatabase(lastInsertedOrderID, Index);
-           }
-           
-           db.close();
-       }
-       else
-       {
-           throw err;
-       }
-   });
-   
-   function insertOrderIntoDatabase(OrderID, Index)
-   {
-       collection.insert(
-           {
-               ordernumber  : OrderID,
-               customer_id  : 1,
-               pizza_id     : req.body[Index]._id,
-               quantity     : req.body[Index].quantity,
-               date         : Date()
-           }); 
-   };
+            }
 
+            db.close();
+        }
+        else
+        {
+            throw err;
+        }
+    });
+
+    function insertOrderIntoDatabase(OrderID, Index)
+    {
+        collection.insert(
+                {
+                    ordernumber: OrderID,
+                    customer_id: 1,
+                    pizza_id: req.body[Index]._id,
+                    quantity: req.body[Index].quantity,
+                    date: Date()
+                });
+    }
+    ;
+
+});
+
+server.post('/login', function (req, res) {
+    var db = req.db;
+    var collectionLogin = db.collection('login');
+    var collectionUser = db.collection('customer');
+    var username = req.body.username;
+    var password = req.body.password;
+    var userID = 0;
+    var userFound = false;
+    var userData    = {};
+
+    collectionLogin.find().toArray(function (err, docs) {
+
+        if (!err) {
+            for (var Index = 0; Index < docs.length; ++Index)
+            {
+                if (docs[Index].username === username &&
+                        docs[Index].password === password)
+                {
+                    userFound = true;
+                    userID = docs[Index].customer_id;
+                    break;
+                }
+            }
+
+        } else {
+            throw err;
+        }
+    });
+
+    if (userFound === true)
+    {
+        collectionUser.find().toArray(function (err, docs) {
+
+            if (!err)
+            {
+                for(var Index = 0; Index < docs.length; ++ Index)
+                {
+                    if(docs[Index]._id === userID)
+                    {
+                        userData = {    firstname : docs[Index].firstname,
+                                        lastname  : docs[Index].lastname,
+                                        address   : docs[Index].address };
+                        break;
+                    }
+                }
+              
+            } else {
+                throw err;
+            }
+
+        });
+    }
+    
+    res.send(userData);
 });
 
 server.listen(3000);
