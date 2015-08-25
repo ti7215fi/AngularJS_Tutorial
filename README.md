@@ -14,42 +14,62 @@
 
 #### NodeJS
 
-[verwendete Installationsanleitung](https://github.com/joyent/node/wiki/installing-node.js-via-package-manager)
+* [Installation der aktuellen Version](https://github.com/joyent/node/wiki/installing-node.js-via-package-manager)
+```
+sudo apt-get intall nodejs // Installation der stabilen Version unter Ubuntu 
+```
 
 #### ExpressJS
 
-**Installation erfolgte lokal im Projekt: app/server (gespeichert wird im Ordner node-modules)**
-* npm install express
+```
+npm install express // (bei Installation der aktuellen Version)
+sudo apt-get install node-express // (bei Installation der stabilen Version)
+```
 
 #### MongoDB
 
-[verwendete Installationsanleitung](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-debian/)
+* [verwendete Installationsanleitung](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-debian/)
+```
+sudo apt-get install mongodb // Installation über offizielle Ubuntu-Seite
+```
 
 #### JSDoc
 
-**Installation erfolgte erst lokal(1.) im Projekt: app/server, später aber global(2.)**
-
-1. npm install jsdoc
-2. npm install jsdoc -g
+```
+npm install jsdoc // (npm muss installiert sein)
+sudo apt-get install jsdoc-tollkit // (stabile Version unter Ubuntu)
+```
 
 ### Befehle in der Konsole
 
 #### NodeJS & ExpressJS
 
 **Skript startet Express-Webserver**
-* node server.js *im Ordner app/server ausführen um das Skript zu starten (MongoDB muss zuvor gestartet werden)*
+*im Ordner app/server ausführen um das Skript zu starten (MongoDB muss zuvor gestartet werden)*
+```
+node server.js  // Installation über offiziele NodeJS-Seite)
+nodejs server.js //Installation über die offizielle Ubuntu-Seite (apt-get install nodejs)
+```
 
 #### MongoDB
 
 **Starten des MongoDB Service:**
-* sudo service mongod start
+```
+sudo service mongod start // (aktuelle Version)
+sudo service mongodb start // (stabile Version unter Ubuntu)
+```
 
 **Öffnen der MongoDB Shell:**
-* mongo
+```
+mongo
+```
 
 #### JSDoc
 
-* jsdoc filename1 filename2 ...
+```
+jsdoc filename1 filename2 ... *oder*
+jsdoc filename1 filename2 -d=<output_directory>
+```
 
 
 
