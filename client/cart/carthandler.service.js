@@ -10,20 +10,24 @@
             .module('tutorialApp')
             .factory('carthandler', carthandler);
 
+
+    carthandler.$inject = ['$http'];
     /**
      * @description Gibt Funktionen und Methoden für den Warenkorb aus
      * @returns {carthandler.service_L6.carthandler.actions}
      */        
-    function carthandler() {
+    function carthandler($http) {
         var items = [];
 
         var actions = {
             getItems: getItems,
             getItemByID: getItemByID,
             getLength: getLength,
+            getArticleCount : getArticleCount,
             addArticle: addArticle,
             deleteArticles: deleteArticles,
-            sum: sum
+            sum: sum,
+            insertOrderIntoDatabase : insertOrderIntoDatabase
         };
         return actions;
         ////////////////
@@ -42,12 +46,22 @@
         {
             return items.length;
         };
+        
+        function getArticleCount()
+        {
+            var count = 0;
+            
+            for(var Index = 0; Index < items.length; ++ Index)
+            {
+                count += items[Index].quantity;
+            }
+            
+            return count;
+        };
 
         function addArticle(article) {
             var found = false;
             var indexOfItem;
-
-            console.log("Artikel", article);
 
             for (var Index = 0; Index < items.length; ++Index)
             {
@@ -86,6 +100,27 @@
             }
 
             return sum;
+        };
+        
+        function insertOrderIntoDatabase()
+        {   
+            var data = JSON.stringify(getItems());
+            
+            $http.post('/orderFood', data)
+                    .success(successHandler())
+                    .error(errorHandler())
+            
+            /////////////////////////////////////
+                    
+           function successHandler(){
+                console.log("POST successful");
+                items.length = 0;
+           }; 
+           
+           function errorHandler(){
+                console.log("Error"); 
+           };
+            
         };
     };
 })();

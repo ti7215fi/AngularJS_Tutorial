@@ -4,6 +4,7 @@
  */
 var express         = require('express');                           //import ExpressJS Drivers
 var server          = express();
+var bodyParser      = require('body-parser');
 
 /**
  * 
@@ -16,6 +17,7 @@ var MongoClient     = Mongodb.MongoClient;                          //MongoClien
 var url             = 'mongodb://localhost:27017/pizzaservice';     //URL of the mongodb server
 
 server.use('/static', express.static('../client'));
+server.use(bodyParser.json());                                      // to support JSON encoded bodies
 /**
  * This function is to connect with the database.
  * You can use req.db (running database) in every server function.
@@ -64,6 +66,50 @@ server.get('/pizzen', function(req, res){
             throw err;
         }
     });   
+});
+
+/**
+ * @description Get the order data and insert it to the database
+ * @param {type} request
+ * @param {type} response
+ */
+server.post('/orderFood', function(req, res){
+   var db           = req.db;
+   var collection   = db.collection('order');
+   var lastInsertedOrderID;
+
+   collection.find().toArray(function(err, docs){
+       
+       if(!err)
+       {
+           lastInsertedOrderID = docs[docs.length - 1].ordernumber;
+           lastInsertedOrderID += 1;
+           
+           for(var Index = 0; Index < req.body.length; ++ Index)
+           {
+                insertOrderIntoDatabase(lastInsertedOrderID, Index);
+           }
+           
+           db.close();
+       }
+       else
+       {
+           throw err;
+       }
+   });
+   
+   function insertOrderIntoDatabase(OrderID, Index)
+   {
+       collection.insert(
+           {
+               ordernumber  : OrderID,
+               customer_id  : 1,
+               pizza_id     : req.body[Index]._id,
+               quantity     : req.body[Index].quantity,
+               date         : Date()
+           }); 
+   };
+
 });
 
 server.listen(3000);

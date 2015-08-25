@@ -23,17 +23,17 @@
 
     <table ng-show="cart.getItems().length" class="table">
         <tr ng-repeat="item in cart.getItems() track by $index" class="cart-item">
-            <td>{{item.quantity}}</td>
+            <td>{{item.quantity + "x"}}</td>
             <td>{{item.name}}</td>
             <td>{{item.price}}</td>
         </tr>
         <tr>
-            <td>{{cart.getItems().length}} Pizzen</td>
+            <td>{{cart.getArticleCount()}} Pizzen</td>
             <td>{{(cart.sum() | number:2) + "€"}}</td>
             <td></td>
         </tr>
         <tr>
-            <td><a href class="btn btn-default btn-sm" ng-click=";">Bestellen</a></td>
+            <td><a href class="btn btn-default btn-sm" ng-click="cart.insertOrderIntoDatabase();">Bestellen</a></td>
             <td><a href class="btn btn-default btn-sm" ng-click="cart.deleteArticles();">Zurücksetzen</a></td>
         </tr>
 
