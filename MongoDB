@@ -1,0 +1,47 @@
+# MongoDB
+
+## Allgmein
+
+* seit 2009
+* Open-Source-Lösung
+* Begriff kommt vom engl. "humongous" (gigantisch, riesig)
+* implementiert in C++
+* für 32bit und 64bit - Systeme
+* NoSQL (Not only SQL)-Datenbank 
+* unterstützt alle Programmiersprachen
+* arbeitet **Dokument-orientiert** (schemafreie Struktur - kein festes Tabellenschema, keine zwingenden Relationstabellen und joints)
+
+### Kollektionen
+
+* Kollektionen = Tabellen
+* können Dokumente enthalten = Datensätze
+
+### Dokumente
+
+* werden im BSON-Format gespeichert
+* können Dokumente enthalten
+* können eine verschachtelte Array-Struktur enthalten
+
+## Gemeinsamkeiten zu MySQL
+
+* eindeutige ID pro Dokument/Datensatz
+
+## Vorteile von MongoDB
+
+* objektorientiertes Datenmodell
+* keine extra Abfragesprache
+* hohe Leistung
+* große Datenmengen
+* hohe Flexibilität
+* einfache Skalierbarkeit
+
+## Wann sollte man MongoDB verwenden?
+
+Wenn die meisten der folgenden Fragen mit "Ja" beantwortet werden können:
+
+* Muss das System mit großen Datenmengen effizient umgehen können? 
+* Werden hohe Anforderungen an Skalierbarkeit und Flexibilität der Datenbank gestellt? 
+* Sollen sich die Daten über mehrere Server verteilen lassen? 
+* Sind häufige Änderungen an der Datenstruktur in Zukunft zu erwarten?
+
+[Quelle](http://www.computerwoche.de/a/datenbanksysteme-fuer-web-anwendungen-im-vergleich,2496589)
