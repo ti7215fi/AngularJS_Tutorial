@@ -125,6 +125,16 @@ Wenn die meisten der folgenden Fragen mit "Ja" beantwortet werden können:
 
 [Quelle](http://www.computerwoche.de/a/datenbanksysteme-fuer-web-anwendungen-im-vergleich,2496589)
 
+## verwendete Kommandos
+
+File-Upload
+* -d <databasename>
+* -c <collectinname>
+* -l <name_of_file> <name_of_file_in_db>
+```
+mongofiles -d pizzaservice -c pizza put -l pizza-salami.jpg pizza-salami.jpg
+```
+
 
 
 
