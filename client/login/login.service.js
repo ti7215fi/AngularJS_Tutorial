@@ -4,11 +4,11 @@
    
    angular
            .module("loginModule")
-           .factory("loginData", loginHandler);
+           .factory("loginHandler", loginHandler);
    
    function loginHandler()
    {
-       var username     = "";
+       var username     = "test";
        var password     = "";
        var firstname    = "";
        var lastname     = "";
@@ -19,11 +19,17 @@
            getFirstname : getFirstname,
            getLastname  : getLastname,
            setUsername  : setUsername,
-           setPassword  : setPassword
+           setPassword  : setPassword,
+           setData      : setData,
+           test         : test
        };
        return actions;
        
        ////////////////
+       
+       function test(){
+            alert("succesful!");
+       };
        
        function getUsername(){
            return username;
@@ -43,6 +49,15 @@
        
        function setPassword(passwd){
          password = passwd;  
+       };
+       
+       function setData(name, passwd)
+       {
+            username = name;
+            password = passwd;
+            
+            console.log("name: ", name);
+            console.log("password: ", passwd);
        };
        
    };

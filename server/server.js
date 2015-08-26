@@ -6,6 +6,7 @@ var express = require('express');                           //import ExpressJS D
 var server = express();
 var bodyParser = require('body-parser');
 
+
 /**
  * 
  * Setup MongoDB
@@ -76,19 +77,22 @@ server.get('/pizzen', function (req, res) {
 server.post('/orderFood', function (req, res) {
     var db = req.db;
     var collection = db.collection('order');
-    var lastInsertedOrderID;
 
     collection.find().toArray(function (err, docs) {
 
         if (!err)
         {
-            lastInsertedOrderID = docs[docs.length - 1].ordernumber;
-            lastInsertedOrderID += 1;
+            var orderID = docs.length;
+            var order   = [];
 
             for (var Index = 0; Index < req.body.length; ++Index)
             {
-                insertOrderIntoDatabase(lastInsertedOrderID, Index);
+               order.push({ pizza_id : req.body[Index]._id ,
+                            quantity : req.body[Index].quantity }) ;
+                            
             }
+            
+            insertOrderIntoDatabase(orderID, order)
 
             db.close();
         }
@@ -98,15 +102,14 @@ server.post('/orderFood', function (req, res) {
         }
     });
 
-    function insertOrderIntoDatabase(OrderID, Index)
+    function insertOrderIntoDatabase(OrderID, order)
     {
         collection.insert(
                 {
-                    ordernumber: OrderID,
-                    customer_id: 1,
-                    pizza_id: req.body[Index]._id,
-                    quantity: req.body[Index].quantity,
-                    date: Date()
+                    _id         : OrderID,
+                    customer_id : 1,
+                    order       : order,
+                    date        : Date()
                 });
     }
     ;
@@ -114,15 +117,18 @@ server.post('/orderFood', function (req, res) {
 });
 
 server.post('/login', function (req, res) {
-    var db = req.db;
+    var db              = req.db;
     var collectionLogin = db.collection('login');
-    var collectionUser = db.collection('customer');
-    var username = req.body.username;
-    var password = req.body.password;
-    var userID = 0;
-    var userFound = false;
-    var userData    = {};
+    var collectionUser  = db.collection('customer');
+    var username        = req.body.username;
+    var password        = req.body.password;
+    var userID          = 0;
+    var userFound       = false;
+    var userData        = {};
 
+    /**
+     * try to find the user with the recieved data
+     */
     collectionLogin.find().toArray(function (err, docs) {
 
         if (!err) {
@@ -142,6 +148,10 @@ server.post('/login', function (req, res) {
         }
     });
 
+    /**
+     * if the user was found
+     * get the user data from the database and store it in an array
+     */
     if (userFound === true)
     {
         collectionUser.find().toArray(function (err, docs) {

@@ -5,5 +5,5 @@
  * @param {type} Abhängigkeiten (Animationen, Routing)
  */
 angular
-        .module('tutorialApp', ['ngAnimate', 'ngRoute']); 
+        .module('tutorialApp', [ 'loginModule' , 'ngAnimate', 'ngRoute' ]); 
 

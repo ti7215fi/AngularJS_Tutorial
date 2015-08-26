@@ -7,7 +7,10 @@
 
     function config($routeProvider)
     {
-        var templateUrls = ['cart/articles.html', 'about.html', 'impressum.html', 'loginform.html'];
+        var templateUrls = ['cart/articles.html', 
+                            'about.view.html', 
+                            'impressum.view.html', 
+                            'login/login.view.html'];
 
         $routeProvider
                 .when('/', {templateUrl: templateUrls[0]})
