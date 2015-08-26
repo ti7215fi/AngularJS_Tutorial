@@ -127,10 +127,15 @@ Wenn die meisten der folgenden Fragen mit "Ja" beantwortet werden können:
 
 ## verwendete Kommandos
 
-File-Upload
-* -d <databasename>
-* -c <collectinname>
-* -l <name_of_file> <name_of_file_in_db>
+### File-Upload
+
+- in der Konsole verwendet
+- [GridFS](http://docs.mongodb.org/v3.0/reference/program/mongofiles/)
+
+* -d databasename
+* -c collectinname
+* -l name_of_file name_of_file_in_db 
+ *Datei muss sich im aktuellen Verzeichnis befinden, oder Angabe des Pfades*
 ```
 mongofiles -d pizzaservice -c pizza put -l pizza-salami.jpg pizza-salami.jpg
 ```
