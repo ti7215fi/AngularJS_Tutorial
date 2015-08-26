@@ -33,6 +33,8 @@ sudo apt-get install node-express // (bei Installation der stabilen Version)
 sudo apt-get install mongodb // Installation über offizielle Ubuntu-Seite
 ```
 
+*[verwendete Admin UI](http://robomongo.org/)
+
 #### JSDoc
 
 ```
