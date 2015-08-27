@@ -93,7 +93,7 @@ jsdoc filename1 filename2 -d=<output_directory>
 
 ### Dokumente
 
-* werden im BSON-Format gespeichert
+* werden im BSON-Format (binary JSON) [BSON-Reference](http://docs.mongodb.org/master/reference/bson-types/) gespeichert
 * können Dokumente enthalten
 * können eine verschachtelte Array-Struktur enthalten
 
@@ -125,9 +125,8 @@ Wenn die meisten der folgenden Fragen mit "Ja" beantwortet werden können:
 
 [Quelle](http://www.computerwoche.de/a/datenbanksysteme-fuer-web-anwendungen-im-vergleich,2496589)
 
-## verwendete Kommandos
 
-### File-Upload
+## File-Upload
 
 - in der Konsole verwendet
 - [GridFS](http://docs.mongodb.org/v3.0/reference/program/mongofiles/)
@@ -139,6 +138,26 @@ Wenn die meisten der folgenden Fragen mit "Ja" beantwortet werden können:
 ```
 mongofiles -d pizzaservice -c pizza put -l pizza-salami.jpg pizza-salami.jpg
 ```
+
+* Nach dem Upload der Datei, werden 2 neue Collections erstellt die, die Datei repräsentiert (files.fs, chunks.fs)
+* Mit Hilfe von GridFS, kann der Dateistrom ausgelesen werden
+* Es ist auch möglich die Collections zu durchsuchen und den binären Datenstrom auszulesen
+* Das Bild im binär-Format befindet sich in chunks.fs, während sich im files.fs nur die Meta-Daten befinden
+
+## GeoDaten
+
+* werden als GeoJSON gespeichert
+* [GeoJSON-Reference](http://geojson.org/)
+
+* Beispiel: Speichern von Geo-Koordinaten
+* Wichtig: Speichern im Format **[Länge , Breite]**  
+```
+{
+  "type"        : "Point",
+  "coordinates" : [100.0, 0.0]
+}
+```
+
 
 
 
