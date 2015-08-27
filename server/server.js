@@ -44,29 +44,60 @@ server.use(function (req, res, next)
  * 
  */
 server.get('/pizzen', function (req, res) {
-    var db = req.db;
-    var collection = db.collection('pizza');
+    
+    var db                  = req.db;
+    var collection          = db.collection('pizza');
+    var collectionFiles     = db.collection('fs.files');
+    var collectionChunks    = db.collection('fs.chunks');
+    var ObjectIDs           = [];
+    var BinaryImageData     = [];
 
-    collection.find().toArray(function (err, docs) {
+    collectionFiles.find().toArray(function (err, docs) {
+        if (!err) {
 
-        if (!err)
-        {
-            console.log("Returned #" + docs.length + " documents");
-
-            for (var Index = 0; Index < docs.length; ++Index)
-            {
-                docs[Index].price = (docs[Index].price).toFixed(2);
-                (docs[Index].price).toString();
-                docs[Index].price += "€";
+            for (var Index = 0; Index < docs.length; ++Index) {
+                ObjectIDs.push(docs[Index]._id);
             }
+           
+            collectionChunks.find().toArray(function (err, docs) {
 
-            res.status(200).send(docs);
-        }
-        else
-        {
+                if (!err) {
+
+                    for (var Index = 0; Index < docs.length; ++Index) {
+                        BinaryImageData.push(docs[Index].data.buffer);
+                    }
+
+                    collection.find().toArray(function (err, docs) {
+
+                        if (!err) {
+
+                            for (var Index = 0; Index < docs.length; ++Index) {
+
+                                if (BinaryImageData.length > Index) {
+                                    docs[Index].image = BinaryImageData[Index].toString('base64');
+                                }
+                                docs[Index].price = (docs[Index].price).toFixed(2);
+                                (docs[Index].price).toString();
+                                docs[Index].price += "€";
+                                
+                                
+                            }
+                            res.status(200).send(docs);
+
+                        } else {
+                            throw err;
+                        }
+                    }); // end CollectionsPizza
+
+                } else {
+                    throw err;
+                }
+            }); // end CollectionsChunks
+
+        } else {
             throw err;
         }
-    });
+    }); // end CollectionsFind
 });
 
 /**
@@ -83,15 +114,15 @@ server.post('/orderFood', function (req, res) {
         if (!err)
         {
             var orderID = docs.length;
-            var order   = [];
+            var order = [];
 
             for (var Index = 0; Index < req.body.length; ++Index)
             {
-               order.push({ pizza_id : req.body[Index]._id ,
-                            quantity : req.body[Index].quantity }) ;
-                            
+                order.push({pizza_id: req.body[Index]._id,
+                    quantity: req.body[Index].quantity});
+
             }
-            
+
             insertOrderIntoDatabase(orderID, order)
 
             db.close();
@@ -106,10 +137,10 @@ server.post('/orderFood', function (req, res) {
     {
         collection.insert(
                 {
-                    _id         : OrderID,
-                    customer_id : 1,
-                    order       : order,
-                    date        : Date()
+                    _id: OrderID,
+                    customer_id: 1,
+                    order: order,
+                    date: Date()
                 });
     }
     ;
@@ -117,14 +148,14 @@ server.post('/orderFood', function (req, res) {
 });
 
 server.post('/login', function (req, res) {
-    var db              = req.db;
+    var db = req.db;
     var collectionLogin = db.collection('login');
-    var collectionUser  = db.collection('customer');
-    var username        = req.body.username;
-    var password        = req.body.password;
-    var userID          = 0;
-    var userFound       = false;
-    var userData        = {};
+    var collectionUser = db.collection('customer');
+    var username = req.body.username;
+    var password = req.body.password;
+    var userID = 0;
+    var userFound = false;
+    var userData = {};
 
     /**
      * try to find the user with the recieved data
@@ -158,24 +189,24 @@ server.post('/login', function (req, res) {
 
             if (!err)
             {
-                for(var Index = 0; Index < docs.length; ++ Index)
+                for (var Index = 0; Index < docs.length; ++Index)
                 {
-                    if(docs[Index]._id === userID)
+                    if (docs[Index]._id === userID)
                     {
-                        userData = {    firstname : docs[Index].firstname,
-                                        lastname  : docs[Index].lastname,
-                                        address   : docs[Index].address };
+                        userData = {firstname: docs[Index].firstname,
+                            lastname: docs[Index].lastname,
+                            address: docs[Index].address};
                         break;
                     }
                 }
-              
+
             } else {
                 throw err;
             }
 
         });
     }
-    
+
     res.send(userData);
 });
 

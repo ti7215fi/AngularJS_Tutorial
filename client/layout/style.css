@@ -12,3 +12,12 @@
     float: right;
 }
 
+img{
+    width: 50%;
+    height: 50%;
+}
+
+.table{
+    table-layout: fixed;
+}
+
