@@ -18,7 +18,7 @@ var MongoClient = Mongodb.MongoClient;                          //MongoClient in
 var url = 'mongodb://localhost:27017/pizzaservice';     //URL of the mongodb server
 
 server.use('/static', express.static('../client'));
-server.use(bodyParser.json());                                      // to support JSON encoded bodies
+server.use(bodyParser.json({limit : '50mb'}));                                      // to support JSON encoded bodies
 /**
  * This function is to connect with the database.
  * You can use req.db (running database) in every server function.
@@ -78,9 +78,7 @@ server.get('/pizzen', function (req, res) {
                                 }
                                 docs[Index].price = (docs[Index].price).toFixed(2);
                                 (docs[Index].price).toString();
-                                docs[Index].price += "€";
-                                
-                                
+                                docs[Index].price += "€";  
                             }
                             res.status(200).send(docs);
 
@@ -210,8 +208,44 @@ server.post('/login', function (req, res) {
     res.send(userData);
 });
 
+server.post('/saveImage', function(req, res){
+    var db = req.db;
+    var collectionPizza = db.collection('pizza');
+    
+    collectionPizza.find().toArray(function(err, docs){
+        if(!err){
+            
+            var imageBuffer = new Buffer(req.body[0].image, 'base64'); //ToDO
+            
+            collectionPizza.insert(
+                    
+                    {
+                        _id     : ++ docs.length,
+                        name    : req.body[0].name,
+                        price   : req.body[0].price,
+                        image   : imageBuffer
+                    }
+                    );
+            console.log("Pizza hinzugefügt!");
+            
+        } else{
+            throw err;
+        }
+    });
+    
+});
+
 server.listen(3000);
 console.log('Server running on port 3000');
+
+
+function storeImageFileInDB(Image){
+    var fs = require('fs');
+    
+    fs.readFile(Image, function(err, original_data){
+        var base64Image = original_data.toString('base64');
+    })
+}
 
 
 

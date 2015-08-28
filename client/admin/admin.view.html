@@ -1,0 +1,44 @@
+<form class="form-horizontal" ng-controller='AdminController'>
+<fieldset>
+
+<!-- Form Name -->
+<legend>Pizza hinzufügen</legend>
+
+<!-- Text input-->
+<div class="control-group">
+  <label class="control-label" for="nameinput">Name der Pizza</label>
+  <div class="controls">
+      <input id="name_input" name="nameinput" placeholder="Pizzaname" class="input-medium" type="text">
+    
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="control-group">
+  <label class="control-label" for="price_input">Preis der Pizza</label>
+  <div class="controls">
+    <input id="price_input" name="price_input" placeholder="Pizzapreis" class="input-medium" type="text" >
+    
+  </div>
+</div>
+
+<!-- File Button --> 
+<div class="control-group">
+  <label class="control-label" for="filebutton">Bild der Pizza</label>
+  <div class="controls">
+    <input id="filebutton" name="filebutton" class="input-file" type="file">
+  </div>
+</div>
+
+<!-- Button -->
+<div class="control-group">
+  <label class="control-label" for="singlebutton"></label>
+  <div class="controls">
+    <button id="singlebutton" name="singlebutton" class="btn btn-primary" ng-click='admin.saveImage();'>Upload</button>
+  </div>
+</div>
+
+</fieldset>
+</form>
+
+
