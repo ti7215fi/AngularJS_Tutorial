@@ -96,6 +96,7 @@ jsdoc filename1 filename2 -d=<output_directory>
 * werden im BSON-Format (binary JSON) [BSON-Reference](http://docs.mongodb.org/master/reference/bson-types/) gespeichert
 * können Dokumente enthalten
 * können eine verschachtelte Array-Struktur enthalten
+* maximale Größe = 16 MB
 
 ## Gemeinsamkeiten zu MySQL
 
@@ -118,6 +119,8 @@ Wenn die meisten der folgenden Fragen mit "Ja" beantwortet werden können:
 * Werden hohe Anforderungen an Skalierbarkeit und Flexibilität der Datenbank gestellt? 
 * Sollen sich die Daten über mehrere Server verteilen lassen? 
 * Sind häufige Änderungen an der Datenstruktur in Zukunft zu erwarten?
+
+Skalierbarkeit bzgl. Datenbank: Steigt die Anzahl der Zugriffe und/oder die Datenmenge, so steigt auch der Datendurchsatz. Das bedeutet das die Performance nicht sinkt.
 
 ## Tools
 
