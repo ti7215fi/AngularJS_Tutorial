@@ -8,7 +8,7 @@
     function config($routeProvider)
     {
         var templateUrls = ['cart/articles.html', 
-                            'about.view.html', 
+                            'about/locations/locations.view.html', 
                             'impressum.view.html', 
                             'login/login.view.html',
                             'admin/admin.view.html'];

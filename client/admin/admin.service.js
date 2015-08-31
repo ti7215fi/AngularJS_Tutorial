@@ -39,15 +39,19 @@
             }
             
             function loadFunction(e){
-
                 
-                postArray = [
-                             { name    : document.getElementById("name_input").value},
-                             { price   : document.getElementById("price_input").value},
-                             { image   : e.target.result}
-                            ];
+                var postPizza = [];
+                var price     = parseFloat(document.getElementById("price_input").value);
+                
+                var pizza     = {
+                                    name :  document.getElementById("name_input").value,
+                                    price:  price,
+                                    image:  e.target.result
+                                };
+                
+                postPizza = JSON.stringify(pizza);
                     
-                $http.post('/saveImage', JSON.stringify(postArray))
+                $http.post('/saveImage', postPizza)
                                 .success(successHandler(e))
                                 .error(errorHandler(e));
                         

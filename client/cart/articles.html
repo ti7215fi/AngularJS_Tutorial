@@ -8,6 +8,13 @@
 
 
 <table class="table" ng-controller="ArticlesController as articlesController">
+    <tr>
+        <td><b>Bestellnummer</b></td>
+        <td><b>Name</b></td>
+        <td></td>
+        <td><b>Preis</b></td>
+        <td></td>
+    </tr>
     <tr ng-repeat="article in articles| filter:search" >
         <td>{{article._id}}</td>
         <td>{{article.name}}</td>

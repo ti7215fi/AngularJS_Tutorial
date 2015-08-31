@@ -215,39 +215,129 @@ server.post('/saveImage', function(req, res){
     collectionPizza.find().toArray(function(err, docs){
         if(!err){
             
-            var imageBuffer = new Buffer(req.body[0].image, 'base64'); //ToDO
+            // cut the string, that you have only the image data (without meta-data)
+            var imageStringLength   = (req.body.image).length;
+            var imageData           = (req.body.image).substr(23, imageStringLength);
+            
+            // convert base64 string into binary data (buffer)
+            var binaryImageData = new Buffer(imageData, 'base64');
             
             collectionPizza.insert(
                     
                     {
                         _id     : ++ docs.length,
-                        name    : req.body[0].name,
-                        price   : req.body[0].price,
-                        image   : imageBuffer
+                        name    : req.body.name,
+                        price   : req.body.price,
+                        image   : binaryImageData
                     }
                     );
+            
             console.log("Pizza hinzugefügt!");
             
+            db.close();
+            
         } else{
+            db.close();
             throw err;
         }
     });
     
 });
 
+server.post('/saveLocation', function(req, res){
+   
+    var db = req.db;
+    var collectionLocations = db.collection('location');
+    
+});
+
+server.get('/locations', function(req, res){
+    var db = req.db;
+    var collectionLocation = db.collection('location');
+    
+    collectionLocation.find().toArray(function(err, docs){
+        if(!err){
+            
+            var locations = [];
+            
+            for(var index = 0; index < docs.length; ++index){
+                locations.push(docs[index].city);
+            }
+            
+            console.log("Locations: ", locations);
+            
+            res.status(200).send(locations);
+            
+            db.close();
+        }else{
+            db.close();
+        }
+    })
+})
+
+server.post('/getLocation', function(req, res){
+   var db = req.db;
+   var collectionLocation = db.collection('location');
+   var location = req.body.location;
+   var coordinates = [];
+   var distance = 0;
+   
+   console.log("req.body ", req.body);
+   
+   collectionLocation.find({city : location}).toArray(function(err, docs){
+       if(!err){
+           
+           console.log("coordinates: ", docs[0].geoData.coordinates);
+           coordinates = docs[0].geoData.coordinates;
+           
+             db.command(
+            {
+                geoNear                 : 'location',
+                near                    : { type: "Point" , coordinates : coordinates } ,
+                spherical               : true,
+                distanceMultiplier      : 0.001,
+            }, function(err, result){
+            
+                if(!err){
+                    var distances =  [];
+            
+                    for(var index = 0; index < result.results.length; ++index)
+                    {
+                        console.log("city: ", result.results[index].obj.city);
+                        console.log("distance "  ,result.results[index].dis);
+                        
+                        distances.push({ distance : result.results[index].dis,
+                                             city     : result.results[index].obj.city});
+                    }
+                
+                    console.log("distances: ", distances);
+                
+                    res.status(200).send(distances);
+                    db.close();
+                }else{
+                    db.close();
+                    throw err;
+                }
+
+            }); 
+           
+       }else{
+           db.close();
+           throw err;
+       }
+   });
+   
+   
+   
+
+    
+    
+});
+
+
+
 server.listen(3000);
 console.log('Server running on port 3000');
-
-
-function storeImageFileInDB(Image){
-    var fs = require('fs');
-    
-    fs.readFile(Image, function(err, original_data){
-        var base64Image = original_data.toString('base64');
-    })
-}
-
-
 
 //--------------------------------------------------------------------------------------------------------------
 
