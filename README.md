@@ -160,6 +160,28 @@ mongofiles -d pizzaservice -c pizza put -l pizza-salami.jpg pizza-salami.jpg
   "coordinates" : [100.0, 0.0]
 }
 ```
+* Um die GeoDaten mit MongoDB zu verwenden ist ein Geo-Index notwendig: [Geo-Index-Referenz](http://docs.mongodb.org/v3.0/applications/geospatial-indexes/)
+* Beispiel:
+```
+// collection = Name der Kollektion
+// <location field> = Name des Keys
+// "2dsphere" = Typ des Index
+db.collection.createIndex( { <location field> : "2dsphere" } )
+```
+* Ist dieser Index vorhanden, so ist folgendes möglich:
+* [geoNear-Referenz](https://docs.mongodb.org/manual/reference/command/geoNear/#dbcmd.geoNear)
+```
+// geoNear (definiert in MongoDB), gibt die Distanz zu dem angegeben Ort(near) in Metern zurück
+// near, beschreibt den Ort, zu dem die Distanz berechnet werden soll
+// spherical: true, ist notwendig wenn ein 2dsphere-Index verwendet wurde
+// distanceMultiplier, rechnet in folgendem Beispiel Meter in Kilometer um
+
+db.runCommand({
+    geoNear: 'location',
+    near: { type: "Point" , coordinates : [11.3166667, 50.9833333] } ,
+    spherical: true,
+    distanceMultiplier : 0.001 })
+```
 
 
 
