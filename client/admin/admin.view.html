@@ -5,35 +5,35 @@
 <legend>Pizza hinzufügen</legend>
 
 <!-- Text input-->
-<div class="control-group">
-  <label class="control-label" for="nameinput">Name der Pizza</label>
-  <div class="controls">
-      <input id="name_input" name="nameinput" placeholder="Pizzaname" class="input-medium" type="text">
+<div class="form-group">
+  <label class="col-md-4 control-label" for="nameinput">Name der Pizza</label>
+  <div class="col-md-4">
+      <input id="name_input" name="nameinput" placeholder="Pizzaname" class="form-control input-md" type="text">
     
   </div>
 </div>
 
 <!-- Text input-->
-<div class="control-group">
-  <label class="control-label" for="price_input">Preis der Pizza</label>
-  <div class="controls">
-    <input id="price_input" name="price_input" placeholder="Pizzapreis" class="input-medium" type="text" >
+<div class="form-group">
+  <label class="col-md-4 control-label" for="price_input">Preis der Pizza</label>
+  <div class="col-md-4">
+    <input id="price_input" name="price_input" placeholder="Pizzapreis" class="form-control input-md" type="text" >
     
   </div>
 </div>
 
 <!-- File Button --> 
-<div class="control-group">
-  <label class="control-label" for="filebutton">Bild der Pizza</label>
-  <div class="controls">
+<div class="form-group">
+  <label class="col-md-4 control-label" for="filebutton">Bild der Pizza</label>
+  <div class="col-md-4">
     <input id="filebutton" name="filebutton" class="input-file" type="file">
   </div>
 </div>
 
 <!-- Button -->
-<div class="control-group">
-  <label class="control-label" for="singlebutton"></label>
-  <div class="controls">
+<div class="form-group">
+  <label class="col-md-4 control-label" for="singlebutton"></label>
+  <div class="col-md-4">
     <button id="singlebutton" name="singlebutton" class="btn btn-primary" ng-click='admin.saveImage();'>Upload</button>
   </div>
 </div>
@@ -41,7 +41,7 @@
 </fieldset>
 </form>
     <br><br>
-<form class="form-horizontal">
+<form class="form-horizontal"  ng-controller='AdminController'>
 <fieldset>
 
 <!-- Form Name -->
@@ -60,7 +60,8 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="longitude_input">Längengrad</label>  
   <div class="col-md-4">
-  <input id="longitude_input" name="longitude_input" placeholder="Längengradeingabe" class="form-control input-md" type="text">
+  <input id="longitude_input" name="longitude_input" placeholder="Längengradeingabe" class="form-control input-md" 
+         type="number" step="0.0000001">
     
   </div>
 </div>
@@ -69,7 +70,8 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="latitude_input">Breitengrad</label>  
   <div class="col-md-4">
-  <input id="latitude_input" name="latitude_input" placeholder="Breitengradeingabe" class="form-control input-md" type="text">
+  <input id="latitude_input" name="latitude_input" placeholder="Breitengradeingabe" class="form-control input-md" 
+         type="number" step="0.0000001">
     
   </div>
 </div>
@@ -78,7 +80,7 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="addCity"></label>
   <div class="col-md-4">
-    <button id="addCity" name="addCity" class="btn btn-primary">Ort hinzufügen</button>
+    <button id="addCity" name="addCity" class="btn btn-primary" ng-click='admin.saveLocation()'>Ort hinzufügen</button>
   </div>
 </div>
 

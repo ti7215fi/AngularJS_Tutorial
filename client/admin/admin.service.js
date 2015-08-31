@@ -14,6 +14,7 @@
         
         var actions = {
             saveImage       : saveImage,
+            saveLocation    : saveLocation
         };
         return actions;
         
@@ -56,6 +57,34 @@
                                 .error(errorHandler(e));
                         
             }
+            
+        };
+        
+        function saveLocation(){
+          
+            var location = document.getElementById('city_input').value;
+            var longitude = document.getElementById('longitude_input').value;
+            var latitude = document.getElementById('latitude_input').value;
+            var coordinates = [longitude, latitude];
+            
+            var postLocation =  {
+                                    location    : location,
+                                    coordinates : coordinates
+                                };
+            
+            $http.post('/saveLocation', postLocation)
+                    .success(successHandler)
+                    .error(errorHandler);
+            
+            ////////////////////////////////////////
+            
+            function successHandler(){
+                console.log("POST saveLocation successful!");
+            };
+            
+            function errorHandler(){
+                console.log("POST saveLocation failes!");
+            };
             
         };
         

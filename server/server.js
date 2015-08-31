@@ -246,8 +246,40 @@ server.post('/saveImage', function(req, res){
 
 server.post('/saveLocation', function(req, res){
    
-    var db = req.db;
+    var db                  = req.db;
     var collectionLocations = db.collection('location');
+    
+    collectionLocations.find().toArray(function(err, docs){
+       if(!err){
+         
+           
+           var locationName = req.body.location;
+           var coordinates = [parseFloat(req.body.coordinates[0]),
+                              parseFloat(req.body.coordinates[1])];
+           var ID          = docs.length +1;
+           
+           console.log(req.body);
+           console.log(coordinates);
+           
+           collectionLocations.insert(
+                    {
+                       _id      : ID,
+                       city     : locationName,
+                       geoData  : {
+                                    type        : "Point",
+                                    coordinates : coordinates
+                                  }
+                    }
+                    );
+           
+           console.log("Filiale hinzugefügt: ", locationName);
+               
+           db.close();
+       } else {
+           db.close();
+           throw err;
+       }
+    });
     
 });
 
