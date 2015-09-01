@@ -98,9 +98,93 @@ jsdoc filename1 filename2 -d=<output_directory>
 * können eine verschachtelte Array-Struktur enthalten
 * maximale Größe = 16 MB
 
+### Datenmodellierung - Konzepte
+
+#### 1. Beziehungen zwischen den Dokumenten
+
+* vgl. mit Primärschlüssel-Fremdschlüssel-Konzept und JOINTS
+* 1-1 Beziehung
+* 1-n Beziehung
+
+##### 1. Referenzen
+
+* [Database References](http://docs.mongodb.org/manual/reference/database-references/)
+* Manuelle Referenzen (sind zu bevorzugen)
+
+```
+var userID = ObjectID();
+
+db.user.insert({_id : userID , ...});
+db.contact.insert({_id : <ObjectID2> , user_id : userID, ...});
+db.access.insert({_id : <ObjectID3>, user_id : userID, ...});
+
+contact document                  user document                   access document
+{                                 {                               {
+  _id     : <ObjectID2>             _id       : <ObjectID1>,        _id : <ObjectID3>,
+  user_id : <ObjectID1>             username  : "XYZ"               user_id : <ObjectID1>,
+  phone   : "+49/2837473"         }                                 level : 5,
+  e-mail  : "guten@tag.de"                                          group : "dev"
+}                                                                 }
+```
+
+* DBRef
+
+```
+{ "$ref" : <value>, "$id" : <value>, "$db" : <value> }
+
+{
+  "_id" : ObjectId("5126bbf64aed4daf9e2ab771"),
+  // .. application fields
+  "creator" : {
+                  "$ref" : "creators",
+                  "$id" : ObjectId("5126bc054aed4daf9e2ab772"),
+                  "$db" : "users"
+               }
+}
+
+```
+
+##### 2. Eingebettete Dokumente
+
+* Eingebettete Dokumente
+* [Embedded Data Models](http://docs.mongodb.org/manual/core/data-model-design/#data-modeling-embedding)
+
+```
+user document
+{
+    _id       : <ObjectID1>,
+    username  : "XYZ",
+    contact   : { 
+                  phone   : "+49/2837473",
+                  e-mail  : "guten@tag.de"
+                },
+    access    : {
+                  level   : 5,
+                  group   : "dev"
+                }
+};
+```
+
+#### 2. Baumstruktur 
+
+* [Model Tree Structures](http://docs.mongodb.org/manual/applications/data-models-tree-structures/)
+* erlaubt es eine große Datenhierarchie aufzubauen
+* erlaubt es verschachtelte Datenbeziehungen aufzubauen
+* jeder Knoten des Baumes wird in einem Dokument gespeichert
+* Baumstruktur mit Referenz auf ein "Eltern"-Dokument
+* Baumstruktur mit Referenz auf "Kind"-Dokumente
+* Baumstruktur mit Referenz auf ein "Eltern"-Dokument und allen übergeordneten Dokumenten (Basisdokmente)
+* Baumstruktur mit Angaben von Pfaden zu den übergeordneten Dokumenten
+* Baumstruktur mit verschachtelten Gruppen 
+
+## Aggregation
+
+* [Aggregation-Reference](http://docs.mongodb.org/manual/aggregation/)
+
 ## Gemeinsamkeiten zu MySQL
 
 * eindeutige ID pro Dokument/Datensatz
+* [SQL to Aggregation Mapping Chart](http://docs.mongodb.org/manual/reference/sql-aggregation-comparison/)
 
 ## Vorteile von MongoDB
 
