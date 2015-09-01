@@ -122,6 +122,10 @@ Wenn die meisten der folgenden Fragen mit "Ja" beantwortet werden können:
 
 Skalierbarkeit bzgl. Datenbank: Steigt die Anzahl der Zugriffe und/oder die Datenmenge, so steigt auch der Datendurchsatz. Das bedeutet das die Performance nicht sinkt.
 
+## Warum benötigt MongoDB keine Constraints?
+
+* [Beispiel] (http://www.toadworld.com/platforms/sql-server/b/weblog/archive/2013/04/20/why-mongodb-doesn-t-need-transactions-and-constraints)
+
 ## Tools
 
 [Admin UI's] (http://docs.mongodb.org/ecosystem/tools/administration-interfaces/)
