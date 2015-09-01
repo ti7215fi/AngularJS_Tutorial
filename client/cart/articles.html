@@ -1,7 +1,16 @@
-<form>
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Pizzasuche</h3>
+  </div>
+  <div class="panel-body">
+    <form>
     <input type="text" ng-model="search">
-    <p>Du suchst gerade nach: {{ search.toUpperCase() + "!"}}</p> 
+    <p><span class="label label-info">Du suchst gerade nach: {{ search.toUpperCase() + "!"}}</span> </p>
 </form>
+  </div>
+</div>
 
 
 <br>

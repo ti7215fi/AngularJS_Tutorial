@@ -1,34 +1,43 @@
-<form class="form-horizontal">
-<fieldset>
 
-<!-- Form Name -->
-<legend>Filialen</legend>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Filialen</h3>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal">
+            <fieldset>
 
-<!-- Select Basic -->
-<div class="form-group" ng-controller="LocationController as locationController">
-  <label class="col-md-4 control-label" for="select_location">Wähle eine Filiale</label>
-  <div class="col-md-4">
-      <select id="select_location" name="select_location" class="form-control" 
-              ng-model="loc_selection" ng-switch on="loc_selection" ng-change="loc.changeCity()">
-    
-        <option ng-repeat="location in locations" value="{{ location.city }}">{{ location.city }}</option>
-        
-    </select>
-  </div>
-  <div ng-show="loc.getDistances().length > 0;">
-  <h3><br>Unsere anderen Filialen</h3>
-  <table class="table"  >
-      <tr>
-          <td><b>Ort der Filiale</b></td>
-          <td><b>Entfernung vom ausgewählten Standort</b></td>
-      </tr>
-      <tr ng-repeat="distance in loc.getDistances()" ng-If="distance.distance > 0">
-        <td>{{ distance.city }}</td>
-        <td>{{ (distance.distance | number: 2) + " km" }}</td>
-    </tr>
-</table>
-  </div>
+                <!-- Select Basic -->
+                <div class="form-group" ng-controller="LocationController
+        as locationController">
+                    <label class="col-md-4 control-label" for="select_location">Wähle eine Filiale</label>
+                    <div class="col-md-4">
+                        <select id="select_location" name="select_location" class="form-control" 
+                                ng-model="loc_selection" ng-switch on="loc_selection" ng-change="loc.changeCity()">
+
+                            <option ng-repeat="location in locations" value="{{ location.city}}">{{ location.city}}</option>
+
+                        </select>
+                    </div>
+                    <div ng-show="loc.getDistances().length > 0;">
+                        <h3><br>Unsere anderen Filialen</h3>
+                        <table class="table"  >
+                            <tr>
+                                <td><b>Ort der Filiale</b></td>
+                                <td><b>Entfernung vom ausgewählten Standort</b></td>
+                            </tr>
+                            <tr ng-repeat="distance in loc.getDistances()" ng-If="distance.distance > 0">
+                                <td>{{ distance.city}}</td>
+                                <td>{{ (distance.distance | number: 2) + " km"}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+            </fieldset>
+        </form>
+
+    </div>
 </div>
 
-</fieldset>
-</form>
+

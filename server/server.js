@@ -18,7 +18,7 @@ var MongoClient = Mongodb.MongoClient;                          //MongoClient in
 var url = 'mongodb://localhost:27017/pizzaservice';     //URL of the mongodb server
 
 server.use('/static', express.static('../client'));
-server.use(bodyParser.json({limit : '50mb'}));                                      // to support JSON encoded bodies
+server.use(bodyParser.json({limit: '50mb'}));                                      // to support JSON encoded bodies
 /**
  * This function is to connect with the database.
  * You can use req.db (running database) in every server function.
@@ -44,13 +44,13 @@ server.use(function (req, res, next)
  * 
  */
 server.get('/pizzen', function (req, res) {
-    
-    var db                  = req.db;
-    var collection          = db.collection('pizza');
-    var collectionFiles     = db.collection('fs.files');
-    var collectionChunks    = db.collection('fs.chunks');
-    var ObjectIDs           = [];
-    var BinaryImageData     = [];
+
+    var db = req.db;
+    var collection = db.collection('pizza');
+    var collectionFiles = db.collection('fs.files');
+    var collectionChunks = db.collection('fs.chunks');
+    var ObjectIDs = [];
+    var BinaryImageData = [];
 
     collectionFiles.find().toArray(function (err, docs) {
         if (!err) {
@@ -58,7 +58,7 @@ server.get('/pizzen', function (req, res) {
             for (var Index = 0; Index < docs.length; ++Index) {
                 ObjectIDs.push(docs[Index]._id);
             }
-           
+
             collectionChunks.find().toArray(function (err, docs) {
 
                 if (!err) {
@@ -78,7 +78,7 @@ server.get('/pizzen', function (req, res) {
                                 }
                                 docs[Index].price = (docs[Index].price).toFixed(2);
                                 (docs[Index].price).toString();
-                                docs[Index].price += "€";  
+                                docs[Index].price += "€";
                             }
                             res.status(200).send(docs);
 
@@ -208,162 +208,195 @@ server.post('/login', function (req, res) {
     res.send(userData);
 });
 
-server.post('/saveImage', function(req, res){
+server.post('/saveImage', function (req, res) {
     var db = req.db;
     var collectionPizza = db.collection('pizza');
-    
-    collectionPizza.find().toArray(function(err, docs){
-        if(!err){
-            
-            // cut the string, that you have only the image data (without meta-data)
-            var imageStringLength   = (req.body.image).length;
-            var imageData           = (req.body.image).substr(23, imageStringLength);
-            
-            // convert base64 string into binary data (buffer)
-            var binaryImageData = new Buffer(imageData, 'base64');
-            
-            collectionPizza.insert(
-                    
-                    {
-                        _id     : ++ docs.length,
-                        name    : req.body.name,
-                        price   : req.body.price,
-                        image   : binaryImageData
+
+    collectionPizza.find().toArray(function (err, docs) {
+        if (!err) {
+
+            collectionPizza.aggregate([{$match: {name: req.body.name}}]).toArray(function (err, result) {
+
+                if (!err) {
+
+                    if (result.length !== 0) {
+                        console.log("Pizza existiert bereits!!");
+                    } else {
+                        // cut the string, that you have only the image data (without meta-data)
+                        var imageStringLength = (req.body.image).length;
+                        var imageData = (req.body.image).substr(23, imageStringLength);
+
+                        // convert base64 string into binary data (buffer)
+                        var binaryImageData = new Buffer(imageData, 'base64');
+
+                        collectionPizza.insert(
+                                {
+                                    _id: ++docs.length,
+                                    name: req.body.name,
+                                    price: req.body.price,
+                                    image: binaryImageData
+                                }
+                        );
+
+                        console.log("Pizza hinzugefügt!");
+                        db.close();
                     }
-                    );
-            
-            console.log("Pizza hinzugefügt!");
-            
-            db.close();
-            
-        } else{
+                    ;
+
+                } else {
+                    db.close();
+                    throw err;
+                }
+
+            }); // end collectionPizza.aggregate
+
+        } else {
             db.close();
             throw err;
         }
-    });
-    
+    }); // end collectionPizza.find()
+
 });
 
-server.post('/saveLocation', function(req, res){
-   
-    var db                  = req.db;
+server.post('/saveLocation', function (req, res) {
+
+    var db = req.db;
     var collectionLocations = db.collection('location');
-    
-    collectionLocations.find().toArray(function(err, docs){
-       if(!err){
-         
-           
-           var locationName = req.body.location;
-           var coordinates = [parseFloat(req.body.coordinates[0]),
-                              parseFloat(req.body.coordinates[1])];
-           var ID          = docs.length +1;
-           
-           console.log(req.body);
-           console.log(coordinates);
-           
-           collectionLocations.insert(
-                    {
-                       _id      : ID,
-                       city     : locationName,
-                       geoData  : {
-                                    type        : "Point",
-                                    coordinates : coordinates
-                                  }
+
+    collectionLocations.find().toArray(function (err, docs) {
+
+        if (!err) {
+
+            collectionLocations.aggregate([{$match: {city: req.body.location}}]).toArray(function (err, result) {
+
+                if (!err) {
+
+                    if (result !== 0) {
+                        console.log("Filiale %s existiert bereits!", req.body.location);
+                    } else {
+
+                        var locationName = req.body.location;
+                        var coordinates = [parseFloat(req.body.coordinates[0]),
+                            parseFloat(req.body.coordinates[1])];
+                        var ID = docs.length + 1;
+
+                        console.log(req.body);
+                        console.log(coordinates);
+
+                        collectionLocations.insert(
+                                {
+                                    _id: ID,
+                                    city: locationName,
+                                    geoData: {
+                                        type: "Point",
+                                        coordinates: coordinates
+                                    }
+                                }
+                        );
+
+                        console.log("Filiale hinzugefügt: ", locationName);
+
+                        db.close();
                     }
-                    );
-           
-           console.log("Filiale hinzugefügt: ", locationName);
-               
-           db.close();
-       } else {
-           db.close();
-           throw err;
-       }
-    });
-    
+                    ;
+                } else {
+
+                    db.close();
+                    throw err;
+
+                }
+
+            }); // end collectionLocation.aggregate
+
+        } else {
+            db.close();
+            throw err;
+        }
+    }); // end collectionLocations.find();
+
 });
 
-server.get('/locations', function(req, res){
+server.get('/locations', function (req, res) {
     var db = req.db;
     var collectionLocation = db.collection('location');
-    
-    collectionLocation.find().toArray(function(err, docs){
-        if(!err){
-            
+
+    collectionLocation.find().toArray(function (err, docs) {
+        if (!err) {
+
             var locations = [];
-            
-            for(var index = 0; index < docs.length; ++index){
+
+            for (var index = 0; index < docs.length; ++index) {
                 locations.push(docs[index].city);
             }
-            
+
             console.log("Locations: ", locations);
-            
+
             res.status(200).send(locations);
-            
+
             db.close();
-        }else{
+        } else {
             db.close();
         }
     })
 })
 
-server.post('/getLocation', function(req, res){
-   var db = req.db;
-   var collectionLocation = db.collection('location');
-   var location = req.body.location;
-   var coordinates = [];
-   var distance = 0;
-   
-   console.log("req.body ", req.body);
-   
-   collectionLocation.find({city : location}).toArray(function(err, docs){
-       if(!err){
-           
-           console.log("coordinates: ", docs[0].geoData.coordinates);
-           coordinates = docs[0].geoData.coordinates;
-           
-             db.command(
-            {
-                geoNear                 : 'location',
-                near                    : { type: "Point" , coordinates : coordinates } ,
-                spherical               : true,
-                distanceMultiplier      : 0.001,
-            }, function(err, result){
-            
-                if(!err){
-                    var distances =  [];
-            
-                    for(var index = 0; index < result.results.length; ++index)
+server.post('/getLocation', function (req, res) {
+    var db = req.db;
+    var collectionLocation = db.collection('location');
+    var location = req.body.location;
+    var coordinates = [];
+    var distance = 0;
+
+    console.log("req.body ", req.body);
+
+    collectionLocation.find({city: location}).toArray(function (err, docs) {
+        if (!err) {
+
+            console.log("coordinates: ", docs[0].geoData.coordinates);
+            coordinates = docs[0].geoData.coordinates;
+
+            db.command(
+                    {
+                        geoNear: 'location',
+                        near: {type: "Point", coordinates: coordinates},
+                        spherical: true,
+                        distanceMultiplier: 0.001,
+                    }, function (err, result) {
+
+                if (!err) {
+                    var distances = [];
+
+                    for (var index = 0; index < result.results.length; ++index)
                     {
                         console.log("city: ", result.results[index].obj.city);
-                        console.log("distance "  ,result.results[index].dis);
-                        
-                        distances.push({ distance : result.results[index].dis,
-                                             city     : result.results[index].obj.city});
+                        console.log("distance ", result.results[index].dis);
+
+                        distances.push({distance: result.results[index].dis,
+                            city: result.results[index].obj.city});
                     }
-                
+
                     console.log("distances: ", distances);
-                
+
                     res.status(200).send(distances);
                     db.close();
-                }else{
+                } else {
                     db.close();
                     throw err;
                 }
 
-            }); 
-           
-       }else{
-           db.close();
-           throw err;
-       }
-   });
-   
-   
-   
+            });
 
-    
-    
+        } else {
+            db.close();
+            throw err;
+        }
+    });
+
+
+
+
+
+
 });
 
 

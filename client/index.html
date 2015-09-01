@@ -9,21 +9,58 @@ and open the template in the editor.
         <title>AngularJS Tutorial</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
         <link rel="stylesheet" href="layout/style.css">
+
     </head>
     <body>
+
+        <!--
         
-        <div class="container">
+        
             
-            <h1>Pizzeria 404</h1>
+   
 
             <p class="well">
                 <a href="#/">Start</a> | <a href="#/about">Über</a> <a class="login" href="#/login">Login</a> | <a href="#/impressum">Impressum</a> | <a href="#/admin">Admin</a> |
             </p>
             <div ng-view></div>
 
+        -->
+        <div class="container">
+
+            <div class="page-header">
+                <h1>Pizzeria 404 <small>Awesome food!</small></h1>      
+            </div>
+
+            <!-- Centered Pills -->
+            <ul class="nav nav-pills nav-justified" role="tablist">
+                <li class="active"><a href="#/">Start</a></li>
+                <li><a href="#/about">Über</a></li>
+                <li><a href="#/impressum">Impressum</a></li>
+                
+                <li role="presentation" class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#admin"
+                       aria-haspopup="true" aria-expanded="false">
+                        Admin <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#addPizza">Pizza hinzufügen</a></li>
+                        <li><a href="#addLocation">Filiale hinzufügen</a></li>                       
+                    </ul>
+                </li>
+                
+                <li><a href="#/login" >Login</a> </li>
+            </ul>
+            <div ng-view></div>
         </div>
+
+
+        <!--
+<p class="well">
+    <a href="#/">Start</a> | <a href="#/about">Über</a> <a class="login" href="#/login">Login</a> | <a href="#/impressum">Impressum</a> | <a href="#/admin">Admin</a> |
+</p>
+<div ng-view></div>
+        -->
 
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.js"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-animate.js"></script>
@@ -41,6 +78,6 @@ and open the template in the editor.
         <script language="javascript" type="text/javascript" src="login/login.controller.js"></script>
         <script language="javascript" type="text/javascript" src="about/locations/locations.service.js"></script>
         <script language="javascript" type="text/javascript" src="about/locations/locations.controller.js"></script>
-        
+
     </body>
 </html>

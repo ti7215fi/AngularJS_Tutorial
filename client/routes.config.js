@@ -11,7 +11,9 @@
                             'about/locations/locations.view.html', 
                             'impressum.view.html', 
                             'login/login.view.html',
-                            'admin/admin.view.html'];
+                            'admin/admin.view.html',
+
+        ];
 
         $routeProvider
                 .when('/',          {templateUrl: templateUrls[0]})
