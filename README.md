@@ -271,6 +271,33 @@ db.runCommand({
     distanceMultiplier : 0.001 })
 ```
 
+## Tipps zum Erstellen einer Datenbank mit MongoDB
+
+[Quelle](http://blog.mongodb.org/post/88473035333/6-rules-of-thumb-for-mongodb-schema-design-part-3)
+
+### Regeln
+
+1. Es sollten immer eingebettete Dokumente bevorzugt werden, es sei denn es gibt einen Grund diese nicht zu verwenden.
+2. Ein Grund darauf zu verzichten, ist wenn man Zugriff auf das Objekt alleine benötigt.
+3. Arrays sollten eine Begrenzung haben und nicht gegen unendlich wachsen. Sollten es mehr als ein paar hundert Dokumente sein, dann sollte man auf das Einbetten verzichten. Sind es ein paar tausend Dokumente, dann sollte man darauf verzichten ein Array mit ObjectID_Referenzen anzulegen. Arrays mit hoher Kardinalität sind ein guter Grund, Dokumente nicht einzubetten.
+4. Vergibt man die Indexe richtig und wendet sie korrekt an, so sind die Join-Operationen kaum "teurer" als die Join-Operationen einer relationalen DB.
+5. Beachte immer das Verhältnis zu den Schreib-/Leseoperationen. Sollen Datensätze nur gelesen werden und selten aktualisiert werden, so lohnt es sich zu denormalisieren, um so die Abfragegeschwindigkeit zu erhöhen. Wenn Datensätze regelmäßig aktualisert werden, dann sollte normalisiert werden.
+6. Die Erstellung eines Datenmodells hängt immer davon ab, wie man auf die Daten zugreifen möchte. Man will eine Datenstruktur erreichen, mit der die Anwendung effektiv Schreib- und Leseoperationen durchführen kann.
+
+### Entscheidungshilfen, bei der Wahl der Datenstruktur:
+
+* Welche Kardinalitäten besitzen die Beziehungen, 1-wenige, 1-viele oder 1-sehr viele?
+* Benötigt man seperaten Zugriff auf die Elemente der "N" Seite oder greift man nur auf die Elemente der "N" Seite zu mit Bezug zur 1-Seite?
+* Wie oft wird ein Feld gelesen oder aktualisiert?
+
+Hat man vorherige Fragen beantwortet, sollten man sich wie folgt entscheiden:
+
+* 1-wenige: Man sollte einen array von eingebetteten Dokumenten benutzen
+* 1-N, oder die "N"-Seite muss alleine stehen: Man sollte einen array mit Referenzen verwenden. Es ist auch Möglich auf der "N"-Seite eine Referenz auf die 1-Seite zu sichern.
+* 1-sehr viele: Man sollte auf der "N"-Seite eine Referenz zur 1-Seite haben.
+
+
+
 
 
 
