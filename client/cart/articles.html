@@ -26,7 +26,7 @@
     </tr>
     <tr ng-repeat="article in articles| filter:search" >
         <td>{{article._id}}</td>
-        <td>{{article.name}}</td>
+        <td>{{"Pizza " + article.name}}</td>
         <td><img src="data:image/jpg;base64,{{article.image}}"></td>
         <td>{{article.price}}</td>
 <td><a href class="btn btn-default btn-sm" ng-click="cart.addArticle(article);">Hinzufügen</a></td>

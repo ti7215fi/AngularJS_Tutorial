@@ -56,12 +56,14 @@
                     <label class="col-md-4 control-label" for="singlebutton"></label>
                     <div class="col-md-4">
                         <button id="upload_button" name="upload_button" class="btn btn-primary" ng-model="upload" ng-click='admin.saveImage();'
-                                ng-disable="adminForm.nameinput.$dirty && adminForm.nameinput.$invalid ||
-                                adminForm.price_input.$dirty && adminForm.price_input.$invalid">
+                               ng-disable="adminForm.nameinput.$dirty && adminForm.nameinput.$invalid ||
+                                adminForm.price_input.$dirty && adminForm.price_input.$invalid" >
                             Upload
                         </button>
                     </div>
                 </div>
+                
+                <!-- -->
 
                 <div class="progress" ng-show="adminForm.nameinput.$invalid && adminForm.price_input.$invalid">
                     <div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" 

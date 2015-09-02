@@ -19,7 +19,7 @@
             getDistance : getDistance,
             getCity     : getCity,
             changeCity : changeCity,
-            getDistances : getDistances
+            getDistances : getDistances,
         };
         return actions;
         

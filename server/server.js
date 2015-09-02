@@ -105,13 +105,14 @@ server.get('/pizzen', function (req, res) {
  */
 server.post('/orderFood', function (req, res) {
     var db = req.db;
-    var collection = db.collection('order');
+    var collection = db.collection('user');
 
-    collection.find().toArray(function (err, docs) {
+    collection.find({_id : 1}).toArray(function (err, docs) {
 
         if (!err)
         {
-            var orderID = docs.length;
+            
+            var orderID = docs[0].order.length;
             var order = [];
 
             for (var Index = 0; Index < req.body.length; ++Index)
@@ -133,15 +134,11 @@ server.post('/orderFood', function (req, res) {
 
     function insertOrderIntoDatabase(OrderID, order)
     {
-        collection.insert(
-                {
-                    _id: OrderID,
-                    customer_id: 1,
-                    order: order,
-                    date: Date()
-                });
-    }
-    ;
+        collection.update(
+            {_id : 1 },
+            {$push : { order : { ordernumber : OrderID + 1, date : Date(), items :  order }}}
+    );
+    };
 
 });
 
@@ -271,7 +268,8 @@ server.post('/saveLocation', function (req, res) {
 
                 if (!err) {
 
-                    if (result !== 0) {
+                    if (result.length !== 0) {
+                        console.log("result: ", result);
                         console.log("Filiale %s existiert bereits!", req.body.location);
                     } else {
 
@@ -440,3 +438,32 @@ console.log('Server running on port 3000');
  *  
  */
 
+/*
+ * collection user
+ * {
+ *      _id         : 1, 
+ *      firstname   : "Max",
+ *      lastname    : "Mustermann"
+ *      address     : {
+ *                          zip     : 99085,
+ *                          city    : "Erfurt",
+ *                          street  : "Musterweg 2"
+ *                    },
+ *      login       : {
+ *                          username : "MaMu",
+ *                          password : "123123"
+ *                    },  
+ *      order       : [{
+ *                          ordernumber : 1,
+ *                          orderdate   : 2012-12-03,
+ *                          orderitems  : [{
+ *                                              pizza_id : 1,
+ *                                              quantity : 2      
+ *                                        },
+ *                                        {
+ *                                              pizza_id : 2,
+ *                                              quantity : 3
+ *                                        }]  
+ *                    }]      
+ * }
+ */

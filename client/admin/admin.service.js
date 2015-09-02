@@ -22,7 +22,7 @@
         
         function saveImage(){
        
-            var fileInput   = document.getElementById("filebutton");
+            var fileInput   = document.getElementById("browse_button");
             var files       = fileInput.files;
             var imageFile   = files[0];
             var reader      = new FileReader();
@@ -92,3 +92,4 @@
     
 })();
 
+//ToDo: Umkreissuche GeoJSON, Best Practice MongoDB (Vorgehensweise, wie geht man vor bei der Erstellung) 
