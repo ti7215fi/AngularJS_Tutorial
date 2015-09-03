@@ -21,5 +21,11 @@
   "homepage": "https://github.com/ti7215fi/AngularJS_Tutorial#readme",
   "dependencies": {
     "express": "^4.13.3"
+  },
+  "devDependencies": {
+    "jasmine-core": "~2.3.4",
+    "karma-jasmine": "~0.3.6",
+    "karma": "~0.13.9",
+    "karma-firefox-launcher": "~0.1.6"
   }
 }

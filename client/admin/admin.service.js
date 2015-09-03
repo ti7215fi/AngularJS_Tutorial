@@ -14,11 +14,16 @@
         
         var actions = {
             saveImage       : saveImage,
-            saveLocation    : saveLocation
+            saveLocation    : saveLocation,
+            test            : test
         };
         return actions;
         
         /////////////////////////
+        
+        function test(){
+            return "Hello";
+        }
         
         function saveImage(){
        
