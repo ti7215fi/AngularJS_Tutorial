@@ -366,11 +366,11 @@ server.post('/getLocation', function (req, res) {
 
                     for (var index = 0; index < result.results.length; ++index)
                     {
-                        console.log("city: ", result.results[index].obj.city);
-                        console.log("distance ", result.results[index].dis);
+                        console.log("coordinates: ", result.results[index].obj.geoData.coordinates);
 
                         distances.push({distance: result.results[index].dis,
-                            city: result.results[index].obj.city});
+                            city: result.results[index].obj.city,
+                            coordinates : result.results[index].obj.geoData.coordinates});
                     }
 
                     console.log("distances: ", distances);

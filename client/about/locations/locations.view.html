@@ -10,17 +10,17 @@
                 <!-- Select Basic -->
                 <div class="form-group" ng-controller="LocationController
         as locationController">
-                    <label class="col-md-4 control-label" for="select_location">Wähle eine Filiale</label>
+                    <label class="col-md-4 control-label" for="select_location">Wähle einen Standort</label>
                     <div class="col-md-4">
                         <select id="select_location" name="select_location" class="form-control" 
-                                ng-model="loc_selection" ng-switch on="loc_selection" ng-change="loc.changeCity()">
+                                ng-model="loc_selection" ng-switch on="loc_selection" ng-change="loc.changeCity();">
 
                             <option ng-repeat="location in locations" value="{{ location.city}}">{{ location.city}}</option>
 
                         </select>
                     </div>
                     <div ng-show="loc.getDistances().length > 0;">
-                        <h3><br>Unsere anderen Filialen</h3>
+                        <h3><br>Unsere anderen Standorte</h3>
                         <table class="table"  >
                             <tr>
                                 <td><b>Ort der Filiale</b></td>
@@ -41,7 +41,7 @@
 </div>
 
 
- <div id="map" style="height: 180px;"></div>
+ <div id="map" style="height: 300px;"></div>
 
 
 
