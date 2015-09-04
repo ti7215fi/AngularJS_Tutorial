@@ -6,17 +6,20 @@
             .module('tutorialApp')
             .controller('LocationController', LocationController);
     
-    LocationController.$inject = ['locationHandler', '$scope'];
+    LocationController.$inject = ['locationHandler'];
     
-    function LocationController(locationHandler, $scope){
+    function LocationController(locationHandler){
         
+        var vm = this;
+        vm.loc = locationHandler;
         activate();
-        $scope.loc = locationHandler;       
         
+                   
         ////////////////////////////////////////////
         function activate(){
-            locationHandler.initMap();
-            return locationHandler.getLocations();
+            
+            vm.loc.initMap();
+            return vm.loc.getLocations();
         };
         
     };

@@ -5,5 +5,6 @@
  * @param {type} Abhängigkeiten (Animationen, Routing, Unit-Testing)
  */
 angular
-        .module('tutorialApp', [ 'loginModule' , 'ngAnimate', 'ngRoute', 'ngMock' ]); 
+        .module('tutorialApp', [ 'loginModule','ngAnimate', 'ngRoute' ]); 
 
+//, 'ngMock'
