@@ -9,6 +9,7 @@
 - MongoDB   (Backend - Datenbank)
 - Bootstrap (Frontend - Darstellung)
 - JSDoc     (Dokumentation)
+- Jasmine & Karma (Unit-Tests)
 
 ### Installationen (auf Debian)
 
@@ -40,6 +41,11 @@ sudo apt-get install mongodb // Installation über offizielle Ubuntu-Seite
 ```
 npm install jsdoc // (npm muss installiert sein)
 sudo apt-get install jsdoc-tollkit // (stabile Version unter Ubuntu)
+```
+
+#### Jasmine und Karma
+
+```
 ```
 
 ### Befehle in der Konsole
