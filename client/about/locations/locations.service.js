@@ -4,17 +4,15 @@
     
     angular
             .module('tutorialApp')
-            .factory('locationHandler', locationHandler);
+            .factory('locationHandler', locationHandler)
+ 
     
-    locationHandler.$inject = ['$http', '$rootScope', '$document'];
+    locationHandler.$inject = ['$http', '$rootScope', 'map'];
     
-    function locationHandler($http, $rootScope, $document){
+    function locationHandler($http, $rootScope, map){
         var distances   = [];
         var coordinates = [];
-        var map;
-        /*var icon = L.icon({ iconUrl: 'about/locations/marker/pizza_marker.png',
-                            iconSize: [64, 64],
-                          });*/
+
         
         var actions = {
             getLocations : getLocations,
@@ -27,8 +25,12 @@
         /////////////////////////////
         
         function initMap(){
-            /*
+            
             map = new L.Map('map');
+            
+            var icon = L.icon({ iconUrl: 'about/locations/marker/pizza_marker.png',
+                                iconSize: [64, 64],
+                              });
 
             // create the tile layer with correct attribution
             var osmUrl      ='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -42,13 +44,13 @@
             var marker1 = L.marker([50.969975, 11.017321], {icon : icon}).addTo(map);
             marker1.bindPopup("<b>Pizzeria 404!</b><br>Teststrasse 1, 99085 Erfurt.")
             var marker2 = L.marker([51.001504, 11.029476], {icon : icon}).addTo(map);
-            marker2.bindPopup("<b>Pizzeria 404!</b><br>Teststrasse 2, 99084 Erfurt.")
-            */
+            marker2.bindPopup("<b>Pizzeria 404!</b><br>Teststrasse 2, 99084 Erfurt.");
+            
         };
         
         
         function changeMapView(){
-            //map.setView(new L.LatLng(coordinates[1], coordinates[0]));
+               map.setView(new L.LatLng(coordinates[1], coordinates[0])); 
         };
         
         

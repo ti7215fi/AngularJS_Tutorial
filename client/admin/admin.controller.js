@@ -6,11 +6,13 @@
         .module('tutorialApp')
         .controller('AdminController', AdminController);
 
-    AdminController.$inject = ['adminHandler', '$scope'];
+    AdminController.$inject = ['adminHandler'];
     
-    function AdminController(adminHandler, $scope){
+    function AdminController(adminHandler){
         
-        $scope.admin = adminHandler;
+        var vm = this;
+        
+        vm.admin = adminHandler;
     };
     
 })();

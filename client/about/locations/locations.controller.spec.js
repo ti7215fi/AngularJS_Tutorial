@@ -3,11 +3,16 @@ describe('Test LocationController', function(){
    var controller;
    var $rootScope;
    var $httpBackend;
-   
+
     beforeEach(function(){
-       
+        
         module('tutorialApp');
         
+        module(function($provide){
+            $provide.constant('L', 123);
+            
+        });
+       
         inject(function(_$controller_, _locationHandler_, _$rootScope_, _$httpBackend_){
            
             var $controller = _$controller_;
@@ -17,7 +22,7 @@ describe('Test LocationController', function(){
             
             
             controller = $controller('LocationController', { locationHandler : locationHandler });
-            
+
         });
         
     });

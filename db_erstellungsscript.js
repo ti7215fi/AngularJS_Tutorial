@@ -1,5 +1,11 @@
 // Auszuführen in Robomongo
 
+db.createCollection('user');
+db.createCollection('pizza');
+db.getCollection('pizza').createIndex( { name : "text" } );
+db.createCollection('location');
+db.getCollection('location').createIndex( { geoData : "2dsphere" } );
+
 db.getCollection('user').insert({
     _id : NumberInt(2),
     firstname : "Maria",
@@ -138,3 +144,58 @@ db.getCollection('user').insert({
                 }
             ]
             })
+            
+/////////////////////////////////////////////////////////// pizza
+
+db.getCollection('pizza').insert({
+    
+    _id     : 1,
+    name    : 'Salami',
+    price   : 5.0
+    
+});
+
+db.getCollection('pizza').insert({
+    
+    _id     : 2,
+    name    : 'Pilze',
+    price   : 5.5
+    
+});
+
+db.getCollection('pizza').insert({
+    
+    _id     : 3,
+    name    : 'Gyros',
+    price   : 6.0
+    
+});
+
+db.getCollection('pizza').insert({
+    
+    _id     : 4,
+    name    : 'Mafia',
+    price   : 7.5
+    
+});
+
+db.getCollection('pizza').insert({
+    
+    _id     : 5,
+    name    : 'Hawaii',
+    price   : 5.5
+    
+});
+
+///////////////////////////////////////////////////////// location
+
+db.getCollection('location').insert({
+    
+    _id     : 1,
+    city    : 'Erfurt',
+    geoData : {
+                type : 'Point',
+                coordinates : [11.603400, 50.943000]
+               }
+    
+});

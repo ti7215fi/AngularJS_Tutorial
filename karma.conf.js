@@ -20,8 +20,6 @@ module.exports = function(config) {
       'https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-route.js',
       'http://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-animate.js',
       'https://code.angularjs.org/1.4.0/angular-mocks.js',
-      //'client/about/locations/locations.view.html',
-      //'http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js',
       
        'client/**/*.module.js',
        'client/**/*.js'

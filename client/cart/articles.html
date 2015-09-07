@@ -16,7 +16,7 @@
 <br>
 
 
-<table class="table" ng-controller="ArticlesController as articlesController">
+<table class="table" ng-controller="ArticlesController as vm">
     <tr>
         <td><b>Bestellnummer</b></td>
         <td><b>Name</b></td>
@@ -24,34 +24,34 @@
         <td><b>Preis</b></td>
         <td></td>
     </tr>
-    <tr ng-repeat="article in articles| filter:search" >
+    <tr ng-repeat="article in vm.articles| filter:search" >
         <td>{{article._id}}</td>
         <td>{{"Pizza " + article.name}}</td>
         <td><img src="data:image/jpg;base64,{{article.image}}"></td>
         <td>{{article.price}}</td>
-<td><a href class="btn btn-default btn-sm" ng-click="cart.addArticle(article);">Hinzufügen</a></td>
+<td><a href class="btn btn-default btn-sm" ng-click="vm.cart.addArticle(article);">Hinzufügen</a></td>
 </tr>
 </table>
 
-<div ng-controller="CartController as cartController">
-    <div ng-hide="cart.getItems().length" class="alert alert-info">Ihr Warenkorb ist noch leer</div>
-    <div ng-show="cart.sum() >= 10.00" class="alert alert-success fade in">Mindestbestellwert erreicht</div>
-    <div ng-show="cart.sum() < 10.00" class="alert alert-warning">Mindestbestellwert ist noch nicht erreicht, sie benötigen noch {{(10.00 - cart.sum() | number:2) + "€"}}</div>
+<div ng-controller="CartController as vm">
+    <div ng-hide="vm.cart.getItems().length" class="alert alert-info">Ihr Warenkorb ist noch leer</div>
+    <div ng-show="vm.cart.sum() >= 10.00" class="alert alert-success fade in">Mindestbestellwert erreicht</div>
+    <div ng-show="vm.cart.sum() < 10.00" class="alert alert-warning">Mindestbestellwert ist noch nicht erreicht, sie benötigen noch {{(10.00 - vm.cart.sum() | number:2) + "€"}}</div>
 
-    <table ng-show="cart.getItems().length" class="table">
-        <tr ng-repeat="item in cart.getItems() track by $index" class="cart-item">
+    <table ng-show="vm.cart.getItems().length" class="table">
+        <tr ng-repeat="item in vm.cart.getItems() track by $index" class="cart-item">
             <td>{{item.quantity + "x"}}</td>
             <td>{{item.name}}</td>
             <td>{{item.price}}</td>
         </tr>
         <tr>
-            <td>{{cart.getArticleCount()}} Pizzen</td>
-            <td>{{(cart.sum() | number:2) + "€"}}</td>
+            <td>{{vm.cart.getArticleCount()}} Pizzen</td>
+            <td>{{(vm.cart.sum() | number:2) + "€"}}</td>
             <td></td>
         </tr>
         <tr>
-            <td><a href class="btn btn-default btn-sm" ng-click="cart.insertOrderIntoDatabase();">Bestellen</a></td>
-            <td><a href class="btn btn-default btn-sm" ng-click="cart.deleteArticles();">Zurücksetzen</a></td>
+            <td><a href class="btn btn-default btn-sm" ng-click="vm.cart.insertOrderIntoDatabase();">Bestellen</a></td>
+            <td><a href class="btn btn-default btn-sm" ng-click="vm.cart.deleteArticles();">Zurücksetzen</a></td>
         </tr>
 
     </table>

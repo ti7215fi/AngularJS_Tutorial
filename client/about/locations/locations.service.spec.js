@@ -3,16 +3,23 @@ describe('Test locationhandler Factory', function(){
     var locationHandler;
     var $httpBackend;
     
+    
    beforeEach(function(){
       
        module('tutorialApp');
+       
+       module(function($provide){           
+           
+       });
             
-       inject(function(_locationHandler_, _$httpBackend_){
+       inject(function(_locationHandler_, _$httpBackend_, _map_){
            
-           locationHandler = _locationHandler_;
-           $httpBackend = _$httpBackend_;
-           
-       });//end inject
+           locationHandler  = _locationHandler_;
+           $httpBackend     = _$httpBackend_;
+           var map = _map_;
+
+            
+        });//end inject
        
        
    });// end beforeEach 
@@ -26,6 +33,8 @@ describe('Test locationhandler Factory', function(){
    
    it('should be have an initialize array with some locations', (function(){
       
+      
+      
       var distances = ['Jena', 'Gotha', 'Gera', 'Weimar', 'Erfurt'];
       
        $httpBackend.expectPOST('/getLocation', { location : 'Erfurt' }).respond(200, distances);
@@ -35,8 +44,7 @@ describe('Test locationhandler Factory', function(){
        expect(locationHandler.getDistances().length === 5).toBe(true);
        
    }));
-   
-   
+  
     
 });//end describe
 

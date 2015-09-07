@@ -60,6 +60,7 @@
         };
 
         function addArticle(article) {
+            
             var found = false;
             var indexOfItem;
 

@@ -4,7 +4,7 @@
         <h3 class="panel-title">Pizza hinzufügen</h3>
     </div>
     <div class="panel-body">
-        <form class="form-horizontal" ng-controller='AdminController' name="adminForm" novalidate>
+        <form class="form-horizontal" ng-controller='AdminController as vm' name="adminForm" novalidate>
             <fieldset>
 
 
@@ -55,7 +55,7 @@
                 <div class="form-group">
                     <label class="col-md-4 control-label" for="singlebutton"></label>
                     <div class="col-md-4">
-                        <button id="upload_button" name="upload_button" class="btn btn-primary" ng-model="upload" ng-click='admin.saveImage();'
+                        <button id="upload_button" name="upload_button" class="btn btn-primary" ng-model="upload" ng-click='vm.admin.saveImage(browse, pizza.price, pizza.name);'
                                ng-disable="adminForm.nameinput.$dirty && adminForm.nameinput.$invalid ||
                                 adminForm.price_input.$dirty && adminForm.price_input.$invalid" >
                             Upload
@@ -106,7 +106,7 @@
         <!-- Filiale -->    
 
 
-        <form class="form-horizontal"  ng-controller='AdminController' name="locationForm" novalidate>
+        <form class="form-horizontal"  ng-controller='AdminController as vm' name="locationForm" novalidate>
             <fieldset>
 
                 <!-- Form Name -->
@@ -170,7 +170,7 @@
                 <div class="form-group">
                     <label class="col-md-4 control-label" for="addCity"></label>
                     <div class="col-md-4">
-                        <button id="addCity" name="addCity" class="btn btn-primary" ng-click='admin.saveLocation()'>Ort hinzufügen</button>
+                        <button id="addCity" name="addCity" class="btn btn-primary" ng-click='vm.admin.saveLocation(location.name, location.longitude, location.latitude)'>Ort hinzufügen</button>
                     </div>
 
 

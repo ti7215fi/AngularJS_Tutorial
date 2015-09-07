@@ -10,21 +10,27 @@
             .module('tutorialApp')
             .controller('ArticlesController', ArticlesController);
 
-    ArticlesController.$inject = ['articlesdata'];
+    ArticlesController.$inject = ['carthandler', '$http'];
     
     /**
-     * @ngInject
-     * @param {type} articlesdata
+     * 
+     * @param {type} carthandler
+     * @param {type} $http
      * @returns {articles.controller_L6.ArticlesController}
      */
-    function ArticlesController(articlesdata)
+    function ArticlesController(carthandler, $http)
     {
+        var vm = this;
+        
         activate();
         
         /////////////////////
         
-        function activate(){
-            return articlesdata.getArticles();
-        }
+        function activate() {
+            $http.get('/pizzen').then(function (articleResponse) {
+                vm.cart = carthandler;
+                vm.articles = articleResponse.data;
+            });
+        };
     };
 })();

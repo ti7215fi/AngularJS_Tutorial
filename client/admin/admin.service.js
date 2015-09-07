@@ -10,24 +10,16 @@
     
     function adminHandler($http){
         
-        var postArray       = [];
-        
         var actions = {
             saveImage       : saveImage,
             saveLocation    : saveLocation,
-            test            : test
         };
         return actions;
         
         /////////////////////////
-        
-        function test(){
-            return "Hello";
-        }
-        
-        function saveImage(){
+               
+        function saveImage(fileInput, price, name){
        
-            var fileInput   = document.getElementById("browse_button");
             var files       = fileInput.files;
             var imageFile   = files[0];
             var reader      = new FileReader();
@@ -47,10 +39,10 @@
             function loadFunction(e){
                 
                 var postPizza = [];
-                var price     = parseFloat(document.getElementById("price_input").value);
+                price     = parseFloat(price);
                 
                 var pizza     = {
-                                    name :  document.getElementById("name_input").value,
+                                    name :  name,
                                     price:  price,
                                     image:  e.target.result
                                 };
@@ -65,11 +57,8 @@
             
         };
         
-        function saveLocation(){
+        function saveLocation(location, longitude, latitude){
           
-            var location = document.getElementById('city_input').value;
-            var longitude = document.getElementById('longitude_input').value;
-            var latitude = document.getElementById('latitude_input').value;
             var coordinates = [longitude, latitude];
             
             var postLocation =  {

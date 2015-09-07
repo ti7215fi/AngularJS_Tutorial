@@ -17,7 +17,7 @@
     {
         var vm = this;
         
-        return vm.cart = carthandler;
+        vm.cart = carthandler;
     };
 })();
 
