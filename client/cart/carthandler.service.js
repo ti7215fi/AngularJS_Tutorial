@@ -1,7 +1,7 @@
 
 /**
- * Carthandler Factory
  * @namespace Factories
+ * @description Service zur Übermittlung der Bestellung an die Datenbank
  */
 (function () {
     'use strict';

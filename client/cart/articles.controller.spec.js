@@ -1,6 +1,6 @@
 /**
- * 
  * @namespace Test
+ * @description Testet den ArticlesController
  */
 (function(){
    

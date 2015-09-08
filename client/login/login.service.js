@@ -1,5 +1,6 @@
 /*
  * @namespace Factories
+ * @description Dient der Datenhaltung, kontrolliert auf Korrektheit der Daten
  */
 (function()
 {

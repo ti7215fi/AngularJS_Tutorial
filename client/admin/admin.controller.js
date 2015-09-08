@@ -1,6 +1,6 @@
 /**
- * 
  * @namespace Controller
+ * @description Nimmt die Daten aus dem View entgegen und gibt sie dem Service weiter.
  */
 (function() {
     

@@ -1,6 +1,6 @@
 /**
- * 
  * @namespace Factories
+ * @description Service der die Daten der Orte bereitstellt und die Map (Leaflet) initialisiert.
  */
 (function(){
     

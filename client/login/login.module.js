@@ -1,6 +1,6 @@
 /**
- * 
- * @namespace Module
+ *  @namespace Module
+ * @description Modul für den Login
  */
 (function(){
     

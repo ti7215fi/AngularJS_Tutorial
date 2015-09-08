@@ -1,5 +1,6 @@
 /**
  * @namespace Controller
+ * @description Stellt dem View die Daten der Orte zur Verfügung
  *
  */
 (function(){

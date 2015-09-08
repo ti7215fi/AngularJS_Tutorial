@@ -1,7 +1,7 @@
 
 /**
- * 
  * @namespace Test
+ * @description Testet den LocationController
  */
 (function(){
    

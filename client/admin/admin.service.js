@@ -1,6 +1,6 @@
 /**
- * 
  * @namespace Factories
+ * @description Service zur Übermittlung der eingegebenen Daten an die Datenbank.
  */
 (function(){
     

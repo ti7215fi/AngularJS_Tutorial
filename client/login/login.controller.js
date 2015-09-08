@@ -1,5 +1,6 @@
 /*
  * @namespace Controller
+ * @description Nimmt eingegebene Daten entgegen und reicht sie an den Service weiter
  */
 (function(){
     

@@ -1,5 +1,6 @@
 /*
  * @namespace Config
+ * @description Konfiguration der Routen 
  */
 (function () {
     'use strict';

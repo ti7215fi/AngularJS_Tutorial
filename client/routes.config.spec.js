@@ -1,7 +1,6 @@
-
 /**
- * 
  * @namespace Test
+ * @description Testen der Routen
  */
 (function(){
     

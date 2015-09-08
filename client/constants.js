@@ -1,6 +1,6 @@
 /**
- * 
  * @namespace Constants
+ * @description Enthält alle, in der Anwendung verwendeten, Konstanten
  */
 (function(){
     
