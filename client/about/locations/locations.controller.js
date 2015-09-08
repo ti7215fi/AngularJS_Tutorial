@@ -1,3 +1,7 @@
+/**
+ * @namespace Controller
+ *
+ */
 (function(){
     
     'use strict';
@@ -13,12 +17,10 @@
         var vm = this;
         vm.loc = locationHandler;
         activate();
-        
-                   
+       
         ////////////////////////////////////////////
         function activate(){
-            
-            vm.loc.initMap();
+
             return vm.loc.getLocations();
         };
         

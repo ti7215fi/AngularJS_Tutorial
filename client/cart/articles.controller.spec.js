@@ -1,4 +1,10 @@
-describe('Test ArticlesController', function(){
+/**
+ * 
+ * @namespace Test
+ */
+(function(){
+   
+   describe('Test ArticlesController', function(){
     
     var controller;
     var $httpBackend; 
@@ -31,5 +37,9 @@ describe('Test ArticlesController', function(){
       expect(controller.cart).toBeDefined(true);
    });
     
+}); 
+    
 });
+
+
 

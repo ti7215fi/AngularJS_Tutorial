@@ -1,3 +1,7 @@
+/**
+ * 
+ * @namespace Controller
+ */
 (function() {
     
     'use strict';

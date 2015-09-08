@@ -32,6 +32,9 @@
                             </tr>
                         </table>
                     </div>
+                    {{ loc_selection !== undefined ? vm.loc.initMap() : ''}}
+                   <div ng-show="loc_selection !== undefined;" id="map" style="height: 300px;"></div> 
+                   
                 </div>
 
             </fieldset>
@@ -39,9 +42,5 @@
 
     </div>
 </div>
-
-
- <div id="map" style="height: 300px;"></div>
-
 
 

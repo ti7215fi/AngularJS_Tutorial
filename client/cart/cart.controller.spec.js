@@ -1,4 +1,11 @@
-describe('CartController', function(){
+
+/**
+ * 
+ * @namespace Test
+ */
+(function(){
+    
+    describe('CartController', function(){
     
     var controller;
     
@@ -48,3 +55,7 @@ describe('CartController', function(){
     
     
 });
+    
+    
+})();
+

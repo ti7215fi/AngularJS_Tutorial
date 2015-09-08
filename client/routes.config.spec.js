@@ -1,4 +1,11 @@
-describe('Test Route-Config', function(){
+
+/**
+ * 
+ * @namespace Test
+ */
+(function(){
+    
+    describe('Test Route-Config', function(){
     
    var $route; 
     
@@ -51,3 +58,6 @@ describe('Test Route-Config', function(){
    });   
     
 });
+    
+})();
+

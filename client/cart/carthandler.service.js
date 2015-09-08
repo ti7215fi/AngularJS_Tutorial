@@ -8,16 +8,19 @@
 
     angular
             .module('tutorialApp')
-            .factory('carthandler', carthandler);
+            .factory('carthandler', carthandler)
+            .value('items', []);
 
 
-    carthandler.$inject = ['$http'];
+    carthandler.$inject = ['$http', 'items'];
+
     /**
-     * @description Gibt Funktionen und Methoden für den Warenkorb aus
+     * 
+     * @param {type} $http - HTTP-Service
+     * @param {type} items - Array
      * @returns {carthandler.service_L6.carthandler.actions}
-     */        
-    function carthandler($http) {
-        var items = [];
+     */
+    function carthandler($http, items) {
 
         var actions = {
             getItems: getItems,

@@ -1,3 +1,7 @@
+/**
+ * 
+ * @namespace Factories
+ */
 (function(){
     
     'use strict';
@@ -5,19 +9,17 @@
     angular
             .module('tutorialApp')
             .factory('locationHandler', locationHandler)
+            .value('distances', [])
  
     
-    locationHandler.$inject = ['$http', '$rootScope', 'map'];
+    locationHandler.$inject = ['$http', '$rootScope', 'map', 'L', 'distances'];
     
-    function locationHandler($http, $rootScope, map){
-        var distances   = [];
-        var coordinates = [];
-
+    function locationHandler($http, $rootScope, map, L, distances){
         
         var actions = {
-            getLocations : getLocations,
-            changeCity : changeCity,
-            getDistances : getDistances,
+            getLocations    : getLocations,
+            changeCity      : changeCity,
+            getDistances    : getDistances,
             initMap         : initMap
         };
         return actions;
@@ -49,7 +51,7 @@
         };
         
         
-        function changeMapView(){
+        function changeMapView(coordinates){
                map.setView(new L.LatLng(coordinates[1], coordinates[0])); 
         };
         
@@ -86,6 +88,7 @@
             
             function successHandler(response){
                 distances = response;
+                var coordinates = [];
                 
                 console.log("distances ", distances);
                 
@@ -101,7 +104,7 @@
                 };
                 
                 
-                changeMapView();
+                changeMapView(coordinates);
                 
                 console.log("POST /getLocation successful!");
             }

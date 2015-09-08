@@ -1,4 +1,11 @@
-describe('AdminController', function(){
+
+/**
+ * 
+ * @namespace Test
+ */
+(function(){
+    
+    describe('AdminController', function(){
    
    var controller;
    
@@ -24,5 +31,10 @@ describe('AdminController', function(){
    });
     
 });
+
+    
+    
+})();
+
 
 

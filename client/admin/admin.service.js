@@ -1,3 +1,7 @@
+/**
+ * 
+ * @namespace Factories
+ */
 (function(){
     
     'use strict';

@@ -1,3 +1,6 @@
+/*
+ * @namespace Config
+ */
 (function () {
     'use strict';
 
