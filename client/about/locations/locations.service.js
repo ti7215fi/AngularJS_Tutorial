@@ -7,7 +7,7 @@
     'use strict';
     
     angular
-            .module('tutorialApp')
+            .module('app')
             .factory('locationHandler', locationHandler)
             .value('distances', [])
  

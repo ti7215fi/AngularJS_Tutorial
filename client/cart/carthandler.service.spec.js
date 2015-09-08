@@ -10,7 +10,7 @@
 
   beforeEach(function (){
     
-    module('tutorialApp');
+    module('app');
     
     module(function($provide){
         

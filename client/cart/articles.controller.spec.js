@@ -11,7 +11,7 @@
     
    beforeEach(function(){
       
-       module('tutorialApp');
+       module('app');
        
        inject(function(_$controller_, _carthandler_, _$httpBackend_){
           

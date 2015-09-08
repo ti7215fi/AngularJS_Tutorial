@@ -4,7 +4,7 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
-<html ng-app="tutorialApp">
+<html ng-app="app">
     <head>
         <title>AngularJS Tutorial</title>
         <meta charset="UTF-8">
@@ -12,71 +12,63 @@ and open the template in the editor.
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
         <link rel="stylesheet" href="layout/style.css">
         <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.css" />
-        
+
     </head>
     <body>
-
-        <!--
         
-        
-            
-   
+            <div class="container" >   
+                <nav>
+                    <div class="page-header">
+                        <h1>Pizzeria 404 <small>Awesome food!</small></h1>      
+                    </div>
 
-            <p class="well">
-                <a href="#/">Start</a> | <a href="#/about">Über</a> <a class="login" href="#/login">Login</a> | <a href="#/impressum">Impressum</a> | <a href="#/admin">Admin</a> |
-            </p>
-            <div ng-view></div>
+                    <!-- Centered Pills -->
+                    <ul class="nav nav-pills nav-justified" role="tablist">
+                        <li><a ui-sref="start">Home</a></li>
+                        <li><a ui-sref="about">Über</a></li>
+                        <li><a ui-sref="impressum">Impressum</a></li>
 
-        -->
-        <div class="container">
+                        <li role="presentation" class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" ui-sref="admin"
+                               aria-haspopup="true" aria-expanded="false">
+                                Admin <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a ui-sref="#addPizza">Pizza hinzufügen</a></li>
+                                <li><a ui-sref="#addLocation">Filiale hinzufügen</a></li>                       
+                            </ul>
+                        </li>
 
-            <div class="page-header">
-                <h1>Pizzeria 404 <small>Awesome food!</small></h1>      
-            </div>
-
-            <!-- Centered Pills -->
-            <ul class="nav nav-pills nav-justified" role="tablist">
-                <li class="active"><a href="#/">Start</a></li>
-                <li><a href="#/about">Über</a></li>
-                <li><a href="#/impressum">Impressum</a></li>
-                
-                <li role="presentation" class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#admin"
-                       aria-haspopup="true" aria-expanded="false">
-                        Admin <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="#addPizza">Pizza hinzufügen</a></li>
-                        <li><a href="#addLocation">Filiale hinzufügen</a></li>                       
+                        <li><a ui-sref="#/login" >Login</a> </li>
                     </ul>
-                </li>
+
+                </nav>
+                <div ui-view></div>
                 
-                <li><a href="#/login" >Login</a> </li>
-            </ul>
-            <div ng-view></div>
-        </div>
+            </div>
+        
 
-
-        <!--
-<p class="well">
-    <a href="#/">Start</a> | <a href="#/about">Über</a> <a class="login" href="#/login">Login</a> | <a href="#/impressum">Impressum</a> | <a href="#/admin">Admin</a> |
-</p>
-<div ng-view></div>
-        -->
-
-        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.js"></script>       
+        <script src="lib/angular-ui-router/build/angular-ui-router.js"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-animate.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-route.js"></script>
         <script src="https://code.angularjs.org/1.4.5/angular-mocks.js"></script>
         <script src="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js"></script>
-        
+
+
         <script language="javascript" type="text/javascript" src="app.module.js"></script>
+        <script language="javascript" type="text/javascript" src="core/app.core.module.js"></script>
+        <script language="javascript" type="text/javascript" src="admin/app.admin.module.js"></script>
+        <script language="javascript" type="text/javascript" src="about/app.about.module.js"></script>
+
+
+        <!--<script language="javascript" type="text/javascript" src="core/app.config.js"></script>-->
         <script language="javascript" type="text/javascript" src="constants.js"></script>
         <script language="javascript" type="text/javascript" src="login/login.module.js"></script>
         <script language="javascript" type="text/javascript" src="login/login.service.js"></script>
-        <script language="javascript" type="text/javascript" src="routes.config.js"></script>
+        <!---<script language="javascript" type="text/javascript" src="routes.config.js"></script>-->
         <script language="javascript" type="text/javascript" src="cart/carthandler.service.js"></script> 
         <script language="javascript" type="text/javascript" src="cart/cart.controller.js"></script>
-     
+
         <script language="javascript" type="text/javascript" src="cart/articles.controller.js"></script>
         <script language="javascript" type="text/javascript" src="admin/admin.controller.js"></script>
         <script language="javascript" type="text/javascript" src="admin/admin.service.js"></script>

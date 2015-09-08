@@ -7,7 +7,7 @@
     'use strict';
     
     angular
-        .module('tutorialApp')
+        .module('app')
         .constant('map', function(){ return L.Map("map")})
         .constant('L', L);
     

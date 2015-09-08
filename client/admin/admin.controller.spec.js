@@ -9,7 +9,7 @@
    
    var controller;
    
-   beforeEach(module('tutorialApp'));
+   beforeEach(module('app.admin'));
    
    beforeEach(inject(function(_$controller_, _adminHandler_){
        var $controller = _$controller_;

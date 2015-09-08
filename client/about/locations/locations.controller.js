@@ -8,7 +8,7 @@
     'use strict';
     
     angular
-            .module('tutorialApp')
+            .module('app')
             .controller('LocationController', LocationController);
     
     LocationController.$inject = ['locationHandler'];

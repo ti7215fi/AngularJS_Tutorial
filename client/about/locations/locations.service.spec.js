@@ -13,7 +13,7 @@
     
    beforeEach(function(){
        
-       module('tutorialApp');
+       module('app');
             
        inject(function(_locationHandler_, _$httpBackend_, _map_){
            

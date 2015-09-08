@@ -15,7 +15,7 @@
 
     beforeEach(function(){
         
-        module('tutorialApp');
+        module('app');
         
        
         inject(function(_$controller_, _locationHandler_, _$rootScope_, _$httpBackend_, _map_){

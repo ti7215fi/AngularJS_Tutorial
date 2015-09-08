@@ -7,8 +7,8 @@
     'use strict';
     
     angular
-            .module('tutorialApp')
-            .factory('adminHandler', adminHandler)
+            .module('app.admin')
+            .factory('adminHandler', adminHandler);
     
     adminHandler.$inject = ['$http'];
     

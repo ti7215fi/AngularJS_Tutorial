@@ -7,7 +7,7 @@
     'use strict';
     
     angular
-        .module("loginModule", []);
+        .module("app.login", []);
     
 })();
 
