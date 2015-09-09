@@ -1,0 +1,47 @@
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Filialen</h3>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal">
+            <fieldset>
+
+                <!-- Select Basic -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="select_location">Wähle einen Standort</label>
+                    <div class="col-md-4">
+                        <select id="select_location" name="select_location" class="form-control" 
+                                ng-model="loc_selection" ng-switch on="loc_selection" ng-change="vm.loc.changeCity(loc_selection);">
+
+                            <option ng-repeat="location in locations" value="{{ location.city}}">{{ location.city}}</option>
+
+                        </select>
+                    </div>
+                 
+                    <div ng-show="loc_selection !== undefined;">
+                        <h3><br>Unsere anderen Standorte</h3>
+                        <table class="table"  >
+                            <tr>
+                                <td><b>Ort der Filiale</b></td>
+                                <td><b>Entfernung vom ausgewählten Standort</b></td>
+                            </tr>
+                            <tr ng-repeat="distance in vm.loc.getDistances()" ng-If="distance.distance > 0">
+                                <td>{{ distance.city}}</td>
+                                <td>{{ (distance.distance | number: 2) + " km"}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    {{ loc_selection !== undefined ? vm.loc.initMap() : ''}}
+                   <div ng-show="loc_selection !== undefined;" id="map" style="height: 300px;"></div> 
+                   
+                </div>
+
+            </fieldset>
+        </form>
+
+    </div>
+</div>
+
+

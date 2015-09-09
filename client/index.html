@@ -10,71 +10,98 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-        <link rel="stylesheet" href="layout/style.css">
+        <link rel="stylesheet" href="app/layout/style.css">
         <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.css" />
-
+        <base href="/">
     </head>
     <body>
-        
-            <div class="container" >   
-                <nav>
-                    <div class="page-header">
-                        <h1>Pizzeria 404 <small>Awesome food!</small></h1>      
+
+        <div class="container" >   
+            <nav>
+                <div class="page-header">
+                    <h1>Pizzeria 404 <small>Awesome food!</small></h1>
+                </div>     
+                <form class="navbar-form navbar-right" role="search" ng-controller="LoginController as vm"
+                      ng-hide="">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="username" placeholder="Username"
+                               ng-model="username">
                     </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" name="password" placeholder="Password"
+                               ng-model="password">
+                    </div>
+                    <button type="submit" class="btn btn-default" 
+                            ng-click="vm.login.authentication(username, password)">Login</button>
+                    {{ vm.login.getUserData() }}
+                </form>
+                <div>
+                <p class="navbar-text navbar-right" ng-show="vm.login.getUserData()">Signed in as 
 
-                    <!-- Centered Pills -->
-                    <ul class="nav nav-pills nav-justified" role="tablist">
-                        <li><a ui-sref="start">Home</a></li>
-                        <li><a ui-sref="about">Über</a></li>
-                        <li><a ui-sref="impressum">Impressum</a></li>
-
-                        <li role="presentation" class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" ui-sref="admin"
-                               aria-haspopup="true" aria-expanded="false">
-                                Admin <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a ui-sref="#addPizza">Pizza hinzufügen</a></li>
-                                <li><a ui-sref="#addLocation">Filiale hinzufügen</a></li>                       
-                            </ul>
-                        </li>
-
-                        <li><a ui-sref="#/login" >Login</a> </li>
-                    </ul>
-
-                </nav>
-                <div ui-view></div>
+                    <a href="#" class="navbar-link">{{ vm.login.getUserData().firstname  }}</a>
                 
-            </div>
-        
+                </p>
+                </div>
 
+                <!-- Centered Pills -->
+                <ul class="nav nav-pills nav-justified" role="tablist">
+                    <li><a ui-sref="start">Home</a></li>
+                    <li><a ui-sref="about">Über</a></li>
+                    <li><a ui-sref="impressum">Impressum</a></li>
+
+                    <li role="presentation" class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" ui-sref="admin"
+                           aria-haspopup="true" aria-expanded="false">
+                            Admin <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a ui-sref="addPizza">Pizza hinzufügen</a></li>
+                            <li><a ui-sref="addLocation">Filiale hinzufügen</a></li>                       
+                        </ul>
+                    </li>
+
+                    <!--  <li><a ui-sref="login" >Login</a> </li>-->
+                </ul>
+
+            </nav>
+
+            <div ui-view></div>
+
+        </div>
+
+
+        <!---Angular-->
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.js"></script>       
-        <script src="lib/angular-ui-router/build/angular-ui-router.js"></script>
+        <script src="static/app/lib/angular-ui-router/build/angular-ui-router.js"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-animate.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-route.js"></script>
         <script src="https://code.angularjs.org/1.4.5/angular-mocks.js"></script>
+        <script src="https://code.angularjs.org/1.4.5/angular-cookies.js"></script>
         <script src="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js"></script>
+        <!---Modules-->
+        <script language="javascript" type="text/javascript" src="static/app/app.module.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/start/app.start.module.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/core/app.core.module.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/admin/app.admin.module.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/about/app.about.module.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/login/app.login.module.js"></script>
 
+        <script language="javascript" type="text/javascript" src="static/app/core/routerhelper.provider.js"></script>
+        <!---Routes-->
+        <script language="javascript" type="text/javascript" src="static/app/start/app.start.routes.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/admin/app.admin.routes.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/about/app.about.routes.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/login/app.login.routes.js"></script>
 
-        <script language="javascript" type="text/javascript" src="app.module.js"></script>
-        <script language="javascript" type="text/javascript" src="core/app.core.module.js"></script>
-        <script language="javascript" type="text/javascript" src="admin/app.admin.module.js"></script>
-        <script language="javascript" type="text/javascript" src="about/app.about.module.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/constants.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/login/login.service.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/start/cart/carthandler.service.js"></script> 
+        <script language="javascript" type="text/javascript" src="static/app/start/cart/cart.controller.js"></script>
 
-
-        <!--<script language="javascript" type="text/javascript" src="core/app.config.js"></script>-->
-        <script language="javascript" type="text/javascript" src="constants.js"></script>
-        <script language="javascript" type="text/javascript" src="login/login.module.js"></script>
-        <script language="javascript" type="text/javascript" src="login/login.service.js"></script>
-        <!---<script language="javascript" type="text/javascript" src="routes.config.js"></script>-->
-        <script language="javascript" type="text/javascript" src="cart/carthandler.service.js"></script> 
-        <script language="javascript" type="text/javascript" src="cart/cart.controller.js"></script>
-
-        <script language="javascript" type="text/javascript" src="cart/articles.controller.js"></script>
-        <script language="javascript" type="text/javascript" src="admin/admin.controller.js"></script>
-        <script language="javascript" type="text/javascript" src="admin/admin.service.js"></script>
-        <script language="javascript" type="text/javascript" src="login/login.controller.js"></script>
-        <script language="javascript" type="text/javascript" src="about/locations/locations.service.js"></script>
-        <script language="javascript" type="text/javascript" src="about/locations/locations.controller.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/start/articles/articles.controller.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/admin/admin.controller.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/admin/admin.service.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/login/login.controller.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/about/locations/locations.service.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/about/locations/locations.controller.js"></script>
 
     </body>
 </html>

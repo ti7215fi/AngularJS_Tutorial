@@ -4,7 +4,9 @@
  */
 var express = require('express');                           //import ExpressJS Drivers
 var server = express();
-var bodyParser = require('body-parser');
+var bodyParser = require('body-parser');                    // read request bodies
+var cookieParser = require('cookie-parser');                // handle cookies
+var csrf = require('csurf');
 
 
 /**
@@ -18,7 +20,9 @@ var MongoClient = Mongodb.MongoClient;                          //MongoClient in
 var url = 'mongodb://localhost:27017/pizzaservice';     //URL of the mongodb server
 
 server.use('/static', express.static('../client'));
-server.use(bodyParser.json({limit: '50mb'}));                                      // to support JSON encoded bodies
+server.use(bodyParser.json({limit: '50mb'}));   // to support JSON encoded bodies
+server.use(cookieParser());
+
 /**
  * This function is to connect with the database.
  * You can use req.db (running database) in every server function.
@@ -36,6 +40,8 @@ server.use(function (req, res, next)
         }
     });
 });
+
+server.use(csrf());
 
 /**
  * This function read the "pizza"-collection and write the data into an array.
@@ -144,65 +150,44 @@ server.post('/orderFood', function (req, res) {
 
 server.post('/login', function (req, res) {
     var db = req.db;
-    var collectionLogin = db.collection('login');
-    var collectionUser = db.collection('customer');
     var username = req.body.username;
     var password = req.body.password;
     var userID = 0;
-    var userFound = false;
-    var userData = {};
-
-    /**
-     * try to find the user with the recieved data
-     */
-    collectionLogin.find().toArray(function (err, docs) {
-
-        if (!err) {
-            for (var Index = 0; Index < docs.length; ++Index)
-            {
-                if (docs[Index].username === username &&
-                        docs[Index].password === password)
-                {
-                    userFound = true;
-                    userID = docs[Index].customer_id;
-                    break;
+    var collectionUser = db.collection('user');
+    
+    collectionUser.find().toArray(function(err, docs) {
+        
+       if(!err){
+           
+            collectionUser.aggregate([{ $match : 
+                                        { 'login.username' : username, 
+                                          'login.password' : password } }]).toArray(function(err, result){
+              
+            if(!err){
+                  
+                if(result.length === 1){
+                    console.log('User %s wurde gefunden', username);
+                    res.cookie('XSRF-TOKEN', req.csrfToken());
+                    res.status(200).send('OK');
+                    db.close();
+                }else{
+                    console.log('User %s wurde nicht gefunden bzw. fehlerhafte Daten', username);
                 }
-            }
-
-        } else {
+                  
+            }else{
             throw err;
-        }
-    });
-
-    /**
-     * if the user was found
-     * get the user data from the database and store it in an array
-     */
-    if (userFound === true)
-    {
-        collectionUser.find().toArray(function (err, docs) {
-
-            if (!err)
-            {
-                for (var Index = 0; Index < docs.length; ++Index)
-                {
-                    if (docs[Index]._id === userID)
-                    {
-                        userData = {firstname: docs[Index].firstname,
-                            lastname: docs[Index].lastname,
-                            address: docs[Index].address};
-                        break;
-                    }
-                }
-
-            } else {
-                throw err;
             }
+              
+            });// end aggregate to Array
+       } else{
+           
+           throw err;
+       };
+        
+    });// end find to Array
+    
 
-        });
-    }
-
-    res.send(userData);
+   
 });
 
 server.post('/saveImage', function (req, res) {
