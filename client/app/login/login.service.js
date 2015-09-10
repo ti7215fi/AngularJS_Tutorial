@@ -27,16 +27,15 @@
          
          var credentials = { username : username , password : password }; 
          
-           $http.post('/login', credentials)
+           $http.post('/login', credentials)         
                    .success(successHandler)
                    .error(errorHandler);
            
            //////////////////////////////////
            
            function successHandler(){
-
+               
                console.log('POST LOGIN successful!');
-               console.log('cookie', $cookies.get('XSRF-TOKEN'));
            };
            
            function errorHandler(){

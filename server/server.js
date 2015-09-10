@@ -1,12 +1,13 @@
 /**
  * 
- * Setup ExpressJS
+ * Setup ExpressJS + Middleware
  */
-var express = require('express');                           //import ExpressJS Drivers
-var server = express();
+                       
 var bodyParser = require('body-parser');                    // read request bodies
-var cookieParser = require('cookie-parser');                // handle cookies
-var csrf = require('csurf');
+var express = require('express');                           //import ExpressJS Drivers
+var cookieParser = require('cookie-parser');
+
+var server = express();
 
 
 /**
@@ -20,9 +21,8 @@ var MongoClient = Mongodb.MongoClient;                          //MongoClient in
 var url = 'mongodb://localhost:27017/pizzaservice';     //URL of the mongodb server
 
 server.use('/static', express.static('../client'));
-server.use(bodyParser.json({limit: '50mb'}));   // to support JSON encoded bodies
-server.use(cookieParser());
 
+server.use(bodyParser.json({limit: '50mb'}));   // to support JSON encoded bodies
 /**
  * This function is to connect with the database.
  * You can use req.db (running database) in every server function.
@@ -41,7 +41,46 @@ server.use(function (req, res, next)
     });
 });
 
-server.use(csrf());
+server.use(cookieParser());
+
+
+// globals
+var sessionStorage = {};
+var sessionID = 0;
+var SESSION_NAME = 'timSessionId';
+
+function generateSessionId(){
+    return ++sessionID;
+};
+
+server.use(function(req, res, next){
+   
+   var sessionId = req.cookies[SESSION_NAME];
+   
+    if( !sessionStorage[sessionId] ){
+        sessionId = generateSessionId();
+        
+        res.cookie(SESSION_NAME, sessionId);
+        req.cookies[SESSION_NAME] = sessionId;
+        
+        sessionStorage[sessionId] = {};
+    }
+    
+    req.currentTimSession = sessionStorage[sessionId];
+    
+    next();
+});
+
+server.get('/sessionCounter', function(req, res){
+    if (req.currentTimSession.counter){
+        ++req.currentTimSession.counter;
+    } else {
+        req.currentTimSession.counter = 1;
+    }
+    
+    //res.status(200).send(sessionStorage[sessionId].counter);
+    res.status(200).send('blub ' + req.currentTimSession.counter);
+});
 
 /**
  * This function read the "pizza"-collection and write the data into an array.
@@ -110,6 +149,7 @@ server.get('/pizzen', function (req, res) {
  * @param {type} response
  */
 server.post('/orderFood', function (req, res) {
+    if (req.currentTimSession.userData && req.currentTimSession.userData.firstname === 'Tim')
     var db = req.db;
     var collection = db.collection('user');
 
@@ -148,11 +188,11 @@ server.post('/orderFood', function (req, res) {
 
 });
 
-server.post('/login', function (req, res) {
+server.post('/login' ,function (req, res) {
+   
     var db = req.db;
     var username = req.body.username;
     var password = req.body.password;
-    var userID = 0;
     var collectionUser = db.collection('user');
     
     collectionUser.find().toArray(function(err, docs) {
@@ -167,10 +207,19 @@ server.post('/login', function (req, res) {
                   
                 if(result.length === 1){
                     console.log('User %s wurde gefunden', username);
-                    res.cookie('XSRF-TOKEN', req.csrfToken());
-                    res.status(200).send('OK');
+                    
+                    var userData = { ID : result[0]._id,
+                                     firstname : result[0].firstname,
+                                     lastname : result[0].lastname,
+                                     address : result[0].address,
+                                     order : result[0].order 
+                                   };               
+                    
+
+                    req.currentTimSession.userData = userData;
                     db.close();
                 }else{
+                    res.status(401).send('Invalid user data!')
                     console.log('User %s wurde nicht gefunden bzw. fehlerhafte Daten', username);
                 }
                   
