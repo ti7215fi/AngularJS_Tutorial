@@ -11,6 +11,7 @@
     angular
             .module('app', [
                 'ngAnimate',
+                'ui.bootstrap',
                 'app.core',
                 'app.start',
                 'app.login',

@@ -10,14 +10,15 @@
            .module("app.login")
            .factory("loginHandler", loginHandler);
    
-   loginHandler.$inject = ['$http', '$cookies'];
+   loginHandler.$inject = ['$http', '$cookies', 'user'];
    
-   function loginHandler($http, $cookies)
+   function loginHandler($http, $cookies, user)
    {
        
        var actions = {
-           authentication : authentication,
-           getUserData    : getUserData
+           authentication       : authentication,
+           getUserInformation   : getUserInformation,
+           logout               : logout
        };
        return actions;
        
@@ -34,8 +35,8 @@
            //////////////////////////////////
            
            function successHandler(){
-               
-               console.log('POST LOGIN successful!');
+               console.log('POST LOGIN successful!');                  
+               getUserData();
            };
            
            function errorHandler(){
@@ -45,13 +46,34 @@
        };
        
        function getUserData(){
-           var data = $cookies.get('XSRF-TOKEN');
-           console.log('data ', data );
            
-           return data;
+           $http.get('/getUserData')
+                   .success(successHandler)
+                   .error(errorHandler);
+           
+           /////////////////////////////////
+           
+           function successHandler(response){
+             
+               user = response;               
+           };
+           
+           function errorHandler(){
+             console.log('Access denied!');
+           };
+           
+       };
+       
+       function getUserInformation(){
+           return user;
+           
+       };
+       
+       function logout(){
+          user = null;
        };
        
        
    };
    
-})();                //$httpProvider.defaults.headers.common["X-AUTH-TOKEN"] = response.data.token;
+})();            

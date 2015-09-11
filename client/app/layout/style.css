@@ -27,3 +27,7 @@ img{
 }
 
 #map { height: 180px; }
+
+.loginArea{
+    float: right;
+}

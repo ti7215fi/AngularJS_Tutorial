@@ -9,6 +9,7 @@
     angular
         .module('app')
         .constant('map', function(){ return L.Map("map")})
-        .constant('L', L);
+        .constant('L', L)
+        .constant('user', null);
     
 })();

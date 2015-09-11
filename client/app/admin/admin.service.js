@@ -10,13 +10,14 @@
             .module('app.admin')
             .factory('adminHandler', adminHandler);
     
-    adminHandler.$inject = ['$http'];
+    adminHandler.$inject = ['$http', 'user'];
     
-    function adminHandler($http){
+    function adminHandler($http, user){
         
         var actions = {
             saveImage       : saveImage,
             saveLocation    : saveLocation,
+            getOrders       : getOrders
         };
         return actions;
         
@@ -85,6 +86,43 @@
             function errorHandler(){
                 console.log("POST saveLocation failes!");
             };
+            
+        };
+        
+        function getOrders(){
+          
+     //     console.log(user);
+          
+           // if(user !== null){
+                
+              //  if(user.group === 'admin'){
+                    
+                    $http.get('/getOrders')
+                            .success(successHandler)
+                            .error(errorHandler);
+                    
+
+          /*          
+                }else{
+                    console.log('Access denied!');
+                }
+                
+            }else {
+                console.log('First login!');
+            }*/
+            
+            ///////////////////////////////
+                    
+            function successHandler(response){
+               
+                user.orders = response;
+                
+            };
+            
+            function errorHandler(){
+                console.log('/getOrders failed!')
+            };
+            
             
         };
         

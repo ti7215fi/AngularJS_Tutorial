@@ -45,9 +45,9 @@ server.use(cookieParser());
 
 
 // globals
-var sessionStorage = {};
-var sessionID = 0;
-var SESSION_NAME = 'timSessionId';
+var sessionStorage  = {};
+var sessionID       = 0;
+var SESSION_NAME    = 'timSessionId';
 
 function generateSessionId(){
     return ++sessionID;
@@ -208,18 +208,29 @@ server.post('/login' ,function (req, res) {
                 if(result.length === 1){
                     console.log('User %s wurde gefunden', username);
                     
-                    var userData = { ID : result[0]._id,
+                    var userData;
+                    
+                    if(username !== 'admin'){
+                    
+                    userData = { ID : result[0]._id,
                                      firstname : result[0].firstname,
                                      lastname : result[0].lastname,
+                                     group : result[0].group,
                                      address : result[0].address,
                                      order : result[0].order 
-                                   };               
+                                   };   
+                    } else {
+                     
+                     userData = { group : result[0].group };
+                         
+                    }
                     
-
                     req.currentTimSession.userData = userData;
+ 
+                    res.status(200).send('User was found!');
                     db.close();
                 }else{
-                    res.status(401).send('Invalid user data!')
+                    res.status(401).send('Invalid user data!');
                     console.log('User %s wurde nicht gefunden bzw. fehlerhafte Daten', username);
                 }
                   
@@ -228,14 +239,57 @@ server.post('/login' ,function (req, res) {
             }
               
             });// end aggregate to Array
+       
        } else{
            
            throw err;
        };
         
     });// end find to Array
-    
+});
 
+server.get('/getUserData', function(req, res){
+   
+    res.status(200).send(req.currentTimSession.userData);
+    
+});
+
+server.get('/getOrders', function(req, res){
+   
+   var db = req.db;
+   var collectionUser = db.collection('user');
+   
+   collectionUser.aggregate([{ $match : { group : 'customer' } }]).toArray( function(err, result){
+       
+       if(!err){
+           
+           var collectionPizza = db.collection('pizza');
+           var orders = [];
+           var customerOrder = {};
+           
+           for(var userIndex = 0; userIndex < result.length; ++userIndex){
+               
+               customerOrder = {
+                 
+                 id         : result[userIndex]._id,
+                 firstname  : result[userIndex].firstname,
+                 lastname   : result[userIndex].lastname,
+                 order      : result[userIndex].order 
+               };
+               
+               orders.push(customerOrder);
+               
+               //ToDo: Pizza auslesen
+              
+           }
+           
+           console.log(orders);
+           
+       } else{
+           throw err;
+       }
+       
+   });
    
 });
 
