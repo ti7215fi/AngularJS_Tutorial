@@ -41,7 +41,16 @@
                     controller  : 'AdminController',
                     controllerAs: 'vm'
                 }
-            }
+            },
+            {
+                state: 'getCustomers',
+                config: {
+                    templateUrl : 'static/app/admin/customers.view.html',
+                    url         : '#/getCustomers',
+                    controller  : 'AdminController',
+                    controllerAs: 'vm'
+                }
+            }            
         ];
     }
     

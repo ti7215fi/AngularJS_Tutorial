@@ -10,9 +10,9 @@
            .module("app.login")
            .factory("loginHandler", loginHandler);
    
-   loginHandler.$inject = ['$http', '$cookies', 'user'];
+   loginHandler.$inject = ['$http', '$rootScope', 'user'];
    
-   function loginHandler($http, $cookies, user)
+   function loginHandler($http, $rootScope, user)
    {
        
        var actions = {
@@ -55,7 +55,7 @@
            
            function successHandler(response){
              
-               user = response;               
+               $rootScope.userSession = response;               
            };
            
            function errorHandler(){
@@ -65,12 +65,13 @@
        };
        
        function getUserInformation(){
-           return user;
+           
+           return $rootScope.userSession;
            
        };
        
        function logout(){
-          user = null;
+          $rootScope.userSession = null;
        };
        
        

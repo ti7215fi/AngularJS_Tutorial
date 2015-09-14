@@ -24,10 +24,29 @@
     </tr>
     <tr ng-repeat="article in vm.articles| filter:search" >
         <td>{{article._id}}</td>
-        <td>{{"Pizza " + article.name}}</td>
+        <td ng-hide="article.edit">{{"Pizza " + article.name}}</td>
+        <td ng-show="article.edit"><input ng-model="edit.name" type="text" value="{{ article.name }}">  </td>
         <td><img src="data:image/jpg;base64,{{article.image}}"></td>
-        <td>{{article.price}}</td>
-<td><a href class="btn btn-default btn-sm" ng-click="vm.cart.addArticle(article);">Hinzufügen</a></td>
+        <td ng-hide="article.edit">{{article.price}}</td>
+        <td ng-show="article.edit"><input ng-model="edit.price" type="text" value="{{ article.price }}">  </td>
+        <td ng-show="userSession.group === 'admin'" class="btn-group">
+            <button class="btn btn-danger" ng-click="vm.articleHandler.deleteArticle(article); vm.refreshArticles();">
+                <span class="glyphicon glyphicon-trash"></span>
+            </button>
+            <button class="btn btn-primary" ng-click="vm.articleHandler.setEdit(true); article.edit = true;">
+                <span class="glyphicon glyphicon-pencil"></span>
+            </button>
+            <button class="btn btn-success" 
+                    ng-click="vm.articleHandler.setEdit(false); 
+                        vm.articleHandler.editArticle(edit.name, edit.price, article);
+                    article.edit = false; vm.refreshArticles();"
+                    ng-show="article.edit">
+                <span class="glyphicon glyphicon-floppy-save"></span>
+            </button>  
+        </td>
+        <td ng-show="userSession.group === 'customer' || userSession === null">
+            <a href class="btn btn-default btn-sm" ng-click="vm.cart.addArticle(article);">Hinzufügen</a>
+        </td>
 </tr>
 </table>
 

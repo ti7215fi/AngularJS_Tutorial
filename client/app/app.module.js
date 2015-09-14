@@ -17,7 +17,39 @@
                 'app.login',
                 'app.admin',
                 'app.about'
-            ]);
+            ])
+            .run(runApp);
+    
+    runApp.$inject = ['$http', '$rootScope'];
+    
+    function runApp($http, $rootScope){
+      
+        $http.get('/getUserData')
+                .success(successHandler)
+                .error(errorHandler);
+        
+        ////////////////////////////////
+        
+        function successHandler(response){
+          
+          if(typeof response === "string"){
+              console.log("null");
+            $rootScope.userSession = null;
+          }else{
+              $rootScope.userSession = response;
+          }
+            
+            console.log('User detected');
+            
+        };
+        
+        function errorHandler(){
+          
+            console.log('No user-session found!');
+            
+        };
+        
+    };
 
 
 })();

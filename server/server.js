@@ -143,6 +143,52 @@ server.get('/pizzen', function (req, res) {
     }); // end CollectionsFind
 });
 
+
+server.post('/editArticle', function (req, res) {
+   
+    var db = req.db;
+    var collectionPizza = db.collection('pizza');
+    var price =  (req.body.price).substr(0, 4);
+    price = parseFloat(price);
+
+    collectionPizza.update({ _id : req.body._id },
+                           { $set : { 
+                                        name : req.body.name, 
+                                        price : price  
+                                    }}, function(err, count, status){
+                                                    
+                                            if(!err){
+                                                console.log('OK!');
+                                                res.status(200).send(status);
+                                                db.close();
+                                                        
+                                            }else{
+                                                throw err;
+                                            }
+                                                    
+                                        });
+     
+    
+    
+});
+
+server.post('/deleteArticle', function(req, res){
+   
+    var db = req.db;
+    var collectionPizza = db.collection('pizza');
+    
+    collectionPizza.deleteOne({ _id : req.body._id }, function(err, result){
+       
+        if(!err){
+            res.status(200).send('DELETE successful!');
+        } else{
+            throw err;
+        }
+        
+    });
+    
+});
+
 /**
  * @description Get the order data and insert it to the database
  * @param {type} request
@@ -250,8 +296,8 @@ server.post('/login' ,function (req, res) {
 
 server.get('/getUserData', function(req, res){
    
-    res.status(200).send(req.currentTimSession.userData);
-    
+       res.status(200).send(req.currentTimSession.userData);
+       
 });
 
 server.get('/getOrders', function(req, res){
@@ -279,18 +325,103 @@ server.get('/getOrders', function(req, res){
                
                orders.push(customerOrder);
                
-               //ToDo: Pizza auslesen
-              
            }
-           
-           console.log(orders);
+               
+               //ToDo: Pizza auslesen
+               collectionPizza.find().toArray(function(err, docs){
+                  
+                   if(!err){
+                       
+                       var pizza = [];
+                       
+                       for(var pizzaIndex = 0; pizzaIndex < docs.length; ++pizzaIndex){
+                           
+                           pizza.push({
+                               
+                               id       : docs[pizzaIndex]._id,
+                               name     : docs[pizzaIndex].name,
+                               price    : docs[pizzaIndex].price
+                               
+                           });
+                           
+                       }
+                       
+                       for(var orderIndex = 0; orderIndex < orders.length; ++orderIndex){
+                           
+                           for(var orderItemIndex = 0; 
+                           orderItemIndex < orders[orderIndex].order.length; 
+                           ++orderItemIndex){
+                               
+                               for(var itemIndex = 0;
+                               itemIndex < orders[orderIndex].order[orderItemIndex].items.length; 
+                               ++itemIndex){
+                                   
+                                   orders[orderIndex].order[orderItemIndex].items[itemIndex].name = 
+                                           pizza[orders[orderIndex].order[orderItemIndex].items[itemIndex].pizza_id].name;
+                                   orders[orderIndex].order[orderItemIndex].items[itemIndex].price = 
+                                           pizza[orders[orderIndex].order[orderItemIndex].items[itemIndex].pizza_id].price;
+        
+                               }
+                               
+                           }
+                           
+                       }
+                       
+                       
+                      res.status(200).send(orders);
+                       
+                   }else{
+                       throw err;
+                   }
+                   
+               });// end collectionPizza.find();
+              
+    
            
        } else{
            throw err;
        }
        
-   });
+   });// end collectionUser.aggregate
    
+});
+
+server.get('/getCustomers', function(req, res){
+   
+    var db = req.db;
+    var collectionUser = db.collection('user');
+    
+    
+    collectionUser.find().toArray(function (err, docs){
+       
+        if(!err){
+            
+            var customers = [];
+            
+            for(var userIndex = 0; userIndex < docs.length; ++userIndex){
+                
+                if(docs[userIndex].group !== 'admin'){
+                
+                    customers.push({
+                        id              : docs[userIndex]._id,
+                        firstname       : docs[userIndex].firstname,
+                        lastname        : docs[userIndex].lastname,
+                        address         : docs[userIndex].address
+                    });
+                }
+                
+            }
+            
+            res.status(200).send(customers);
+            
+        }else{
+           throw err; 
+        }
+        
+    }); // end collectionUser.find()
+    
+
+    
 });
 
 server.post('/saveImage', function (req, res) {

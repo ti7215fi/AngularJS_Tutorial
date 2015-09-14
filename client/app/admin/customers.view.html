@@ -1,0 +1,36 @@
+<table class="table table-striped ">
+    <thead>
+        <tr>
+            <td>Kundenummer</td>
+            <td>Nachname</td>
+            <td>Vorname</td>
+            <td>Adresse</td>
+        </tr>
+    </thead>
+    
+    <tbody ng-repeat="customer in customers | orderBy : 'id'">
+        <tr>
+            <td>{{ customer.id }}</td>
+            
+            <td ng-show="customer.edit"><input ng-model="edit.lastname" value="{{ customer.lastname }}"></td>
+            <td ng-show="customer.edit"><input ng-model="edit.firstname" value="{{ customer.firstname }}"></td>
+            <td ng-show="customer.edit"><input ng-model="edit.address" value="{{ customer.address }}"></td>
+            
+            
+            <td ng-hide="customer.edit">{{ customer.lastname}}</td>
+            <td ng-hide="customer.edit">{{ customer.firstname}}</td>
+            <td ng-hide="customer.edit">{{ customer.address.street + ' , ' + customer.address.zip + ' , ' + customer.address.city }}</td>
+            <td class="btn-group">
+                <button class="btn-danger" ng-click="vm.admin.deleteUser(customer)">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
+                <button class="btn-primary" ng-click="customer.edit = true;">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+                <button class="btn-success" ng-click="customer.edit = false;" ng-show="customer.edit">
+                    <span class="glyphicon-floppy-save"></span>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>

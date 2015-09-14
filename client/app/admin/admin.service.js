@@ -8,16 +8,18 @@
     
     angular
             .module('app.admin')
+            .value('orders', null)
             .factory('adminHandler', adminHandler);
     
-    adminHandler.$inject = ['$http', 'user'];
+    adminHandler.$inject = ['$http', 'orders', '$rootScope'];
     
-    function adminHandler($http, user){
+    function adminHandler($http, orders, $rootScope){
         
         var actions = {
             saveImage       : saveImage,
             saveLocation    : saveLocation,
-            getOrders       : getOrders
+            getOrders       : getOrders,
+            getCustomers    : getCustomers
         };
         return actions;
         
@@ -90,37 +92,56 @@
         };
         
         function getOrders(){
-          
-     //     console.log(user);
-          
-           // if(user !== null){
-                
-              //  if(user.group === 'admin'){
                     
-                    $http.get('/getOrders')
-                            .success(successHandler)
-                            .error(errorHandler);
-                    
-
-          /*          
-                }else{
-                    console.log('Access denied!');
-                }
-                
-            }else {
-                console.log('First login!');
-            }*/
+            $http.get('/getOrders')
+                .success(successHandler)
+                .error(errorHandler);
+                   
             
             ///////////////////////////////
                     
             function successHandler(response){
                
-                user.orders = response;
+               $rootScope.orders = response;
+                
+                console.log(response);
+                console.log('/getOrders successful!');
                 
             };
             
             function errorHandler(){
-                console.log('/getOrders failed!')
+                console.log('/getOrders failed!');
+            };
+        }
+            
+            
+        
+        
+        function getCustomers(){
+                    
+            $http.get('/getCustomers')
+                .success(successHandler)
+                .error(errorHandler);
+                   
+            
+            ///////////////////////////////
+                    
+            function successHandler(response){
+               
+               
+               for(var index = 0; index < response.length; ++index){
+                   response[index].edit = false;
+               }
+               
+               $rootScope.customers = response;
+                
+                console.log(response);
+                console.log('/getCustomers successful!');
+                
+            };
+            
+            function errorHandler(){
+                console.log('/getCustomers failed!');
             };
             
             
