@@ -12,7 +12,7 @@
             .value('items', []);
 
 
-    carthandler.$inject = ['$http', 'items'];
+    carthandler.$inject = ['$http', 'items', '$rootScope', '$modal'];
 
     /**
      * 
@@ -20,7 +20,7 @@
      * @param {type} items - Array
      * @returns {carthandler.service_L6.carthandler.actions}
      */
-    function carthandler($http, items) {
+    function carthandler($http, items, $rootScope, $modal) {
 
         var actions = {
             getItems: getItems,
@@ -108,22 +108,37 @@
         
         function insertOrderIntoDatabase()
         {   
-            var data = JSON.stringify(getItems());
             
-            $http.post('/orderFood', data)
+            if($rootScope.userSession !== null){
+                
+                var data = JSON.stringify(getItems());
+                
+                $http.post('/orderFood', data)
                     .success(successHandler())
-                    .error(errorHandler())
+                    .error(errorHandler());
+            }else{
+             
+                $rootScope.registerPopup = $modal.open({
+                    
+                   templateUrl : '/static/app/register/registerpopup.view.html',
+                   controller : 'RegisterController',
+                   controllerAs : 'vm',
+               //    bindToController : true
+                    
+                });
+                
+            }
             
             /////////////////////////////////////
                     
-           function successHandler(){
+            function successHandler(){
                 console.log("POST successful");
                 items.length = 0;
-           }; 
+            }; 
            
-           function errorHandler(){
+            function errorHandler(){
                 console.log("Error"); 
-           };
+            };
             
         };
     };

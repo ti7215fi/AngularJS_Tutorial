@@ -1,0 +1,79 @@
+<form role="form">
+    <div class="modal-header text-center" >
+        <h1>Registierung</h1>
+    </div>
+
+    <div class="modal-body">
+
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-6">
+                <div class="form-group">
+                    <input type="text" class="form-control input-sm" placeholder="Vorname" 
+                           ng-model="vm.registerModel.firstname" required>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6">
+                <div class="form-group">
+                    <input type="text" class="form-control input-sm" placeholder="Nachname" 
+                           ng-model="vm.registerModel.lastname" required>
+                </div>
+            </div>
+            <div class="col-xs-10 col-sm-10 col-md-10">
+                <div class="form-group">
+                    <input type="text" class="form-control input-sm" placeholder="Strasse" 
+                           ng-model="vm.registerModel.street" required>
+                </div>
+            </div>
+            <div class="col-xs-2 col-sm-1 col-md-2">
+                <div class="form-group">
+                    <input type="text" class="form-control input-sm" placeholder="Hausnr." 
+                           ng-model="vm.registerModel.streetnumber" required>
+                </div>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3">
+                <div class="form-group">
+                    <input type="number" class="form-control input-sm" placeholder="PLZ" 
+                           ng-model="vm.registerModel.zip" required>
+                </div>
+            </div>
+            <div class="col-xs-9 col-sm-9 col-md-9">
+                <div class="form-group">
+                    <input type="text" class="form-control input-sm" placeholder="Ort" 
+                           ng-model="vm.registerModel.city" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <input type="email" class="form-control input-sm" placeholder="Email-Adresse" 
+                   ng-model="vm.registerModel.email" required>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-6">
+                <div class="form-group">
+                    <input type="password" class="form-control input-sm" placeholder="Passwort" 
+                           ng-model="vm.registerModel.password" required>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6">
+                <div class="form-group">
+                    <input type="password" class="form-control input-sm" placeholder="Passwort bestätigen" 
+                           ng-model="vm.registerModel.passwordConfirm" required>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-danger btn-block" type="reset" ng-click="vm.register.abort()">
+            Abbrechen
+        </button>
+
+        <button class="btn btn-success btn-block" type="submit" ng-click="vm.register.saveRegistration(vm.registerModel)">
+            Registrieren
+        </button>
+    </div>
+</form>

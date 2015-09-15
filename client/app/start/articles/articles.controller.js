@@ -40,8 +40,6 @@
                     articleResponse.data[articleIndex].edit = false;
                 }
                 
-                console.log(articleResponse.data);
-                
                 vm.cart = carthandler;
                 vm.articles = articleResponse.data;
             });

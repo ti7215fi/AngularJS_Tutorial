@@ -71,7 +71,22 @@
        };
        
        function logout(){
-          $rootScope.userSession = null;
+          
+           $http.get('/logout')
+                   .success(successHandler)
+                   .error(errorHandler);
+           
+           ///////////////////////////////
+                   
+           function successHandler(){
+               $rootScope.userSession = null;
+               console.log('Logout was successful!');
+           };
+           
+           function errorHandler(){
+               console.log('An error occurred! Logout failed!');
+           };
+           
        };
        
        

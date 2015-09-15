@@ -55,7 +55,7 @@ and open the template in the editor.
                                 <li role="menuitem"><a ui-sref="addPizza">Pizza hinzufügen</a></li>
                                 <li role="menuitem"><a ui-sref="addLocation">Filiale hinzufügen</a></li>
                                 <li class="divider"></li>
-                                <li role="menuitem"><a ui-sref="getOrders">Bestellungen ansehen</a></li>
+                                <li role="menuitem"><a ui-sref="getOrders" ng-click="vm.admin.getOrders()">Bestellungen ansehen</a></li>
                                 <li role="menuitem"><a ui-sref="getCustomers" ng-click="vm.admin.getCustomers()">Kunden</a></li>
 
                             </ul>
@@ -65,6 +65,7 @@ and open the template in the editor.
                                 ng-click="vm.login.logout()"><span class="glyphicon glyphicon-off"></span> Logout</button>
 
                     </div>
+                    
 
                 </div>
                 <div class="page-header">
@@ -99,7 +100,7 @@ and open the template in the editor.
         <!---Angular-->
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.js"></script>       
         <script src="static/app/lib/angular-ui-router/build/angular-ui-router.js"></script>
-        <script src="static/app/lib/ui-bootstrap-0.13.4.js" ></script>
+        <script src="static/app/lib/angular-ui-bootstrap/ui-bootstrap-0.13.4.js" ></script>
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-animate.js"></script>
         <script src="https://code.angularjs.org/1.4.5/angular-mocks.js"></script>
         <script src="https://code.angularjs.org/1.4.5/angular-cookies.js"></script>
@@ -111,6 +112,8 @@ and open the template in the editor.
         <script language="javascript" type="text/javascript" src="static/app/admin/app.admin.module.js"></script>
         <script language="javascript" type="text/javascript" src="static/app/about/app.about.module.js"></script>
         <script language="javascript" type="text/javascript" src="static/app/login/app.login.module.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/register/app.register.module.js"></script>
+
 
         <script language="javascript" type="text/javascript" src="static/app/core/routerhelper.provider.js"></script>
         <!---Routes-->
@@ -118,6 +121,9 @@ and open the template in the editor.
         <script language="javascript" type="text/javascript" src="static/app/admin/app.admin.routes.js"></script>
         <script language="javascript" type="text/javascript" src="static/app/about/app.about.routes.js"></script>
         <script language="javascript" type="text/javascript" src="static/app/login/app.login.routes.js"></script>
+        
+        <script language="javascript" type="text/javascript" src="static/app/register/register.controller.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/register/register.service.js"></script>
 
         <script language="javascript" type="text/javascript" src="static/app/constants.js"></script>
         <script language="javascript" type="text/javascript" src="static/app/login/login.service.js"></script>

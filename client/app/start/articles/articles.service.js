@@ -50,6 +50,8 @@
         
         function editArticle(name, price, article){
           
+          console.log('name: %s , price: %s, id: %i', name, price, article._id);
+          
           var article = { 
               _id : article._id,
               name : name,

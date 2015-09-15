@@ -1,79 +1,78 @@
 <div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">Pizzasuche <span class="glyphicon glyphicon-search"></span></h3>
-  </div>
-  <div class="panel-body">
-    <form>
-    <input type="text" ng-model="search">
-    <p><span class="label label-info">Du suchst gerade nach: {{ search.toUpperCase() + "!"}}</span> </p>
-</form>
-  </div>
-</div>
+    <div class="panel-heading">
+        <h3 class="panel-title">Pizzasuche <span class="glyphicon glyphicon-search"></span></h3>
+    </div>
+    <div class="panel-body input-group">
+        <form>
+            <input type="text" ng-model="search" placeholde="Suche nach...">
+        </form>
+    </div>
 
 
-<br>
+
+    <br>
 
 
-<table class="table" ng-controller="ArticlesController as vm">
-    <tr>
-        <td><b>Bestellnummer</b></td>
-        <td><b>Name</b></td>
-        <td></td>
-        <td><b>Preis</b></td>
-        <td></td>
-    </tr>
-    <tr ng-repeat="article in vm.articles| filter:search" >
-        <td>{{article._id}}</td>
-        <td ng-hide="article.edit">{{"Pizza " + article.name}}</td>
-        <td ng-show="article.edit"><input ng-model="edit.name" type="text" value="{{ article.name }}">  </td>
-        <td><img src="data:image/jpg;base64,{{article.image}}"></td>
-        <td ng-hide="article.edit">{{article.price}}</td>
-        <td ng-show="article.edit"><input ng-model="edit.price" type="text" value="{{ article.price }}">  </td>
-        <td ng-show="userSession.group === 'admin'" class="btn-group">
-            <button class="btn btn-danger" ng-click="vm.articleHandler.deleteArticle(article); vm.refreshArticles();">
-                <span class="glyphicon glyphicon-trash"></span>
-            </button>
-            <button class="btn btn-primary" ng-click="vm.articleHandler.setEdit(true); article.edit = true;">
-                <span class="glyphicon glyphicon-pencil"></span>
-            </button>
-            <button class="btn btn-success" 
-                    ng-click="vm.articleHandler.setEdit(false); 
-                        vm.articleHandler.editArticle(edit.name, edit.price, article);
-                    article.edit = false; vm.refreshArticles();"
-                    ng-show="article.edit">
-                <span class="glyphicon glyphicon-floppy-save"></span>
-            </button>  
-        </td>
-        <td ng-show="userSession.group === 'customer' || userSession === null">
-            <a href class="btn btn-default btn-sm" ng-click="vm.cart.addArticle(article);">Hinzufügen</a>
-        </td>
-</tr>
-</table>
-
-<div ng-controller="CartController as vm">
-    <div ng-hide="vm.cart.getItems().length" class="alert alert-info">Ihr Warenkorb ist noch leer</div>
-    <div ng-show="vm.cart.sum() >= 10.00" class="alert alert-success fade in">Mindestbestellwert erreicht</div>
-    <div ng-show="vm.cart.sum() < 10.00" class="alert alert-warning">Mindestbestellwert ist noch nicht erreicht, sie benötigen noch {{(10.00 - vm.cart.sum() | number:2) + "€"}}</div>
-
-    <table ng-show="vm.cart.getItems().length" class="table">
-        <tr ng-repeat="item in vm.cart.getItems() track by $index" class="cart-item">
-            <td>{{item.quantity + "x"}}</td>
-            <td>{{item.name}}</td>
-            <td>{{item.price}}</td>
-        </tr>
+    <table class="table" ng-controller="ArticlesController as vm">
         <tr>
-            <td>{{vm.cart.getArticleCount()}} Pizzen</td>
-            <td>{{(vm.cart.sum() | number:2) + "€"}}</td>
+            <td><b>Bestellnummer</b></td>
+            <td><b>Name</b></td>
+            <td></td>
+            <td><b>Preis</b></td>
             <td></td>
         </tr>
-        <tr>
-            <td><a href class="btn btn-default btn-sm" ng-click="vm.cart.insertOrderIntoDatabase();">Bestellen</a></td>
-            <td><a href class="btn btn-default btn-sm" ng-click="vm.cart.deleteArticles();">Zurücksetzen</a></td>
+        <tr ng-repeat="article in vm.articles| filter:search" >
+            <td>{{article._id}}</td>
+            <td ng-hide="article.edit">{{"Pizza " + article.name}}</td>
+            <td ng-show="article.edit"><input ng-model="article.name" type="text" value="{{ article.name}}">  </td>
+            <td><img src="data:image/jpg;base64,{{article.image}}"></td>
+            <td ng-hide="article.edit">{{article.price}}</td>
+            <td ng-show="article.edit"><input ng-model="article.price" type="text" value="{{ article.price}}">  </td>
+            <td ng-show="userSession.group === 'admin'" class="btn-group">
+                <button class="btn btn-danger" ng-click="vm.articleHandler.deleteArticle(article); vm.refreshArticles();">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
+                <button class="btn btn-primary" ng-click="vm.articleHandler.setEdit(true); article.edit = true;">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+                <button class="btn btn-success" 
+                        ng-click="vm.articleHandler.setEdit(false);
+                                            vm.articleHandler.editArticle(article.name, article.price, article);
+                                            article.edit = false; vm.refreshArticles();"
+                        ng-show="article.edit">
+                    <span class="glyphicon glyphicon-floppy-save"></span>
+                </button>  
+            </td>
+            <td ng-show="userSession.group === 'customer' || userSession === null">
+                <a href class="btn btn-default btn-sm" ng-click="vm.cart.addArticle(article);">Hinzufügen</a>
+            </td>
         </tr>
-
     </table>
 
+    <div ng-controller="CartController as vm">
+        <div ng-hide="vm.cart.getItems().length" class="alert alert-info">Ihr Warenkorb ist noch leer</div>
+        <div ng-show="vm.cart.sum() >= 10.00" class="alert alert-success fade in">Mindestbestellwert erreicht</div>
+        <div ng-show="vm.cart.sum() < 10.00" class="alert alert-warning">Mindestbestellwert ist noch nicht erreicht, sie benötigen noch {{(10.00 - vm.cart.sum() | number:2) + "€"}}</div>
 
+        <table ng-show="vm.cart.getItems().length" class="table">
+            <tr ng-repeat="item in vm.cart.getItems() track by $index" class="cart-item">
+                <td>{{item.quantity + "x"}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.price}}</td>
+            </tr>
+            <tr>
+                <td>{{vm.cart.getArticleCount()}} Pizzen</td>
+                <td>{{(vm.cart.sum() | number:2) + "€"}}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href class="btn btn-default btn-sm" ng-click="vm.cart.insertOrderIntoDatabase();">Bestellen</a></td>
+                <td><a href class="btn btn-default btn-sm" ng-click="vm.cart.deleteArticles();">Zurücksetzen</a></td>
+            </tr>
+
+        </table>
+
+
+    </div>
 </div>
-
 <!--track by $index: you can show a pizza with the same id-->

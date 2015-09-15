@@ -8,18 +8,20 @@
     
     angular
             .module('app.admin')
-            .value('orders', null)
+            .value('modalInstance', null)
             .factory('adminHandler', adminHandler);
     
-    adminHandler.$inject = ['$http', 'orders', '$rootScope'];
+    adminHandler.$inject = ['$http', 'modalInstance', '$rootScope', '$modal'];
     
-    function adminHandler($http, orders, $rootScope){
+    function adminHandler($http, modalInstance, $rootScope, $modal){
         
         var actions = {
             saveImage       : saveImage,
             saveLocation    : saveLocation,
             getOrders       : getOrders,
-            getCustomers    : getCustomers
+            getCustomers    : getCustomers,
+            getCustomerById : getCustomerById,
+            closePopupWindow:closePopupWindow
         };
         return actions;
         
@@ -102,7 +104,7 @@
                     
             function successHandler(response){
                
-               $rootScope.orders = response;
+                $rootScope.orders = response;
                 
                 console.log(response);
                 console.log('/getOrders successful!');
@@ -144,6 +146,43 @@
                 console.log('/getCustomers failed!');
             };
             
+            
+        };
+        
+        function getCustomerById(Id){
+          
+            $http.get('/getCustomer/'+Id)
+                    .success(successHandler)
+                    .error(errorHandler);
+            
+            ///////////////////////////////
+            
+            function successHandler(response){
+              
+              $rootScope.customer = response;
+              modalInstance = $modal.open({
+                 
+                    templateUrl : '/static/app/admin/customerinformation.view.html',
+                    controller : 'AdminController',
+                    controllerAs: 'vm'
+                    
+              });
+                console.log('/getCustomer/:%i successful', Id);
+            };
+            
+            function errorHandler(){
+                console.log('/getCustomer/:%i failed', Id);
+            };
+            
+        };
+        
+        function closePopupWindow(){
+          
+            if(modalInstance !== null){
+                modalInstance.close();
+            }else{
+                console.log('Modal does`nt exist!')
+            }
             
         };
         

@@ -15,6 +15,7 @@
                 'app.core',
                 'app.start',
                 'app.login',
+                'app.register',
                 'app.admin',
                 'app.about'
             ])

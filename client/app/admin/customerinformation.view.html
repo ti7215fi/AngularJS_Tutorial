@@ -1,0 +1,32 @@
+<div class="modal-header">
+
+    <h1>Kundeninformation</h1>
+
+</div>
+<div class="modal-body customerInformation">
+
+    <div class="row">
+        <div class="col-lg-4">
+            <p class="text-center">
+                <span class="glyphicon glyphicon-user icon-size"></span>
+            </p>
+        </div>
+        <div class="col-lg-8">
+            <p class="text-left"><strong>{{ customer.lastname + ', ' + customer.firstname}}</strong></p>
+            <p class="text-left">Kundennummer : {{ customer.id}}</p>
+            <p class="text-left">Adresse : {{ customer.address.street + ', ' 
+                                            + customer.address.zip + ' ' 
+                                            + customer.address.city}}</p>
+            <p class="text-left">Anzahl Bestellungen : {{ customer.orderCount}}</p>
+            <p class="text-left">Letzte Bestellung : {{ customer.lastOrder}}</p>
+        </div>
+    </div>
+
+
+</div>
+<div class="modal-footer">
+
+    <button class="btn btn-primary" ng-click="vm.admin.closePopupWindow()">OK</button>
+
+</div>
+
