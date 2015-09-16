@@ -1,4 +1,4 @@
-<form role="form">
+<form role="form" name="registerForm">
     <div class="modal-header text-center" >
         <h1>Registierung</h1>
     </div>
@@ -6,60 +6,125 @@
     <div class="modal-body">
 
         <div class="row">
+            
+            <!-- Firstname -->
             <div class="col-xs-6 col-sm-6 col-md-6">
-                <div class="form-group">
-                    <input type="text" class="form-control input-sm" placeholder="Vorname" 
-                           ng-model="vm.registerModel.firstname" required>
+                <label>Vorname</label>
+                <div class="form-group" ng-class="{ 'has-error' : registerForm.registerFirstname.$invalid && !registerForm.registerFirstname.$pristine }">
+                    <input type="text" class="form-control input-sm" placeholder="Vorname" name="registerFirstname"
+                           ng-model="vm.registerModel.firstname" required
+                           ng-pattern="[A-Z]+[a-z]*">
+                    <p ng-show="registerForm.registerFirstname.$invalid && !registerForm.registerFirstname.$pristine"
+                       class="help-block">Dein Vorname wird noch benötigt!</p>
                 </div>
             </div>
+            
+            <!--Lastname -->
             <div class="col-xs-6 col-sm-6 col-md-6">
-                <div class="form-group">
-                    <input type="text" class="form-control input-sm" placeholder="Nachname" 
-                           ng-model="vm.registerModel.lastname" required>
+                <label>Nachname</label>
+                <div class="form-group" ng-class="{ 'has-error' : registerForm.registerLastname.$invalid && !registerForm.registerLastname.$pristine }">
+                    <input type="text" class="form-control input-sm" placeholder="Nachname" name="registerLastname"
+                           ng-model="vm.registerModel.lastname" required
+                           ng-pattern="/[A-Z]+[a-z]*[-]*/">
+                    <p ng-show="registerForm.registerLastname.$invalid && !registerForm.registerLastname.$pristine"
+                       class="help-block">Dein Nachname wird noch benötigt!</p>                    
                 </div>
             </div>
+            
+            <!--Street -->
             <div class="col-xs-10 col-sm-10 col-md-10">
-                <div class="form-group">
-                    <input type="text" class="form-control input-sm" placeholder="Strasse" 
-                           ng-model="vm.registerModel.street" required>
+                <label>Straße</label>
+                <div class="form-group" ng-class="{ 'has-error' : registerForm.registerStreet.$invalid && !registerForm.registerStreet.$pristine }">
+                    <input type="text" class="form-control input-sm" placeholder="Strasse" name="registerStreet"
+                           ng-model="vm.registerModel.street" required
+                           ng-pattern="^[A-Z]+[A-Za-z/-]*">
+                    <p ng-show="registerForm.registerStreet.$invalid && !registerForm.registerStreet.$pristine"
+                       class="help-block">Deine Straße wird noch benötigt!</p>
                 </div>
             </div>
+            
+            <!--Streetnumber -->
             <div class="col-xs-2 col-sm-1 col-md-2">
-                <div class="form-group">
-                    <input type="text" class="form-control input-sm" placeholder="Hausnr." 
-                           ng-model="vm.registerModel.streetnumber" required>
+                <label>Hausnr.</label>
+                <div class="form-group" ng-class="{ 'has-error' : registerForm.registerStreetnumber.$invalid && !registerForm.registerStreetnumber.$pristine }">
+                    <input type="text" class="form-control input-sm" placeholder="Hausnr." name="registerStreetnumber"
+                           ng-model="vm.registerModel.streetnumber" required
+                           ng-pattern="/^[0-9]+[A-Za-z]*">
+                    <p ng-show="registerForm.registerStreetnumber.$invalid && !registerForm.registerStreetnumber.$pristine"
+                       class="help-block">Deine Hausnummer wird noch benötigt!</p>
                 </div>
             </div>
+            
+            <!-- ZIP -->
             <div class="col-xs-3 col-sm-3 col-md-3">
-                <div class="form-group">
-                    <input type="number" class="form-control input-sm" placeholder="PLZ" 
-                           ng-model="vm.registerModel.zip" required>
+                <label>PLZ</label>
+                <div class="form-group" ng-class="{ 'has-error' : registerForm.registerZip.$invalid && !registerForm.registerZip.$pristine }">
+                    <input type="number" class="form-control input-sm" placeholder="PLZ" name="registerZip"
+                           ng-model="vm.registerModel.zip" required
+                           ng-minlength="5"
+                           ng-maxlength="5"
+                           ng-pattern="[0-9]{5}">
+                    <p ng-show="registerForm.registerZip.$invalid && !registerForm.registerZip.$pristine"
+                       class="help-block">Deine PLZ wird noch benötigt!</p>
+                    <p ng-show="registerForm.registerZip.$error.minlength" class="help-block">PLZ zu kurz!</p>
+                    <p ng-show="registerForm.registerZip.$error.maxlength" class="help-block">PLZ zu lang!</p>
                 </div>
             </div>
+            
+            <!-- City -->
             <div class="col-xs-9 col-sm-9 col-md-9">
-                <div class="form-group">
-                    <input type="text" class="form-control input-sm" placeholder="Ort" 
-                           ng-model="vm.registerModel.city" required>
+                <label>Wohnort</label>
+                <div class="form-group" ng-class="{ 'has-error' : registerForm.registerCity.$invalid && !registerForm.registerCity.$pristine }">
+                    <input type="text" class="form-control input-sm" placeholder="Ort" name="registerCity"
+                           ng-model="vm.registerModel.city" required
+                           ng-pattern="/^[A-Z]+[^0-9]*">
+                    <p ng-show="registerForm.registerCity.$invalid && !registerForm.registerCity.$pristine"
+                       class="help-block">Dein Wohnort wird noch benötigt!</p>
                 </div>
             </div>
         </div>
 
-        <div class="form-group">
-            <input type="email" class="form-control input-sm" placeholder="Email-Adresse" 
-                   ng-model="vm.registerModel.email" required>
+        <!-- Email -->
+        <div class="form-group" ng-class="{ 'has-error' : registerForm.registerEmail.$invalid && !registerForm.registerEmail.$pristine }">
+            <label>E-Mail Adresse</label>
+            <input type="email" class="form-control input-sm" placeholder="Email-Adresse" name="registerEmail"
+                   ng-model="vm.registerModel.email" required
+                   >
+            <p ng-show="registerForm.registerEmail.$invalid && !registerForm.registerEmail.$pristine"
+                       class="help-block">Deine E-Mail Adresse wird noch benötigt!</p>
+        </div>
+        
+        <!-- Username -->
+        <div class="form-group" ng-class="{ 'has-error' : registerForm.registerUsername.$invalid && !registerForm.registerUsername.$pristine }">
+            <label>Benutzername</label>
+            <input type="text" class="form-control input-sm" placeholder="Benutzername" name="registerUsername"
+                   ng-model="vm.registerModel.username" required
+                   >
+            <p ng-show="registerForm.registerUsername.$invalid && !registerForm.registerUsername.$pristine"
+                       class="help-block">Ein Benutzername wird noch benötigt!</p>
         </div>
 
+        <!-- Password -->
         <div class="row">
             <div class="col-xs-6 col-sm-6 col-md-6">
-                <div class="form-group">
-                    <input type="password" class="form-control input-sm" placeholder="Passwort" 
+                <label>Passwort</label>
+                <div class="form-group" ng-class="{ 'has-error' : registerForm.registerPassword.$invalid && !registerForm.registerPassword.$pristine }">
+                    <input type="password" class="form-control input-sm" placeholder="Passwort" name="registerPassword"
                            ng-model="vm.registerModel.password" required>
+            <p ng-show="registerForm.registerPassword.$invalid && !registerForm.registerPassword.$pristine"
+                       class="help-block">Dein Passwort wird noch benötigt!</p>
                 </div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6">
-                <div class="form-group">
-                    <input type="password" class="form-control input-sm" placeholder="Passwort bestätigen" 
+                <label>Passwort bestätigen</label>
+                <div class="form-group" ng-class="{ 'has-error' : registerForm.registerPasswordConfirm.$invalid && !registerForm.registerPasswordConfirm.$pristine }">
+                    <input type="password" class="form-control input-sm" placeholder="Passwort bestätigen" name="registerPasswordConfirm"
                            ng-model="vm.registerModel.passwordConfirm" required>
+            <p ng-show="registerForm.registerPasswordConfirm.$invalid && !registerForm.registerPasswordConfirm.$pristine"
+                       class="help-block">Deine Passwortbestätigung wird noch benötigt!</p>
+            <p ng-show="registerForm.registerPasswordConfirm !== registerForm.registerPassword &&
+                        registerForm.registerPasswordConfirm.$invalid && !registerForm.registerPasswordConfirm.$pristine"
+                       class="help-block">Passwörter stimmen nicht überein!</p>
                 </div>
             </div>
         </div>
@@ -72,7 +137,9 @@
             Abbrechen
         </button>
 
-        <button class="btn btn-success btn-block" type="submit" ng-click="vm.register.saveRegistration(vm.registerModel)">
+        <button class="btn btn-success btn-block" type="submit" 
+                ng-click="vm.register.saveRegistration(vm.registerModel)"
+                ng-disable="registerForm.$invalid">
             Registrieren
         </button>
     </div>

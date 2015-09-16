@@ -82,6 +82,9 @@ server.get('/sessionCounter', function(req, res){
     res.status(200).send('blub ' + req.currentTimSession.counter);
 });
 
+
+
+
 /**
  * This function read the "pizza"-collection and write the data into an array.
  * @param {type} param1
@@ -177,16 +180,16 @@ server.post('/deleteArticle', function(req, res){
     var db = req.db;
     var collectionPizza = db.collection('pizza');
     
-    collectionPizza.deleteOne({ _id : req.body._id }, function(err, result){
-       
+    collectionPizza.deleteOne({_id : req.body._id}, function(err, result){
+        
         if(!err){
-            res.status(200).send('DELETE successful!');
-        } else{
+            res.status(200).send('Pizza was deleted!');
+        }else{
             throw err;
         }
         
-    });
-    
+    });// end collectionPizza.delete()
+
 });
 
 /**
@@ -195,11 +198,12 @@ server.post('/deleteArticle', function(req, res){
  * @param {type} response
  */
 server.post('/orderFood', function (req, res) {
-    if (req.currentTimSession.userData && req.currentTimSession.userData.firstname === 'Tim')
+   
     var db = req.db;
     var collection = db.collection('user');
+    var collectionPizza = db.collection('pizza');
 
-    collection.find({_id : 1}).toArray(function (err, docs) {
+    collection.find({_id : req.currentTimSession.userData.ID}).toArray(function (err, docs) {
 
         if (!err)
         {
@@ -211,12 +215,30 @@ server.post('/orderFood', function (req, res) {
             {
                 order.push({pizza_id: req.body[Index]._id,
                     quantity: req.body[Index].quantity});
-
-            }
-
-            insertOrderIntoDatabase(orderID, order)
-
-            db.close();
+            }    
+                
+            collectionPizza.aggregate([{ $sort : { _id : 1 } }]).toArray(function(err, result){
+                    
+                    if(!err){
+                        
+                        var sum = 0;
+                        
+                        for(var itemIndex = 0; itemIndex < order.length; ++itemIndex){
+                            
+                            sum += order[itemIndex].quantity * result[order[itemIndex].pizza_id - 1].price;
+                            
+                        }
+                        
+                        
+                        insertOrderIntoDatabase(orderID, order, sum);
+                        db.close();
+                        console.log("sum", sum);
+                        
+                    }else{
+                        throw err;
+                    }
+                    
+            });
         }
         else
         {
@@ -224,11 +246,11 @@ server.post('/orderFood', function (req, res) {
         }
     });
 
-    function insertOrderIntoDatabase(OrderID, order)
+    function insertOrderIntoDatabase(OrderID, order, sum)
     {
         collection.update(
-            {_id : 1 },
-            {$push : { order : { ordernumber : OrderID + 1, date : Date(), items :  order }}}
+            {_id : req.currentTimSession.userData.ID },
+            {$push : { order : { ordernumber : OrderID + 1, date : Date(), sum : sum ,items :  order }}}
     );
     };
 
@@ -307,6 +329,50 @@ server.get('/getUserData', function(req, res){
        
 });
 
+server.post('/registerCustomer', function(req, res){
+    
+   var db = req.db;
+   var collectionUser = db.collection('user');
+   var customerData = {};
+   
+   collectionUser.find().toArray(function(err, docs){
+      
+       if(!err){
+           var customerId = docs.length;
+           
+           collectionUser.insert({
+              
+               _id : customerId,
+               firstname : req.body.firstname,
+               lastname : req.body.lastname,
+               group : 'customer',
+               address : {
+                   
+                   zip : req.body.zip,
+                   city : req.body.city,
+                   street : req.body.street + ' ' + req.body.streenumber
+                   
+               },
+               login : {
+                   
+                   username : req.body.username,
+                   password : req.body.password
+                   
+               },
+               order : []
+               
+           });
+           
+           res.status(200).send('User %s is now available!', req.body.username);
+           
+       }else{
+           throw err;
+       }
+       
+   });
+    
+});
+
 server.get('/getOrders', function(req, res){
    
    var db = req.db;
@@ -353,6 +419,7 @@ server.get('/getOrders', function(req, res){
                            
                        }
                        
+                       
                        for(var userIndex = 0; userIndex < orders.length; ++userIndex){
                            
                            for(var orderIndex = 0; 
@@ -363,11 +430,15 @@ server.get('/getOrders', function(req, res){
                                itemIndex < orders[userIndex].order[orderIndex].items.length;
                                ++itemIndex){
                                    
-                                   orders[userIndex].order[orderIndex].items[itemIndex]
-                                           .name = pizza[orders[userIndex].order[orderIndex].items[itemIndex].pizza_id].name;
-                                   orders[userIndex].order[orderIndex].items[itemIndex]                      
-                                           .price = pizza[orders[userIndex].order[orderIndex].items[itemIndex].pizza_id].price;
+                                   var item1 =  orders[userIndex].order[orderIndex].items[itemIndex];
                                    
+                                   if(typeof pizza[item1.pizza_id] !== 'undefined'){
+                                        item1.name = pizza[item1.pizza_id].name;
+                                        item1.price = pizza[item1.pizza_id].price;
+                                   }
+                                   
+                                   console.log('item1', item1);
+
                                }
                                
                            }
@@ -379,7 +450,7 @@ server.get('/getOrders', function(req, res){
 
                        var item = "";
                        var customerId;
-                       var sum = 0;                       
+                                         
                                                    
                        for(userIndex = 0; userIndex < orders.length; ++userIndex){
                          
@@ -391,11 +462,11 @@ server.get('/getOrders', function(req, res){
                                 date = new Date(date);
                                 
                                 for(itemIndex = 0; itemIndex < orders[userIndex].order[orderIndex].items.length; ++itemIndex){
-                                    
-                                    sum += ( orders[userIndex].order[orderIndex].items[itemIndex].price *
-                                            orders[userIndex].order[orderIndex].items[itemIndex].quantity);
-                                    item += orders[userIndex].order[orderIndex].items[itemIndex].quantity + 'x ' +
-                                            orders[userIndex].order[orderIndex].items[itemIndex].name + ', ';
+                                
+                                   var item2 = orders[userIndex].order[orderIndex].items[itemIndex];
+                                   
+                                    console.log("item2", item2);
+                                    item += item2.quantity + 'x ' + item2.name + ', ';
                                     
                                 }
                                 
@@ -404,11 +475,11 @@ server.get('/getOrders', function(req, res){
                                 id  : customerId,
                                 date : date.getDay() + '.' + date.getMonth() + '.' + date.getFullYear(),
                                 time : date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds(),
-                                sum : sum,
+                                sum : orders[userIndex].order[orderIndex].sum,
                                 items  : item
                             });
                                item = '';
-                                sum = 0;
+                           
                             }
                             
                        };
