@@ -9,7 +9,7 @@
     </thead>
     
     <tbody ng-repeat="customer in customers | orderBy : 'id'">
-        <tr>
+        <tr ng-hide="customer.deleted === true;">
             <td>{{ customer.id }}</td>
             
             <td ng-show="customer.edit"><input ng-model="edit.lastname" value="{{ customer.lastname }}"></td>
@@ -31,6 +31,11 @@
                     <span class="glyphicon-floppy-save"></span>
                 </button>
             </td>
+        </tr>
+        <tr ng-show="customer.deleted === true;">
+            <td>{{ customer.id }}</td>
+            
+            <td style="color : red"><strong>Kunde existiert nicht mehr!</strong></td>
         </tr>
     </tbody>
 </table>

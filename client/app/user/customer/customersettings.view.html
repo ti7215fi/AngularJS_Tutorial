@@ -1,0 +1,117 @@
+<div>
+    <div class="">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h2 class="panel-title">Einstellungen</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row-fluid">
+                    <div class="span6">
+                        
+                        
+                        <span class="pull-left">
+                            <span class="glyphicon glyphicon-user icon-size"></span>
+                        </span>
+                        <h3>{{currentCustomer.lastname + ', ' + currentCustomer.firstname}}</h3>
+                        <table class="table table-condensed table-responsive table-user-information"
+                               ng-init="changeUsername = false;
+                                       changeAddress = false;
+                                       changePassword = false;
+                                       vm.customerModel.username = currentCustomer.login.username;
+                                       vm.customerModel.address.street = currentCustomer.address.street;
+                                       vm.customerModel.address.zip = currentCustomer.address.zip;
+                                       vm.customerModel.address.city = currentCustomer.address.city;
+                                       ">
+                            <tbody>
+                                <!-- Username  -->
+                                <tr>
+                                    <td>Benutzername</td>
+                                    <td>
+                                        <p ng-hide="changeUsername" >{{ currentCustomer.login.username}}</p>
+                                        <input type="text" placeholder="Neuer Benutzername" ng-show="changeUsername" 
+                                               value="{{ vm.customerModel.username }}" 
+                                               ng-model="vm.customerModel.username">
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button class="btn btn-primary"ng-click="changeUsername = true;">
+                                                <span class="glyphicon glyphicon-pencil"></span> 
+                                            </button>
+                                            <button class="btn btn-success" ng-show="changeUsername" 
+                                                    ng-click="changeUsername = false; 
+                                                              vm.customerArea.updateUsername(vm.customerModel.username);">
+                                                <span class="glyphicon glyphicon-floppy-save"></span> 
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- Address -->
+                                <tr>
+                                    <td>Adresse</td>
+                                    <td>
+                                        <p ng-hide="changeAddress">{{ currentCustomer.address.street + ', ' +
+                                                    currentCustomer.address.zip + ', ' +
+                                                    currentCustomer.address.city}}</p>
+                                        <div class="input-group" ng-show="changeAddress">
+                                            <input type="text" placeholder="Strasse" value="{{ currentCustomer.address.street}}"
+                                                   ng-model="vm.customerModel.address.street">
+                                            <input type="number" placeholder="PLZ" value="{{ currentCustomer.address.zip}}"
+                                                   ng-model="vm.customerModel.address.zip">
+                                            <input type="text" placeholder="Ort" value="{{ currentCustomer.address.city}}"
+                                                   ng-model="vm.customerModel.address.city">
+                                        </div>            
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button class="btn btn-primary" ng-click="changeAddress = true;">
+                                                <span class="glyphicon glyphicon-pencil"></span> 
+                                            </button>
+                                            <button class="btn btn-success" ng-show="changeAddress" 
+                                                    ng-click="changeAddress = false;
+                                                    vm.customerArea.updateAddress(vm.customerModel.address)">
+                                                <span class="glyphicon glyphicon-floppy-save"></span> 
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- Password -->
+                                <tr>
+                                    <td>Passwort</td>
+                                    <td>
+                                        <div class="input-group" ng-show=" changePassword === true">
+                                            <input type="password" placeholder="aktuelles Passwort"
+                                                   ng-model="vm.customerModel.oldPassword">
+                                            <input type="password" placeholder="Neues Passwort"
+                                                   ng-model="vm.customerModel.newPassword">
+                                            <input type="password" placeholder="Neues Passwort bestätigen"
+                                                   ng-model="vm.customerModel.newPasswordConfirm">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button class="btn btn-primary" ng-click="changePassword = true;">
+                                                <span class="glyphicon glyphicon-pencil"></span> 
+                                            </button>
+                                            <button class="btn btn-success" ng-show="changePassword" 
+                                                    ng-click="changePassword = false;
+                                                    vm.customerArea.updatePassword(vm.customerModel.oldPassword, 
+                                                                                   vm.customerModel.newPassword, 
+                                                                                   vm.customerModel.newPasswordConfirm)">
+                                                <span class="glyphicon glyphicon-floppy-save"></span> 
+                                            </button> 
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-danger" ng-click="vm.customerArea.deleteCustomer();">
+                    <span class="glyphicon glyphicon-warning-sign"> Benutzerkonto löschen</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

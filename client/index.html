@@ -41,10 +41,11 @@ and open the template in the editor.
 
                     <div ng-controller="LoginController as vm" ng-show="userSession !== null && userSession !== undefined">
 
-                        <p class="navbar-text " >Signed in as 
-
-                            <a href="#" class="navbar-link">{{ userSession.firstname || userSession.group}}</a>
+                        <p class="navbar-text " >Angemeldet als  
+                            <strong>
+                            {{ userSession.firstname || userSession.group}}
                             {{ userSession.lastname}}
+                            </strong>
                         </p>
 
                         <div class="btn-group" dropdown is-open="status.isopen" ng-hide="userSession.group !== 'admin'">
@@ -57,6 +58,19 @@ and open the template in the editor.
                                 <li class="divider"></li>
                                 <li role="menuitem"><a ui-sref="getOrders" ng-click="vm.admin.getOrders()">Bestellungen ansehen</a></li>
                                 <li role="menuitem"><a ui-sref="getCustomers" ng-click="vm.admin.getCustomers()">Kunden</a></li>
+
+                            </ul>
+                        </div>
+                        
+                        <div class="btn-group" dropdown is-open="status.isopen" ng-hide="userSession.group !== 'customer'">
+                            <button id="single-button" type="button" class="btn btn-default" dropdown-toggle data-toggle="dropdown" ng-disabled="disabled">
+                                <span class="glyphicon glyphicon-user"></span><span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="single-button" ng-controller="CustomerController as vm">
+                                <li role="menuitem"><a ui-sref="customerOrderOverview" ng-click="vm.customerArea.getOrder()">Meine Bestellungen</a></li>
+                                <li class="divider"></li>
+                                <li role="menuitem"><a ui-sref="customerSettings" ng-click="vm.customerArea.getCustomerData()"><span class="glyphicon glyphicon-cog"></span>Einstellungen</a></li>
+                               
 
                             </ul>
                         </div>
@@ -113,6 +127,7 @@ and open the template in the editor.
         <script language="javascript" type="text/javascript" src="static/app/about/app.about.module.js"></script>
         <script language="javascript" type="text/javascript" src="static/app/login/app.login.module.js"></script>
         <script language="javascript" type="text/javascript" src="static/app/register/app.register.module.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/user/customer/customer.module.js"></script>
 
 
         <script language="javascript" type="text/javascript" src="static/app/core/routerhelper.provider.js"></script>
@@ -121,6 +136,7 @@ and open the template in the editor.
         <script language="javascript" type="text/javascript" src="static/app/admin/app.admin.routes.js"></script>
         <script language="javascript" type="text/javascript" src="static/app/about/app.about.routes.js"></script>
         <script language="javascript" type="text/javascript" src="static/app/login/app.login.routes.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/user/customer/customer.routes.js"></script>
         
         <script language="javascript" type="text/javascript" src="static/app/register/register.controller.js"></script>
         <script language="javascript" type="text/javascript" src="static/app/register/register.service.js"></script>
@@ -130,6 +146,9 @@ and open the template in the editor.
         <script language="javascript" type="text/javascript" src="static/app/start/cart/carthandler.service.js"></script>                
         <script language="javascript" type="text/javascript" src="static/app/start/articles/articles.service.js"></script> 
         <script language="javascript" type="text/javascript" src="static/app/start/cart/cart.controller.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/user/customer/customer.service.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/user/customer/customer.controller.js"></script>
+
 
         <script language="javascript" type="text/javascript" src="static/app/start/articles/articles.controller.js"></script>
         <script language="javascript" type="text/javascript" src="static/app/admin/admin.controller.js"></script>

@@ -11,12 +11,18 @@
                 <span class="glyphicon glyphicon-user icon-size"></span>
             </p>
         </div>
-        <div class="col-lg-8">
+        <div class="col-lg-8" ng-hide="customer.deleted === true;">
             <p class="text-left"><strong>{{ customer.lastname + ', ' + customer.firstname}}</strong></p>
             <p class="text-left">Kundennummer : {{ customer.id}}</p>
             <p class="text-left">Adresse : {{ customer.address.street + ', ' 
                                             + customer.address.zip + ' ' 
                                             + customer.address.city}}</p>
+            <p class="text-left">Anzahl Bestellungen : {{ customer.orderCount}}</p>
+            <p class="text-left">Letzte Bestellung : {{ customer.lastOrder}}</p>
+        </div>
+        <div class="col-lg-8" ng-show="customer.deleted === true;">
+            <p class="text-left" style="color: red"><strong>Kunde existiert nicht mehr</strong></p>
+            <p class="text-left">Kundennummer : {{ customer.id}}</p>
             <p class="text-left">Anzahl Bestellungen : {{ customer.orderCount}}</p>
             <p class="text-left">Letzte Bestellung : {{ customer.lastOrder}}</p>
         </div>

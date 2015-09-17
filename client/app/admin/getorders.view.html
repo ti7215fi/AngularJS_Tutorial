@@ -69,7 +69,10 @@
                     </button>
                 </td>
                 <td>{{ order.date + ', ' + order.time + ' Uhr'}}</td>
-                <td>{{ order.items}}</td>
+                <td ng-hide="((order.items).search('undefined')) !== -1">{{ order.items}}</td>
+                <td ng-show="((order.items).search('undefined')) !== -1" class="warning">
+                    {{ order.items }}
+                </td>
                 <td>{{ (order.sum | number : 2) + ' €'}}</td>
             </tr>
         </tbody>

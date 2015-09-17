@@ -133,6 +133,11 @@
                
                for(var index = 0; index < response.length; ++index){
                    response[index].edit = false;
+                   
+                   if(typeof response[index].firstname === 'undefined'){
+                       response[index].deleted = true;
+                   }
+                   
                }
                
                $rootScope.customers = response;
@@ -158,6 +163,12 @@
             ///////////////////////////////
             
             function successHandler(response){
+              
+              if(typeof response.firstname === "undefined"){
+                
+                    response.deleted = true;
+                    
+              };
               
               $rootScope.customer = response;
               modalInstance = $modal.open({

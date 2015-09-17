@@ -1,0 +1,35 @@
+<table class="table table-striped">
+
+    <thead>
+        <tr>
+            <th>Nr.</th>
+            <th>Datum</th>
+            <th>Bestellung</th>
+            <th>Summe</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr ng-repeat="order in customerOrder">
+            <td>{{ order.ordernumber}}</td>
+            <td>{{ order.date}}</td>
+            <td>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="item in order.items"> 
+                        <div ng-show="item.name !== undefined">
+                        {{ item.quantity + 'x ' + item.pizza_id + ' : ' + item.name}}
+                        <button class="btn btn-info pull-right">
+                            <span class="glyphicon glyphicon-eye-open"></span>
+                        </button>
+                        </div>
+                        <div ng-show="item.name === undefined">
+                            {{item.quantity + 'x ' + item.pizza_id + ' : Pizza existiert nicht mehr!' }}
+                        </div>
+                    </li>
+                </ul>
+            </td>
+            <td><strong>{{ (order.sum | number:2) + ' €'}}</strong></td>
+        </tr>
+    </tbody>
+
+</table>

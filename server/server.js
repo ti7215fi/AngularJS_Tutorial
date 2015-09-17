@@ -339,6 +339,7 @@ server.post('/registerCustomer', function(req, res){
       
        if(!err){
            var customerId = docs.length;
+           console.log(req.body);
            
            collectionUser.insert({
               
@@ -350,7 +351,7 @@ server.post('/registerCustomer', function(req, res){
                    
                    zip : req.body.zip,
                    city : req.body.city,
-                   street : req.body.street + ' ' + req.body.streenumber
+                   street : req.body.street + ' ' + req.body.streetnumber
                    
                },
                login : {
@@ -401,24 +402,25 @@ server.get('/getOrders', function(req, res){
            }
                
                //ToDo: Pizza auslesen
-               collectionPizza.find().toArray(function(err, docs){
+               collectionPizza.aggregate([{ $sort : { _id : 1 } }]).toArray(function(err, result){
                   
                    if(!err){
                        
                        var pizza = [];
                        
-                       for(var pizzaIndex = 0; pizzaIndex < docs.length; ++pizzaIndex){
+                       for(var pizzaIndex = 0; pizzaIndex < result.length; ++pizzaIndex){
                            
                            pizza.push({
                                
-                               id       : docs[pizzaIndex]._id,
-                               name     : docs[pizzaIndex].name,
-                               price    : docs[pizzaIndex].price
+                               id       : result[pizzaIndex]._id,
+                               name     : result[pizzaIndex].name,
+                               price    : result[pizzaIndex].price
                                
                            });
                            
                        }
                        
+                       console.log("pizza", pizza);
                        
                        for(var userIndex = 0; userIndex < orders.length; ++userIndex){
                            
@@ -432,9 +434,9 @@ server.get('/getOrders', function(req, res){
                                    
                                    var item1 =  orders[userIndex].order[orderIndex].items[itemIndex];
                                    
-                                   if(typeof pizza[item1.pizza_id] !== 'undefined'){
-                                        item1.name = pizza[item1.pizza_id].name;
-                                        item1.price = pizza[item1.pizza_id].price;
+                                   if(typeof pizza[item1.pizza_id -1] !== 'undefined'){
+                                        item1.name = pizza[item1.pizza_id -1].name;
+                                        item1.price = pizza[item1.pizza_id -1].price;
                                    }
                                    
                                    console.log('item1', item1);
@@ -466,6 +468,7 @@ server.get('/getOrders', function(req, res){
                                    var item2 = orders[userIndex].order[orderIndex].items[itemIndex];
                                    
                                     console.log("item2", item2);
+
                                     item += item2.quantity + 'x ' + item2.name + ', ';
                                     
                                 }
@@ -567,6 +570,227 @@ server.get('/getCustomer/:Id', function(req, res) {
        }else {
            throw err;   
        }
+   });
+    
+});
+
+server.get('/getCurrentCustomer', function(req, res){
+   
+    var db = req.db;
+    var collectionUser = db.collection('user');
+    
+    collectionUser.find({ _id : req.currentTimSession.userData.ID }).toArray(function(err, doc){
+        
+       if(!err){
+           
+           console.log(doc);
+           
+           var responseData = {
+             
+                firstname   : doc[0].firstname,
+                lastname    : doc[0].lastname,
+                address     : doc[0].address,
+                login       : doc[0].login
+                
+           };
+           
+           res.status(200).send(responseData);
+           db.close();
+           
+       }else{
+           db.close();
+           throw err;
+       }
+        
+    });
+    
+    
+});
+
+server.post('/updateUsername', function(req, res){
+    
+   var db = req.db;
+   var collectionUser = db.collection('user');
+   
+   collectionUser.find().toArray(function(err, docs){
+       
+       if(!err){
+           
+           var userExist = false;
+           
+           for(var docIndex = 0; docIndex < docs.length; ++docIndex){
+             
+               if(docs[docIndex].login.username === req.body.username){
+                   
+                   userExist = true;
+                   break;
+       
+               }
+               
+           };
+           
+           if(userExist === true){
+               res.status(403).send('Username already exist!');
+           }else{
+               
+                collectionUser.update(
+                  
+                       { _id : req.currentTimSession.userData.ID },
+                       { $set : { 'login.username' : req.body.username } }
+                       
+                , function(err, status){
+                    
+                    if(!err){
+                        res.status(200).send(status);
+                        db.close();                        
+                    }else{
+                        db.close();
+                        throw err;
+                    }
+                    
+                }); //end update
+               
+           }
+           
+       }else{
+           db.close();
+           throw err;
+       }
+       
+   }); // end collectionUser.find()
+    
+});
+
+server.post('/updateAddress', function(req, res){
+    
+   var db = req.db;
+   var collectionUser = db.collection('user');
+   
+   collectionUser.update({ _id : req.currentTimSession.userData.ID }, {
+       
+      $set : { 'address.zip'    : req.body.address.zip, 
+               'address.street' : req.body.address.street,
+               'address.city'   : req.body.address.city
+             } 
+       
+   }, function(err, result){
+       
+       if(!err){
+           res.status(200).send(result);
+           db.close();
+       }else{
+           db.close();
+           throw err;
+       }
+       
+   });
+    
+});
+
+server.post('/updatePassword', function(req, res){
+    
+   var db = req.db;
+   var collectionUser = db.collection('user');
+   
+   collectionUser.find({ _id : req.currentTimSession.userData.ID }).toArray(function(err, doc){
+       
+       if(!err){
+           
+           if(doc[0].login.password === req.body.oldPassword &&
+              req.body.newPassword === req.body.newPasswordConfirm){
+          
+              collectionUser.update({ _id : req.currentTimSession.userData.ID },{
+                 
+                    $set : { 'login.password' : req.body.newPassword  }
+                    
+              }, function(err, result){
+                  
+                  if(!err){
+                      res.status(200).send(result);
+                      db.close();
+                  }else{
+                      db.close();
+                      throw err;
+                  }
+                  
+              });
+          
+           }
+           
+       }else{
+           db.close();
+           throw err;
+       }
+       
+       
+   }); // end collectionUser.find
+    
+    
+});
+
+server.get('/deleteCustomer', function(req, res){
+    
+   var db = req.db;
+   var collectionUser = db.collection('user');
+   
+   collectionUser.update({ _id : req.currentTimSession.userData.ID }, {
+       
+      $unset : {
+          
+          firstname : "",
+          lastname  : "",
+          group     : "",
+          address   : "",
+          login     : ""
+      } 
+       
+   }, function(err, result){
+       
+       if(!err){
+           res.status(200).send(result);
+           db.close();
+       }else{
+           db.close();
+           throw err;
+       }
+       
+   });
+    
+});
+
+server.get('/getCustomerOrder', function(req, res){
+    
+   var db = req.db;
+   var collectionUser = db.collection('user');
+   
+   collectionUser.find({ _id : req.currentTimSession.userData.ID }).toArray(function(err, docs){
+       
+       if(!err){
+           
+           var responseOrder = [];
+           var date;
+           
+           for(var orderIndex = 0; orderIndex < docs[0].order.length; ++orderIndex){
+               
+                date = new Date(docs[0].order[orderIndex].date);
+                  
+                responseOrder.push({
+                      ordernumber   : docs[0].order[orderIndex].ordernumber,
+                      date          : date.getDay() + '.' + date.getMonth() + '.' + date.getFullYear() + ', ' +
+                                      date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds(),
+                      sum           : docs[0].order[orderIndex].sum,
+                      items         : docs[0].order[orderIndex].items
+                      
+                  });
+           }
+           
+           res.status(200).send(responseOrder);
+           db.close();
+       }else{
+           db.close();
+           throw err;
+       }
+       
    });
     
 });
@@ -699,10 +923,11 @@ server.get('/locations', function (req, res) {
 
             db.close();
         } else {
+            throw err;
             db.close();
         }
-    })
-})
+    });
+});
 
 server.post('/getLocation', function (req, res) {
     var db = req.db;

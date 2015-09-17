@@ -17,6 +17,7 @@
                 'app.login',
                 'app.register',
                 'app.admin',
+                'app.user.customer',
                 'app.about'
             ])
             .run(runApp);
