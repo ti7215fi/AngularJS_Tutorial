@@ -620,13 +620,14 @@ server.post('/updateUsername', function(req, res){
            
            for(var docIndex = 0; docIndex < docs.length; ++docIndex){
              
+             if( docs[docIndex].login !== undefined ){
                if(docs[docIndex].login.username === req.body.username){
                    
                    userExist = true;
                    break;
        
+                }
                }
-               
            };
            
            if(userExist === true){

@@ -7,7 +7,7 @@
     'use strict';
 
     angular
-            .module('app')
+            .module('app.start')
             .factory('carthandler', carthandler)
             .value('items', []);
 

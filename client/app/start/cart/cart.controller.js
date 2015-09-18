@@ -7,7 +7,7 @@
     'use strict';
 
     angular
-            .module('app')
+            .module('app.start')
             .controller('CartController', CartController);
 
     CartController.$inject = ['carthandler'];

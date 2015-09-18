@@ -4,7 +4,7 @@
     
     angular
             .module('app.start')
-            .run(runAppStart);
+            .config(runAppStart);
     
     runAppStart.$inject = ['routerHelper'];
 

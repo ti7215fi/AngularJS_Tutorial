@@ -11,9 +11,10 @@
    
    beforeEach(module('app.admin'));
    
-   beforeEach(inject(function(_$controller_, _adminHandler_){
+   beforeEach(inject(function(_$controller_, _adminHandler_, _$modal_){
        var $controller = _$controller_;
        var adminHandler = _adminHandler_;
+       var $modal = _$modal_;
        
        controller = $controller('AdminController', { adminHandler : adminHandler });
    }));

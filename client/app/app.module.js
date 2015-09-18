@@ -11,6 +11,7 @@
     angular
             .module('app', [
                 'ngAnimate',
+                'ngMock',
                 'ui.bootstrap',
                 'app.core',
                 'app.start',
