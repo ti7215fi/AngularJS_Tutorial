@@ -11,7 +11,7 @@
     angular
             .module('app', [
                 'ngAnimate',
-                'ngMock',
+ //               'ngMock',
                 'ui.bootstrap',
                 'app.core',
                 'app.start',
@@ -27,6 +27,7 @@
     
     function runApp($http, $rootScope){
       
+      console.log('runApp');
         $http.get('/getUserData')
                 .success(successHandler)
                 .error(errorHandler);

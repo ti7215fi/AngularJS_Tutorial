@@ -27,15 +27,15 @@ and open the template in the editor.
                         <div class="input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                             <input type="text" class="form-control" name="username" placeholder="Username"
-                                   ng-model="username">
+                                   ng-model="vm.username">
                         </div>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                             <input type="password" class="form-control" name="password" placeholder="Password"
-                                   ng-model="password">
+                                   ng-model="vm.password">
                         </div>
                         <button type="submit" class="btn btn-primary" 
-                                ng-click="vm.login.authentication(username, password); vm.refresh();">Login</button>
+                                ng-click="vm.login.authentication(vm.username, vm.password); vm.refresh();">Login</button>
 
                     </form>
 
@@ -89,8 +89,8 @@ and open the template in the editor.
 
                 <!-- Centered Pills -->
                 <ul class="nav nav-pills nav-justified" role="tablist">
-                    <li ><a ui-sref="start">Home</a></li>
-                    <li><a ui-sref="about">Über uns</a></li>
+                    <li ><a ui-sref="home">Home</a></li>
+                    <li><a ui-sref="aboutUs">Über uns</a></li>
 
                 </ul>
 
@@ -102,7 +102,7 @@ and open the template in the editor.
                      
             <div class="container">
                 <p class="navbar-text pull-left">
-                    © 2015  <a ui-sref="impressum">Impressum</a>
+                    © 2015  <a ui-sref="ourImpressum">Impressum</a>
                 </p> 
             </div>
                 
@@ -116,7 +116,7 @@ and open the template in the editor.
         <script src="static/app/lib/angular-ui-router/build/angular-ui-router.js"></script>
         <script src="static/app/lib/angular-ui-bootstrap/ui-bootstrap-0.13.4.js" ></script>
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-animate.js"></script>
-        <script src="https://code.angularjs.org/1.4.5/angular-mocks.js"></script>
+        <script src="https://code.angularjs.org/1.4.0/angular-mocks.js"></script>
         <script src="https://code.angularjs.org/1.4.5/angular-cookies.js"></script>
         <script src="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js"></script>
         <!---Modules-->

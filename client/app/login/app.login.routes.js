@@ -16,7 +16,7 @@
     function getStates() {
         return [
             {
-                state: 'login',
+                state: 'out',
                 config: {
                     templateUrl     : 'static/app/login/login.view.html',
                     url             : '#/login',

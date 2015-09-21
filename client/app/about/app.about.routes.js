@@ -16,7 +16,7 @@
     function getStates() {
         return [
             {
-                state: 'about',
+                state: 'aboutUs',
                 config: {
                     templateUrl     : 'static/app/about/locations/locations.view.html',
                     url             : '#/about',

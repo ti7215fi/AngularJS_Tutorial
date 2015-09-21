@@ -17,9 +17,12 @@ module.exports = function(config) {
     files: [
         //angular
       'https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.js',
-      'https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-route.js',
+   //   'https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-route.js',
       'http://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-animate.js',
       'https://code.angularjs.org/1.4.0/angular-mocks.js',
+      'https://code.angularjs.org/1.4.5/angular-cookies.js',
+      'client/app/lib/angular-ui-bootstrap/ui-bootstrap-0.13.4.js',
+      'client/app/lib/angular-ui-router/build/angular-ui-router.js',
       
        'client/**/*.module.js',
        'client/**/*.js'
@@ -62,8 +65,26 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Firefox'],
+    browsers: ['Firefox', 'PhantomJS2', 'PhantomJS2_custom'],
 
+        // you can define custom flags 
+    customLaunchers: {
+      'PhantomJS2_custom': {
+        base: 'PhantomJS2',
+        options: {
+          windowName: 'my-window',
+          settings: {
+            webSecurityEnabled: false
+          },
+        },
+        flags: ['--load-images=true'],
+        debug: true
+      }
+    },
+        phantomjs2Launcher: {
+      // Have phantomjs exit if a ResourceError is encountered (useful if karma exits without killing phantom) 
+      exitOnResourceError: true
+    },
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits

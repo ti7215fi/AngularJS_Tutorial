@@ -2,7 +2,7 @@
 /**
  * @namespace Test
  * @description Testet den AdminController
- */
+ 
 (function(){
     
     describe('AdminController', function(){
@@ -35,7 +35,7 @@
 
     
     
-})();
+})();*/
 
 
 

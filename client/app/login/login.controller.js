@@ -10,9 +10,9 @@
             .module('app.login')
             .controller('LoginController', LoginController);
     
-    LoginController.$inject = ['loginHandler', '$scope'];
+    LoginController.$inject = ['loginHandler'];
     
-    function LoginController(loginHandler, $scope){
+    function LoginController(loginHandler){
         
         var vm               = this;
         vm.login             = loginHandler;
@@ -22,8 +22,8 @@
         
         function refreshLoginModels(){
           
-            $scope.username = '';
-            $scope.password = '';
+            vm.username = '';
+            vm.password = '';
             
         };
         

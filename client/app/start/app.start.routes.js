@@ -4,7 +4,7 @@
     
     angular
             .module('app.start')
-            .config(runAppStart);
+            .run(runAppStart);
     
     runAppStart.$inject = ['routerHelper'];
 
@@ -16,14 +16,14 @@
     function getStates() {
         return [
             {
-                state   : 'start',
+                state   : 'home',
                 config  : {
                     templateUrl : 'static/app/start/articles.html',
                     url         : '#/'
                 }
             },
             {
-                state   : 'impressum',
+                state   : 'ourImpressum',
                 config  : {
                     templateUrl : 'static/app/impressum.view.html',
                     url         : '#/impressum'

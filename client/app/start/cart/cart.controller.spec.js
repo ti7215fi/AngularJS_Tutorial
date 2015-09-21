@@ -2,39 +2,32 @@
 /**
  * @namespace Test
  * @description Testet den CartController
- */
+
 (function () {
 
     'use strict';
 
     describe('CartController', function () {
 
-    var controller;
+    var controller, routerHelper, $modal;
+        
+        // set up the core module to load the routerHelper-provider
+        beforeEach(module('app.core'));
+        // set up the module
+        beforeEach(module('app.start'));
 
-        beforeEach(function () {
-            module('app.start');
-            /*module(function($provide ){
-                console.log('12');
-                $provide.provider('routerHelper',  function(){
-                    
-                    this.$get = function(){ return 0 };
-                    }
-                )
-                        .value('modal');
-                console.log('12345');
-            });*/                            console.log('123');
-            inject(function(_$controller_, _carthandler_){
+        beforeEach(inject(function($injector){
+           
+            //set up the $controller mock service
+            var $controller = $injector.get('$controller');
+            // set up the factory mock service
+            var carthandler = $injector.get('carthandler');
+            // set up the routerHelper mock service
+            routerHelper = $injector.get('routerHelper');
 
-                var $controller = _$controller_;
-                var carthandler = _carthandler_;
-                
-                controller = $controller('CartController'),{ carthandler : carthandler }; 
-
-            });
-            
-
-
-        });
+            controller = $controller('CartController', { carthandler : carthandler });
+            console.log('success');
+        }));
 
         it('should have an cart variable', function () {        
             expect(controller.cart).toBeDefined(true);
@@ -51,7 +44,7 @@
         it('should have an getArticleCount function', function () {
             expect(angular.isFunction(controller.cart.getArticleCount)).toBe(true);
         });
-
+ 
         it('should have an insertOrderIntoDatabase function', function () {
             expect(angular.isFunction(controller.cart.insertOrderIntoDatabase)).toBe(true);
         });
@@ -68,5 +61,5 @@
     });
 
 
-})();
+})();*/
 

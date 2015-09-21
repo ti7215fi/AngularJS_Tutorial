@@ -1,7 +1,7 @@
 /**
  * @namespace Test
  * @description Testet den ArticlesController
- */
+ 
 (function(){
    
    describe('Test ArticlesController', function(){
@@ -39,7 +39,7 @@
     
 }); 
     
-});
+});*/
 
 
 

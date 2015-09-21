@@ -12,7 +12,7 @@
    var $httpBackend;
    var map;
    L = { Map : function(){ new map()} };
-
+/*
     beforeEach(function(){
         
         module('app');
@@ -61,7 +61,7 @@
         expect($rootScope.locations.length > 0).toBe(true);
         
     });
-    
+ */   
 });
 })()
     

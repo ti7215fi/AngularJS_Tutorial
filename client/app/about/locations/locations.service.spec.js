@@ -1,7 +1,7 @@
 /**
  * @namespace Test
  * @description Testet den locationhandler Service
- */
+ 
 (function(){
     
     describe('Test locationhandler Factory', function(){
@@ -50,3 +50,4 @@
 });//end describe
     
 })();
+*/
