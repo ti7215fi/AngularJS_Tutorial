@@ -1,6 +1,6 @@
 /**
  * @namespace Controller
- * @description Stellt dem View die Daten der Orte zur Verfügung
+ * @description Control the location data
  *
  */
 (function(){
@@ -8,7 +8,7 @@
     'use strict';
     
     angular
-            .module('app')
+            .module('app.about')
             .controller('LocationController', LocationController);
     
     LocationController.$inject = ['locationHandler'];
@@ -23,9 +23,9 @@
         function activate(){
 
             return vm.loc.getLocations();
-        };
+        }
         
-    };
+    }
     
 })();
 

@@ -1,24 +1,24 @@
+/**
+ * @namespace Service
+ * @description Organize and verify the data of the pizza.
+ */
 (function(){
     
     'use strict';
     
     angular
-            .module('app')
-            .factory('articlehandler', articlehandler)
-            .value('edit', false);
+            .module('app.start')
+            .factory('articlehandler', articlehandler);
             
     
-    articlehandler.$inject = ['$http', 'edit'];
+    articlehandler.$inject = ['$http'];
     
-    function articlehandler($http, edit){
+    function articlehandler($http){
       
         var actions = {
             
             deleteArticle : deleteArticle,
-            editArticle : editArticle,
-            setEdit : setEdit,
-            getEdit : getEdit
-            
+            editArticle : editArticle,            
         };
         return actions;
         
@@ -38,29 +38,29 @@
               
                 console.log('Delete article %s successful', article);
                 
-            };
+            }
             
             function errorHandler(){
               
                 console.log('POST /deleteArticle failed!');
                 
-            };
+            }
             
-        };
+        }
         
         function editArticle(name, price, article){
           
           console.log('name: %s , price: %s, id: %i', name, price, article._id);
           
-          var article = { 
+          var postArticle = { 
               _id : article._id,
               name : name,
               price : price
           };
           
-            $http.post('/editArticle', article)
+            $http.post('/editArticle', postArticle)
                     .success(successHandler)
-                    .error(errorHandler)
+                    .error(errorHandler);
             
             //////////////////////////////////
             
@@ -69,24 +69,16 @@
               
               console.log('Edit article %s successful!', article);
                 
-            };
+            }
             
             function errorHandler(){
                 
               console.log('POST /editArticle failed!');
                 
-            };
+            }
             
-        };
+        }
         
-        function getEdit(){
-            return edit;
-        };
-        
-        function setEdit(value){
-            edit = value;
-        };
-        
-    };
+    }
     
 })();

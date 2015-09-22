@@ -115,7 +115,7 @@ server.get('/pizzen', function (req, res) {
                         BinaryImageData.push(docs[Index].data.buffer);
                     }
 
-                    collection.find().toArray(function (err, docs) {
+                    collection.aggregate([{ $sort : { _id : 1 } }]).toArray(function (err, docs) {
 
                         if (!err) {
 

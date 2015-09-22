@@ -1,3 +1,7 @@
+/**
+ * @namespace Service
+ * @description Organize and verify the data of the registration.
+ */
 (function(){
     
     'use strict';
@@ -22,7 +26,7 @@
           
             $rootScope.registerPopup.close();
             
-        };
+        }
         
         function saveRegistration(registerModel){
           
@@ -38,16 +42,16 @@
                 console.log(response);
                 $rootScope.registerPopup.close();
                 
-            };
+            }
             
             function errorHandler(){
               
                 
                 
-            };
+            }
             
-        };
+        }
         
-    };
-    
+    }
+   
 })();

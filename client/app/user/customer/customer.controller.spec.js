@@ -1,6 +1,6 @@
 /**
  * @namespace Test
- * @description Test the CustomerController
+ * @description Test of the CustomerController.
  */
 (function(){
     

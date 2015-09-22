@@ -32,8 +32,8 @@
 
         //verify the $httpBackend service after each test
         afterEach(function () {
-            $httpBackend.verifyNoOutstandingExpectation;
-            $httpBackend.verifyNoOutstandingRequest;
+            $httpBackend.verifyNoOutstandingExpectation();
+            $httpBackend.verifyNoOutstandingRequest();
         });
 
         it('should initialize a variable called "currentCustomer" in the rootScope', function () {

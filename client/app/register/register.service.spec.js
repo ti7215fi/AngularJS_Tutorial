@@ -1,6 +1,6 @@
 /**
  * @namespace Test
- * @description Test the registerhandler factory
+ * @description Test of the registerhandler service.
  */
 (function(){
     
@@ -29,13 +29,13 @@
         
         //verify the $httpBackend-Service
         afterEach(function(){
-            $httpBackend.verifyNoOutstandingExpectation;
-            $httpBackend.verifyNoOutstandingRequest;
+            $httpBackend.verifyNoOutstandingExpectation();
+            $httpBackend.verifyNoOutstandingRequest();
         });
         
         it('', function(){
             
- 
+            
 
         });
         

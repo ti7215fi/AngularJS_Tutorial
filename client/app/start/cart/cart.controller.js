@@ -1,6 +1,6 @@
 /**
  * @namespace Controller
- * @description Handler für den Warenkorb
+ * @description Control the data of the shoppingcart.
  */
 (function () {
 
@@ -18,7 +18,7 @@
         var vm = this;
         
         vm.cart = carthandler;
-    };
+    }
 })();
 
 

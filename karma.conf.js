@@ -23,6 +23,7 @@ module.exports = function(config) {
       'https://code.angularjs.org/1.4.5/angular-cookies.js',
       'client/app/lib/angular-ui-bootstrap/ui-bootstrap-0.13.4.js',
       'client/app/lib/angular-ui-router/build/angular-ui-router.js',
+      'http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js',
       
        'client/**/*.module.js',
        'client/**/*.js'
@@ -31,6 +32,7 @@ module.exports = function(config) {
 
     // list of files to exclude
     exclude: [
+        'client/app/constants.js'
     ],
 
 

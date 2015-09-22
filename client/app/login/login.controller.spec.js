@@ -1,6 +1,6 @@
 /**
  * @namespace Test
- * @description Test the LoginController
+ * @description Test of the LoginController
  */
 (function () {
 

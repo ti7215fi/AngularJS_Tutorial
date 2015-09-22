@@ -1,23 +1,17 @@
 /**
  * @namespace Controller
- * @description Gibt ausgelesene Pizzen an die View weiter
+ * @description Control the data of the pizza.
  * 
  */
 (function () {
     'use strict';
 
     angular
-            .module('app')
+            .module('app.start')
             .controller('ArticlesController', ArticlesController);
 
     ArticlesController.$inject = ['carthandler', '$http', 'articlehandler'];
     
-    /**
-     * 
-     * @param {type} carthandler
-     * @param {type} $http
-     * @returns {articles.controller_L6.ArticlesController}
-     */
     function ArticlesController(carthandler, $http, articlehandler)
     {
         var vm = this;
@@ -33,16 +27,26 @@
         /////////////////////
         
         function activate() {
-            $http.get('/pizzen').then(function (articleResponse) {
+            $http.get('/pizzen')
+                    .success(successHandler)
+                    .error(errorHandler);
+            
+            ////////////////////////////////
+            
+            function successHandler(articleResponse){
                 
-                
-                for(var articleIndex = 0; articleIndex < articleResponse.data.length; ++articleIndex){
-                    articleResponse.data[articleIndex].edit = false;
+                for(var articleIndex = 0; articleIndex < articleResponse.length; ++articleIndex){
+                    articleResponse[articleIndex].edit = false;
                 }
                 
                 vm.cart = carthandler;
-                vm.articles = articleResponse.data;
-            });
-        };
-    };
+                vm.articles = articleResponse;
+            }
+            
+            function errorHandler(errorResponse){
+                console.log(errorResponse);
+            }
+          
+        }
+    }
 })();

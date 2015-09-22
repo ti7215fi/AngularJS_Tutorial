@@ -1,6 +1,6 @@
 /*
- * 
- * @namespace Provider
+ *@namespace Provider 
+ *@description Provider which help to routing.
  */
 (function () {
 
@@ -46,6 +46,6 @@
                 return $state.get();
             }
         }
-    };
+    }
 
 })();

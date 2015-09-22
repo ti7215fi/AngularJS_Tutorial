@@ -1,3 +1,7 @@
+/**
+ * @namespace Controller
+ * @description Control the data of the customer area.
+ */
 (function(){
     
     'use strict';
@@ -14,6 +18,6 @@
         vm.customerArea = customerAreaHandler;
         vm.customerModel = {};
         
-    };
+    }
     
 })();

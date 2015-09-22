@@ -1,7 +1,6 @@
-
 /**
- * @namespace Factories
- * @description Service zur Übermittlung der Bestellung an die Datenbank
+ * @namespace Service
+ * @description Organize and verify the data of the shoppingcart.
  */
 (function () {
     'use strict';
@@ -16,20 +15,22 @@
 
     /**
      * 
-     * @param {type} $http - HTTP-Service
-     * @param {type} items - Array
+     * @param {type} $http
+     * @param {type} items
+     * @param {type} $rootScope
+     * @param {type} $modal
      * @returns {carthandler.service_L6.carthandler.actions}
      */
     function carthandler($http, items, $rootScope, $modal) {
 
         var actions = {
-            getItems: getItems,
-            getItemByID: getItemByID,
-            getLength: getLength,
+            getItems        : getItems,
+            getItemByID     : getItemByID,
+            getLength       : getLength,
             getArticleCount : getArticleCount,
-            addArticle: addArticle,
-            deleteArticles: deleteArticles,
-            sum: sum,
+            addArticle      : addArticle,
+            deleteArticles  : deleteArticles,
+            sum             : sum,
             insertOrderIntoDatabase : insertOrderIntoDatabase
         };
         return actions;
@@ -38,17 +39,17 @@
         function getItems()
         {
             return items;
-        };
+        }
 
         function getItemByID(ID)
         {
             return items[ID];
-        };
+        }
 
         function getLength()
         {
             return items.length;
-        };
+        }
         
         function getArticleCount()
         {
@@ -60,7 +61,7 @@
             }
             
             return count;
-        };
+        }
 
         function addArticle(article) {
             
@@ -86,12 +87,12 @@
             {
                 (items[indexOfItem]).quantity += 1;
             }
-        };
+        }
 
 
         function deleteArticles() {
             items.length = 0;
-        };
+        }
 
         function sum()
         {
@@ -104,7 +105,7 @@
             }
 
             return sum;
-        };
+        }
         
         function insertOrderIntoDatabase()
         {   
@@ -134,12 +135,12 @@
             function successHandler(){
                 console.log("POST successful");
                 items.length = 0;
-            }; 
+            }
            
             function errorHandler(){
                 console.log("Error"); 
-            };
+            }
             
-        };
-    };
+        }
+    }
 })();

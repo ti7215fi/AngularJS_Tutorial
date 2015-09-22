@@ -1,3 +1,7 @@
+/**
+ * @namespace Routes
+ * @description Routes of the customer module.
+ */
 (function(){
    
     'use strict';

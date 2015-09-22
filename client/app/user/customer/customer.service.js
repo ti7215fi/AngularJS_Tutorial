@@ -1,3 +1,7 @@
+/**
+ * @namespace Service
+ * @description Organize and handle the data of the customer area.
+ */
 (function(){
     
     'use strict';
@@ -34,15 +38,15 @@
                 $rootScope.currentCustomer = response;
                 console.log(response);
                 console.log('/getCurrentCustomer was successful!');
-            };
+            }
             
             function errorHandler(){
               
                 console.log('An error occured! /getCurrentCustomer failed!');
                 
-            };
+            }
             
-        };
+        }
         
         function updateUsername(username){
           
@@ -57,13 +61,13 @@
             function successHandler(){
                 console.log('Username was changed!');
                 getCustomerData();
-            };
+            }
             
             function errorHandler(){
                 console.log('An error occured! Username was not changed!');
-            };
+            }
             
-        };
+        }
         
         function updateAddress(address){
             
@@ -79,14 +83,14 @@
                 console.log('Address was changed!');
                 getCustomerData();
                 
-            };
+            }
             
             function errorHandler(){
               
                 console.log('An error occured! Address was not changed!');
                 
-            };                        
-        };
+            }                        
+        }
         
         function updatePassword(oldPassword, newPassword, newPasswordConfirm){
           
@@ -105,13 +109,13 @@
             function successHandler(){
                 console.log('Password was updated!');
                 getCustomerData();
-            };
+            }
             
             function errorHandler(){
                 console.log("An error occured! Password was not updated!");
-            };
+            }
             
-        };
+        }
         
         function deleteCustomer(){
           
@@ -124,13 +128,13 @@
             function successHandler(){
                 $rootScope.userSession = null;
                 console.log('User was deleted!');
-            };
+            }
             
             function errorHandler(){
                 
-            };
+            }
             
-        };
+        }
         
         function getOrder(){
             
@@ -144,12 +148,12 @@
                 
                 
                 $http.get('/pizzen')
-                        .success(successHandler)
+                        .success(successHandler2)
                         .error(errorHandler);
                 
                 /////////////////////////////
                 
-                function successHandler(responsePizzen){
+                function successHandler2(responsePizzen){
                   
                   var item = "";
                     
@@ -168,21 +172,21 @@
                     
                     $rootScope.customerOrder = responseOrder;
                     console.log('/getCustomerOrder successful!'); 
-                };
+                }
                 
                 function errorHandler(){
                     console.log('/pizzen failed!');
-                };
+                }
                 
                 
-            };
+            }
             
             function errorHandler(){
                 console.log('/getCustomerOrder failed!');
-            };
+            }
             
-        };
+        }
         
-    };
+    }
     
 })();

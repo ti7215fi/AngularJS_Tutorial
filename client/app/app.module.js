@@ -1,8 +1,6 @@
 /**
- * @namespace Modules
- * @description Hauptmodul
- * @param {type} Name der Anwendung
- * @param {type} Abhängigkeiten (Animationen, Routing, Unit-Testing)'ngMock', 
+ * @namespace Module
+ * @description Main module of the app.
  */
 (function () {
 
@@ -17,15 +15,14 @@
                 'app.start',
                 'app.login',
                 'app.register',
-                'app.admin',
-                'app.user.customer',
+                'app.user',
                 'app.about'
             ])
             .run(runApp);
     
-    runApp.$inject = ['$http', '$rootScope'];
+    runApp.$inject = ['$http', '$rootScope', '$state'];
     
-    function runApp($http, $rootScope){
+    function runApp($http, $rootScope, $state){
       
       console.log('runApp');
         $http.get('/getUserData')
@@ -36,6 +33,8 @@
         
         function successHandler(response){
           
+          $state.go('home');
+          
           if(typeof response === "string"){
               console.log("null");
             $rootScope.userSession = null;
@@ -45,15 +44,15 @@
             
             console.log('User detected');
             
-        };
+        }
         
         function errorHandler(){
           
             console.log('No user-session found!');
             
-        };
+        }
         
-    };
+    }
 
 
 })();

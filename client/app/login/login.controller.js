@@ -1,6 +1,6 @@
 /*
  * @namespace Controller
- * @description Nimmt eingegebene Daten entgegen und reicht sie an den Service weiter
+ * @description Control the data of the login.
  */
 (function(){
     
@@ -25,8 +25,8 @@
             vm.username = '';
             vm.password = '';
             
-        };
+        }
         
-    };
+    }
     
 })();

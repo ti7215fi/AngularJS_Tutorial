@@ -32,11 +32,11 @@
                 <button class="btn btn-danger" ng-click="vm.articleHandler.deleteArticle(article); vm.refreshArticles();">
                     <span class="glyphicon glyphicon-trash"></span>
                 </button>
-                <button class="btn btn-primary" ng-click="vm.articleHandler.setEdit(true); article.edit = true;">
+                <button class="btn btn-primary" ng-click="article.edit = true;">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </button>
                 <button class="btn btn-success" 
-                        ng-click="vm.articleHandler.setEdit(false);
+                        ng-click="
                                             vm.articleHandler.editArticle(article.name, article.price, article);
                                             article.edit = false; vm.refreshArticles();"
                         ng-show="article.edit">

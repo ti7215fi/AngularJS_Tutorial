@@ -1,15 +1,15 @@
 /**
- * @namespace Factories
- * @description Service der die Daten der Orte bereitstellt und die Map (Leaflet) initialisiert.
+ * @namespace Service
+ * @description Service which initialize the map of the thrid party library "Leaflet" and organize the data of the locations.
  */
 (function(){
     
     'use strict';
     
     angular
-            .module('app')
+            .module('app.about')
             .factory('locationHandler', locationHandler)
-            .value('distances', [])
+            .value('distances', []);
  
     
     locationHandler.$inject = ['$http', '$rootScope', 'map', 'L', 'distances'];
@@ -47,23 +47,23 @@
             map.addLayer(osm);
             
             var marker1 = L.marker([50.969975, 11.017321], {icon : icon}).addTo(map);
-            marker1.bindPopup("<b>Pizzeria 404!</b><br>Teststrasse 1, 99085 Erfurt.")
+            marker1.bindPopup("<b>Pizzeria 404!</b><br>Teststrasse 1, 99085 Erfurt.");
             var marker2 = L.marker([51.001504, 11.029476], {icon : icon}).addTo(map);
             marker2.bindPopup("<b>Pizzeria 404!</b><br>Teststrasse 2, 99084 Erfurt.");
         }
         
             
-        };
+        }
         
         
         function changeMapView(coordinates){
                map.setView(new L.LatLng(coordinates[1], coordinates[0])); 
-        };
+        }
         
         
         function getDistances(){
             return distances;
-        };
+        }
         
         function getLocations(){
             $http.get('/locations').then(function(locationResponse){
@@ -72,14 +72,14 @@
                
                for(var index = 0; index < locationResponse.data.length; ++index){
                    locations[index] = { 'city' : locationResponse.data[index] };
-               };
+               }
                
                console.log(locations);
                
                 $rootScope.locations = locations;
                 
             });
-        };
+        }
         
         function changeCity(city){
             
@@ -106,7 +106,7 @@
                         break;
                     }
                     
-                };
+                }
                 
                 
                 changeMapView(coordinates);
@@ -117,9 +117,9 @@
             function errorHandler(){
                 console.log("POST /getLocation failed");
             }
-        };
+        }
         
         
-    };
+    }
     
 })();

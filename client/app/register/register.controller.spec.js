@@ -1,6 +1,6 @@
 /**
  * @namespace Test
- * @description Test the RegisterController
+ * @description Test of the RegisterController
  */
 (function(){
     

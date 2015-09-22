@@ -1,3 +1,7 @@
+/**
+ * @namespace Module
+ * @description Module for the customer area.
+ */
 (function(){
     
     'use strict';

@@ -17,3 +17,10 @@
     });
     
 })();
+
+        //verify the $httpBackend-Service
+        afterEach(function(){
+            $httpBackend.verifyNoOutstandingExpectation();
+            $httpBackend.verifyNoOutstandingRequest();
+        });
+        

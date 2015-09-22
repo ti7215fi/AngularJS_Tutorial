@@ -1,3 +1,7 @@
+/**
+ * @namespace Controller
+ * @description Control of the data of the registration. 
+ */
 (function(){
     
     'use strict';
@@ -14,6 +18,6 @@
         vm.register = registerhandler;
         vm.registerModel = {};
         
-    };
+    }
     
 })();
