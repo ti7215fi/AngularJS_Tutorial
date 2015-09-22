@@ -5,29 +5,30 @@
 
 - AngularJS (Frontend)
 - NodeJS    (Backend)
-- ExpressJS (Backend - Server)
+- ExpressJS + Middelware (Backend - Server)
 - MongoDB   (Backend - Datenbank)
 - Bootstrap (Frontend - Darstellung)
 - JSDoc     (Dokumentation)
 - Jasmine & Karma (Unit-Tests)
+- JSHint (Codeanalysetool)
 
-### Installationen (auf Debian)
+### Installationen (auf Debian, Ubuntu)
 
-#### NodeJS
+#### [NodeJS](https://nodejs.org/en/)
 
 * [Installation der aktuellen Version](https://github.com/joyent/node/wiki/installing-node.js-via-package-manager)
 ```
 sudo apt-get intall nodejs // Installation der stabilen Version unter Ubuntu 
 ```
 
-#### ExpressJS
+#### [ExpressJS](http://expressjs.com/)
 
 ```
 npm install express // (bei Installation der aktuellen Version)
 sudo apt-get install node-express // (bei Installation der stabilen Version)
 ```
 
-#### MongoDB
+#### [MongoDB](https://www.mongodb.org/)
 
 * [verwendete Installationsanleitung](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-debian/)
 ```
@@ -36,16 +37,24 @@ sudo apt-get install mongodb // Installation über offizielle Ubuntu-Seite
 
 *[verwendete Admin UI](http://robomongo.org/)
 
-#### JSDoc
+#### [JSDoc](http://usejsdoc.org/)
 
 ```
 npm install jsdoc // (npm muss installiert sein)
 sudo apt-get install jsdoc-tollkit // (stabile Version unter Ubuntu)
 ```
 
-#### Jasmine und Karma
+#### [Karma](http://karma-runner.github.io/0.12/index.html) & [Jasmine](http://jasmine.github.io/2.0/introduction.html)
 
 ```
+npm install karma --save-dev
+npm install karma-jasmine --save-dev
+```
+
+#### [JSHint](http://jshint.com/)
+
+```
+npm install --save-dev jshint
 ```
 
 ### Befehle in der Konsole
