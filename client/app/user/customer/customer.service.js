@@ -2,191 +2,185 @@
  * @namespace Service
  * @description Organize and handle the data of the customer area.
  */
-(function(){
-    
+(function () {
+
     'use strict';
-    
+
     angular
             .module('app.user.customer')
             .factory('customerAreaHandler', customerAreaHandler);
-    
-    customerAreaHandler.$inject = ['$http', '$rootScope'];
-    
-    function customerAreaHandler($http, $rootScope){
-      
+
+    customerAreaHandler.$inject = ['$resource', '$rootScope'];
+
+    function customerAreaHandler($resource, $rootScope) {
+
         var actions = {
-            getCustomerData : getCustomerData,
-            updateUsername : updateUsername,
-            updateAddress : updateAddress,
-            updatePassword : updatePassword,
-            deleteCustomer : deleteCustomer,
-            getOrder : getOrder
+            getCustomerData: getCustomerData,
+            updateUsername: updateUsername,
+            updateAddress: updateAddress,
+            updatePassword: updatePassword,
+            deleteCustomer: deleteCustomer,
+            getOrder: getOrder
         };
         return actions;
-        
+
         /////////////////////////////
-        
-        function getCustomerData(){
-            $http.get('/getCurrentCustomer')
-                    .success(successHandler)
-                    .error(errorHandler);
-            
-            ///////////////////////////////
-            
-            function successHandler(response){
-                
+
+        function getCustomerData() {
+
+            $resource('/getCurrentCustomer').get(
+                    successHandler,
+                    errorHandler);
+
+            /////////////////////////////////
+
+            function successHandler(response) {
                 $rootScope.currentCustomer = response;
+            }
+
+
+            function errorHandler(response) {
                 console.log(response);
-                console.log('/getCurrentCustomer was successful!');
             }
-            
-            function errorHandler(){
-              
-                console.log('An error occured! /getCurrentCustomer failed!');
-                
-            }
-            
+
         }
-        
-        function updateUsername(username){
-          
-            var postUsername = { username : username };
-          
-            $http.post('/updateUsername', postUsername)
-                    .success(successHandler)
-                    .error(errorHandler);
-            
-            ////////////////////////////////////
-            
-            function successHandler(){
-                console.log('Username was changed!');
+
+        function updateUsername(username) {
+
+            var postUsername = {username: username};
+
+            $resource('/updateUsername').save(postUsername,
+                    successHandler,
+                    errorHandler);
+
+            ///////////////////////////////////////////        
+
+            function successHandler(response) {
                 getCustomerData();
+                console.log(response);
             }
-            
-            function errorHandler(){
-                console.log('An error occured! Username was not changed!');
+
+            function errorHandler(response) {
+                console.log(response);
             }
-            
+
         }
-        
-        function updateAddress(address){
-            
-            var postAddress = { address : address };
-            
-            $http.post('/updateAddress', postAddress)
-                    .success(successHandler)
-                    .error(errorHandler);
-            ///////////////////////////////////////
-            
-            function successHandler(){
-              
-                console.log('Address was changed!');
+
+        function updateAddress(address) {
+
+            var postAddress = {address: address};
+
+            $resource('/updateAddress').save(postAddress,
+                    successHandler,
+                    errorHandler);
+
+            //////////////////////////////////////////
+
+            function successHandler(response) {
                 getCustomerData();
-                
+                console.log(response);
             }
-            
-            function errorHandler(){
-              
-                console.log('An error occured! Address was not changed!');
-                
-            }                        
+
+            function errorHandler(response) {
+                console.log(response);
+            }
+
         }
-        
-        function updatePassword(oldPassword, newPassword, newPasswordConfirm){
-          
+
+        function updatePassword(oldPassword, newPassword, newPasswordConfirm) {
+
             var postPassword = {
-              
-                oldPassword : oldPassword,
-                newPassword : newPassword,
-                newPasswordConfirm : newPasswordConfirm
-                
+                oldPassword: oldPassword,
+                newPassword: newPassword,
+                newPasswordConfirm: newPasswordConfirm
+
             };
-            
-            $http.post('/updatePassword', postPassword)
-                    .success(successHandler)
-                    .error(errorHandler);
-            
-            function successHandler(){
+
+            $resource('/updatePassword').save(postPassword,
+                    successHandler,
+                    errorHandler);
+
+            function successHandler() {
                 console.log('Password was updated!');
                 getCustomerData();
             }
-            
-            function errorHandler(){
+
+            function errorHandler() {
                 console.log("An error occured! Password was not updated!");
             }
-            
+
         }
-        
-        function deleteCustomer(){
-          
-            $http.get('/deleteCustomer')
-                    .success(successHandler)
-                    .error(errorHandler);
-            
+
+        function deleteCustomer() {
+
+            $resource('/deleteCustomer').get(
+                    successHandler,
+                    errorHandler);
+
             //////////////////////////////
-            
-            function successHandler(){
+
+            function successHandler() {
                 $rootScope.userSession = null;
                 console.log('User was deleted!');
             }
-            
-            function errorHandler(){
-                
+
+            function errorHandler() {
+
             }
-            
+
         }
-        
-        function getOrder(){
-            
-            $http.get('/getCustomerOrder')
-                    .success(successHandler)
-                    .error(errorHandler);
-            
+
+        function getOrder() {
+
+            $resource('/getCustomerOrder', { isArray : true }).query(
+                    successHandler,
+                    errorHandler);
+
             ///////////////////////////////
-            
-            function successHandler(responseOrder){
-                
-                
-                $http.get('/pizzen')
-                        .success(successHandler2)
-                        .error(errorHandler);
-                
+
+            function successHandler(responseOrder) {
+
+
+                $resource('/pizzen', { isArray : true }).query(
+                        successHandler2,
+                        errorHandler);
+
                 /////////////////////////////
-                
-                function successHandler2(responsePizzen){
-                  
-                  var item = "";
-                    
-                
-                    for(var orderIndex = 0; orderIndex < responseOrder.length; ++orderIndex){
-                        for(var itemIndex = 0; itemIndex < responseOrder[orderIndex].items.length; ++itemIndex){
-                            for(var pizzaIndex = 0; pizzaIndex < responsePizzen.length; ++pizzaIndex){
+
+                function successHandler2(responsePizzen) {
+
+                    var item = "";
+
+
+                    for (var orderIndex = 0; orderIndex < responseOrder.length; ++orderIndex) {
+                        for (var itemIndex = 0; itemIndex < responseOrder[orderIndex].items.length; ++itemIndex) {
+                            for (var pizzaIndex = 0; pizzaIndex < responsePizzen.length; ++pizzaIndex) {
                                 item = responseOrder[orderIndex].items[itemIndex];
-                                
-                                if(item.pizza_id === responsePizzen[pizzaIndex]._id){
+
+                                if (item.pizza_id === responsePizzen[pizzaIndex]._id) {
                                     responseOrder[orderIndex].items[itemIndex].name = responsePizzen[pizzaIndex].name;
                                 } // end if
                             } // end for 3
                         } // end for 2
                     }// end for 1
-                    
+
                     $rootScope.customerOrder = responseOrder;
-                    console.log('/getCustomerOrder successful!'); 
+                    console.log('/getCustomerOrder successful!');
                 }
-                
-                function errorHandler(){
+
+                function errorHandler() {
                     console.log('/pizzen failed!');
                 }
-                
-                
+
+
             }
-            
-            function errorHandler(){
+
+            function errorHandler() {
                 console.log('/getCustomerOrder failed!');
             }
-            
+
         }
-        
+
     }
-    
+
 })();
