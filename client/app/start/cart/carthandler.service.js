@@ -11,27 +11,27 @@
             .value('items', []);
 
 
-    carthandler.$inject = ['$http', 'items', '$rootScope', '$modal'];
+    carthandler.$inject = ['$resource', 'items', '$rootScope', '$modal'];
 
     /**
      * 
-     * @param {type} $http
+     * @param {type} $resource
      * @param {type} items
      * @param {type} $rootScope
      * @param {type} $modal
      * @returns {carthandler.service_L6.carthandler.actions}
      */
-    function carthandler($http, items, $rootScope, $modal) {
+    function carthandler($resource, items, $rootScope, $modal) {
 
         var actions = {
-            getItems        : getItems,
-            getItemByID     : getItemByID,
-            getLength       : getLength,
-            getArticleCount : getArticleCount,
-            addArticle      : addArticle,
-            deleteArticles  : deleteArticles,
-            sum             : sum,
-            insertOrderIntoDatabase : insertOrderIntoDatabase
+            getItems: getItems,
+            getItemByID: getItemByID,
+            getLength: getLength,
+            getArticleCount: getArticleCount,
+            addArticle: addArticle,
+            deleteArticles: deleteArticles,
+            sum: sum,
+            insertOrderIntoDatabase: insertOrderIntoDatabase
         };
         return actions;
         ////////////////
@@ -50,21 +50,21 @@
         {
             return items.length;
         }
-        
+
         function getArticleCount()
         {
             var count = 0;
-            
-            for(var Index = 0; Index < items.length; ++ Index)
+
+            for (var Index = 0; Index < items.length; ++Index)
             {
                 count += items[Index].quantity;
             }
-            
+
             return count;
         }
 
         function addArticle(article) {
-            
+
             var found = false;
             var indexOfItem;
 
@@ -106,41 +106,40 @@
 
             return sum;
         }
-        
+
         function insertOrderIntoDatabase()
-        {   
-            
-            if($rootScope.userSession !== null){
-                
+        {
+
+            if ($rootScope.userSession !== null) {
+
                 var data = JSON.stringify(getItems());
-                
-                $http.post('/orderFood', data)
-                    .success(successHandler())
-                    .error(errorHandler());
-            }else{
-             
+
+                $resource('/orderFood').save(data,
+                        successHandler,
+                        errorHandler);
+            } else {
+
                 $rootScope.registerPopup = $modal.open({
-                    
-                   templateUrl : '/static/app/register/registerpopup.view.html',
-                   controller : 'RegisterController',
-                   controllerAs : 'vm',
-               //    bindToController : true
-                    
+                    templateUrl: '/static/app/register/registerpopup.view.html',
+                    controller: 'RegisterController',
+                    controllerAs: 'vm',
+                    //    bindToController : true
+
                 });
-                
+
             }
-            
+
             /////////////////////////////////////
-                    
-            function successHandler(){
+
+            function successHandler() {
                 console.log("POST successful");
                 items.length = 0;
             }
-           
-            function errorHandler(){
-                console.log("Error"); 
+
+            function errorHandler() {
+                console.log("Error");
             }
-            
+
         }
     }
 })();
