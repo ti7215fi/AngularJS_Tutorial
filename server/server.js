@@ -552,7 +552,7 @@ server.get('/getCustomer/:Id', function(req, res) {
    collectionUser.aggregate([{ $match : { _id : parseInt(req.params.Id) } }]).toArray(function(err, result) {
        
        if(!err){
-           
+           console.log(req.params.Id);
            console.log(typeof req.params.Id);
            
            var date = new Date(result[0].order[result[0].order.length -1 ].date);
