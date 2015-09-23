@@ -11,9 +11,9 @@
             .factory('articlehandler', articlehandler);
             
     
-    articlehandler.$inject = ['$http'];
+    articlehandler.$inject = ['$resource'];
     
-    function articlehandler($http){
+    function articlehandler($resource){
       
         var actions = {
             
@@ -27,9 +27,9 @@
         
         function deleteArticle(article){
           
-            $http.post('/deleteArticle', article)
-                    .success(successHandler)
-                    .error(errorHandler);
+            $resource('/deleteArticle').save(article,
+                    successHandler,
+                    errorHandler);
             
             
             ////////////////////////////////////
@@ -58,9 +58,9 @@
               price : price
           };
           
-            $http.post('/editArticle', postArticle)
-                    .success(successHandler)
-                    .error(errorHandler);
+            $resource('/editArticle').save(postArticle,
+                    successHandler,
+                    errorHandler);
             
             //////////////////////////////////
             
