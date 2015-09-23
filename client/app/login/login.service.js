@@ -29,28 +29,40 @@
             var credentials = {username: username, password: password};
 
             $resource('/login').save(credentials,
-                    ////////////////////////////
-                            function (success) {
-                                console.log(success);
-                                getUserData();
-                            },
-                            function (error) {
-                                console.log(error);
-                            });
-                }
+                    successHandler,
+                    errorHandler);
+
+            ///////////////////////////////////
+
+            function successHandler(response) {
+                console.log(response);
+                getUserData();
+            }
+
+            function errorHandler(response) {
+                console.log(response);
+            }
+
+        }
+
 
         function getUserData() {
 
             $resource('/getUserData').get(
-                    //////////////////////
-                            function (success) {
-                                $rootScope.userSession = success;
-                            },
-                            function (error) {
-                                console.log(error);
-                            }
-                    );
-                }
+                    successHandler,
+                    errorHandler);
+
+            /////////////////////////////
+
+            function successHandler(response) {
+                $rootScope.userSession = response;
+            }
+
+            function errorHandler(response) {
+                console.log(response);
+            }
+
+        }
 
         function getUserInformation() {
 
@@ -61,15 +73,21 @@
         function logout() {
 
             $resource('/logout').get(
-                    ////////////////////
-                    function (success) {
-                        $rootScope.userSession = null;
-                        $state.go('home');
-                        console.log(success);
-                    },
-                    function (error) {
-                        console.log(error);
-                    });
+                    successHandler,
+                    errorHandler);
+                    
+            //////////////////////////////////        
+
+            function successHandler(response) {
+                $rootScope.userSession = null;
+                $state.go('home');
+                console.log(response);
+            }
+
+            function errorHandler(response) {
+                console.log(response);
+            }
+
         }
 
 

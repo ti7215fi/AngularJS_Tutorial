@@ -10,9 +10,9 @@
             .module('app.start')
             .controller('ArticlesController', ArticlesController);
 
-    ArticlesController.$inject = ['carthandler', '$http', 'articlehandler'];
+    ArticlesController.$inject = ['carthandler', '$resource', 'articlehandler'];
     
-    function ArticlesController(carthandler, $http, articlehandler)
+    function ArticlesController(carthandler, $resource, articlehandler)
     {
         var vm = this;
   
@@ -27,9 +27,9 @@
         /////////////////////
         
         function activate() {
-            $http.get('/pizzen')
-                    .success(successHandler)
-                    .error(errorHandler);
+            $resource('/pizzen', { isArray : true }).query(
+                    successHandler,
+                    errorHandler);
             
             ////////////////////////////////
             

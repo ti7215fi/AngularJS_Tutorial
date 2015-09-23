@@ -10,9 +10,9 @@
             .module('app.register')
             .factory('registerhandler', registerhandler);
     
-    registerhandler.$inject = ['$rootScope', '$http'];
+    registerhandler.$inject = ['$rootScope', '$resource'];
     
-    function registerhandler($rootScope, $http){
+    function registerhandler($rootScope, $resource){
         
         var actions = {
             abort : abort,
@@ -31,9 +31,9 @@
         function saveRegistration(registerModel){
           
             console.log(registerModel);
-            $http.post('/registerCustomer', registerModel)
-                    .success(successHandler)
-                    .error(errorHandler);
+            $resource('/registerCustomer').save(registerModel,
+                    successHandler,
+                    errorHandler);
             
             ///////////////////////////////////////////
             
@@ -44,9 +44,9 @@
                 
             }
             
-            function errorHandler(){
+            function errorHandler(response){
               
-                
+                console.log(response);
                 
             }
             
