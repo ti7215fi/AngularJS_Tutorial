@@ -10,9 +10,9 @@
             .module("app.login")
             .factory("loginHandler", loginHandler);
 
-    loginHandler.$inject = ['$http', '$rootScope', '$state'];
+    loginHandler.$inject = ['$rootScope', '$state', '$resource'];
 
-    function loginHandler($http, $rootScope, $state)
+    function loginHandler($rootScope, $state, $resource)
     {
 
         var actions = {
@@ -28,41 +28,29 @@
 
             var credentials = {username: username, password: password};
 
-             $http.post('/login', credentials)         
-             .success(successHandler)
-             .error(errorHandler);
-             
-             //////////////////////////////////
-             
-             function successHandler(){
-             console.log('POST LOGIN successful!');                  
-             getUserData();
-             }
-             
-             function errorHandler(){
-             console.log('POST LOGIN failed!');
-             }
-             
-        }
+            $resource('/login').save(credentials,
+                    ////////////////////////////
+                            function (success) {
+                                console.log(success);
+                                getUserData();
+                            },
+                            function (error) {
+                                console.log(error);
+                            });
+                }
 
         function getUserData() {
 
-            $http.get('/getUserData')
-                    .success(successHandler)
-                    .error(errorHandler);
-
-            /////////////////////////////////
-
-            function successHandler(response) {
-
-                $rootScope.userSession = response;
-            }
-
-            function errorHandler() {
-                console.log('Access denied!');
-            }
-
-        }
+            $resource('/getUserData').get(
+                    //////////////////////
+                            function (success) {
+                                $rootScope.userSession = success;
+                            },
+                            function (error) {
+                                console.log(error);
+                            }
+                    );
+                }
 
         function getUserInformation() {
 
@@ -72,22 +60,16 @@
 
         function logout() {
 
-            $http.get('/logout')
-                    .success(successHandler)
-                    .error(errorHandler);
-
-            ///////////////////////////////
-
-            function successHandler() {
-                $rootScope.userSession = null;
-                $state.go('home');
-                console.log('Logout was successful!');
-            }
-
-            function errorHandler() {
-                console.log('An error occurred! Logout failed!');
-            }
-
+            $resource('/logout').get(
+                    ////////////////////
+                    function (success) {
+                        $rootScope.userSession = null;
+                        $state.go('home');
+                        console.log(success);
+                    },
+                    function (error) {
+                        console.log(error);
+                    });
         }
 
 
