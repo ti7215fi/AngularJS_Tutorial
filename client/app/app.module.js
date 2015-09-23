@@ -9,7 +9,7 @@
     angular
             .module('app', [
                 'ngAnimate',
- //               'ngMock',
+                //               'ngMock',
                 'ngResource',
                 'ui.bootstrap',
                 'app.core',
@@ -20,39 +20,26 @@
                 'app.about'
             ])
             .run(runApp);
-    
-    runApp.$inject = ['$http', '$rootScope', '$state'];
-    
-    function runApp($http, $rootScope, $state){
-      
-      console.log('runApp');
-        $http.get('/getUserData')
-                .success(successHandler)
-                .error(errorHandler);
-        
-        ////////////////////////////////
-        
-        function successHandler(response){
-          
-          $state.go('home');
-          
-          if(typeof response === "string"){
-              console.log("null");
-            $rootScope.userSession = null;
-          }else{
-              $rootScope.userSession = response;
-          }
-            
-            console.log('User detected');
-            
-        }
-        
-        function errorHandler(){
-          
-            console.log('No user-session found!');
-            
-        }
-        
+
+    runApp.$inject = ['$resource', '$rootScope', '$state'];
+
+    function runApp($resource, $rootScope, $state) {
+
+        $resource('/getUserData').get(
+                //////////////////////
+                function (success) {
+                    $state.go('home');
+
+                    if (typeof success === "string") {
+
+                        $rootScope.userSession = null;
+                    } else {
+                        $rootScope.userSession = success;
+                    }
+                },
+                function (error) {
+                    console.log(error);
+                });
     }
 
 
