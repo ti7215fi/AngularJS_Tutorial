@@ -21,6 +21,7 @@ module.exports = function(config) {
       'http://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-animate.js',
       'https://code.angularjs.org/1.4.0/angular-mocks.js',
       'https://code.angularjs.org/1.4.5/angular-cookies.js',
+      'https://code.angularjs.org/1.4.6/angular-resource.js',
       'client/app/lib/angular-ui-bootstrap/ui-bootstrap-0.13.4.js',
       'client/app/lib/angular-ui-router/build/angular-ui-router.js',
       'http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js',

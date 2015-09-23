@@ -10,6 +10,7 @@
             .module('app', [
                 'ngAnimate',
  //               'ngMock',
+                'ngResource',
                 'ui.bootstrap',
                 'app.core',
                 'app.start',
