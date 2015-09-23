@@ -11,9 +11,11 @@
             .value('modalInstance', null)
             .factory('adminHandler', adminHandler);
 
-    adminHandler.$inject = ['$resource', 'modalInstance', '$rootScope', '$modal'];
+    adminHandler.$inject = ['$resource', 'modalInstance', '$rootScope', '$modal',
+        'locationResource', 'pizzaResource', 'userResource'];
 
-    function adminHandler($resource, modalInstance, $rootScope, $modal) {
+    function adminHandler($resource, modalInstance, $rootScope, $modal,
+            locationResource, pizzaResource, userResource) {
 
         var actions = {
             saveImage: saveImage,
@@ -52,14 +54,7 @@
 
                 postPizza = JSON.stringify(pizza);
 
-                $resource('/saveImage').save(postPizza,
-                        function (success) {
-                            console.log(success);
-                        },
-                        function (error) {
-                            console.log(error);
-                        });
-
+                pizzaResource.addPizza(postPizza);
 
             }
 
@@ -74,73 +69,48 @@
                 coordinates: coordinates
             };
 
-            $resource('/saveLocation').save(postLocation,
-                    function (success) {
-                        console.log(success);
-                    },
-                    function (error) {
-                        console.log(error);
-                    });
+            locationResource.addLocation(postLocation);
         }
 
+        //ToDo
         function getOrders() {
 
-            $resource('/getOrders', { isArray : true }).query(
-                    function (success) {
-                        console.log(success);
-                        $rootScope.orders = success;
-                    },
-                    function (error) {
-                        console.log(error);
-                    });
+                $rootScope.orders = $resource('/getOrders').query();
         }
-
-
-
 
         function getCustomers() {
 
-            $resource('/getCustomers', { isArray : true }).query(
-                    function (success) {
-                        for (var index = 0; index < success.length; ++index) {
-                            success[index].edit = false;
+            var response = userResource.getUsers();
 
-                            if (typeof success[index].firstname === 'undefined') {
-                                success[index].deleted = true;
-                            }
+            for (var index = 0; index < response.length; ++index) {
+                response[index].edit = false;
 
-                        }
+                if (typeof response[index].firstname === 'undefined') {
+                    response[index].deleted = true;
+                }
 
-                        $rootScope.customers = success;
-                    },
-                    function (error) {
-                        console.log(error);
-                    });
+            }
 
+            $rootScope.customers = response;
         }
 
         function getCustomerById(Id) {
 
-            $resource('/getCustomer/:Id', {Id: Id}).get(
-                    function (success) {
-                        if (typeof success.firstname === "undefined") {
+            userResource.getUserById(Id).$promise.then(function (response) {
+                if (typeof response.firstname === "undefined") {
 
-                            success.deleted = true;
+                    response.deleted = true;
 
-                        }
+                }
 
-                        $rootScope.customer = success;
-                        modalInstance = $modal.open({
-                            templateUrl: '/static/app/user/admin/views/customerinformation.view.html',
-                            controller: 'AdminController',
-                            controllerAs: 'vm'
+                $rootScope.customer = response;
+                modalInstance = $modal.open({
+                    templateUrl: '/static/app/user/admin/views/customerinformation.view.html',
+                    controller: 'AdminController',
+                    controllerAs: 'vm'
 
-                        });
-                        console.log('/getCustomer/:%i successful', Id);
-                    },
-                    function (error) {
-                        console.log(error);
-                    });
+                });
+            });
         }
 
         function closePopupWindow() {

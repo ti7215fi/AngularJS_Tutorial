@@ -11,10 +11,9 @@
             .factory('locationHandler', locationHandler)
             .value('distances', []);
 
+    locationHandler.$inject = ['$resource', '$rootScope', 'map', 'L', 'distances', 'locationResource'];
 
-    locationHandler.$inject = ['$resource', '$rootScope', 'map', 'L', 'distances'];
-
-    function locationHandler($resource, $rootScope, map, L, distances) {
+    function locationHandler($resource, $rootScope, map, L, distances, locationResource) {
 
         var actions = {
             getLocations: getLocations,
@@ -66,28 +65,9 @@
         }
 
         function getLocations() {
-            $resource('/locations', { isArray : true }).query(
-                    successHandler,
-                    errorHandler);
-
-            /////////////////////////////////
-
-            function successHandler(response) {
-                var locations = [];
-
-                for (var index = 0; index < response.length; ++index) {
-                    locations[index] = {'city': response[index]};
-                }
-
-                console.log(locations);
-
-                $rootScope.locations = locations;
-            }
-
-            function errorHandler(response) {
-                console.log(response);
-            }
-
+            
+            $rootScope.locations = locationResource.getLocations();
+            
         }
 
         function changeCity(city) {

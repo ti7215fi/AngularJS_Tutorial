@@ -21,25 +21,16 @@
             ])
             .run(runApp);
 
-    runApp.$inject = ['$resource', '$rootScope', '$state'];
+    runApp.$inject = ['sessionResource', '$rootScope', '$state'];
 
-    function runApp($resource, $rootScope, $state) {
+    function runApp(sessionResource, $rootScope, $state) {
 
-        $resource('/getUserData').get(
-                //////////////////////
-                function (success) {
-                    $state.go('home');
+        sessionResource.getSessionData().$promise.then(function (success) {
+            $state.go('home');
+            $rootScope.userSession = null;
+           
+        });
 
-                    if (typeof success === "string") {
-
-                        $rootScope.userSession = null;
-                    } else {
-                        $rootScope.userSession = success;
-                    }
-                },
-                function (error) {
-                    console.log(error);
-                });
     }
 
 

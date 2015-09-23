@@ -10,9 +10,9 @@
             .module('app.user.customer')
             .factory('customerAreaHandler', customerAreaHandler);
 
-    customerAreaHandler.$inject = ['$resource', '$rootScope'];
+    customerAreaHandler.$inject = ['$resource', '$rootScope', 'userResource', 'sessionResource', '$state'];
 
-    function customerAreaHandler($resource, $rootScope) {
+    function customerAreaHandler($resource, $rootScope, userResource, sessionResource, $state) {
 
         var actions = {
             getCustomerData: getCustomerData,
@@ -27,27 +27,18 @@
         /////////////////////////////
 
         function getCustomerData() {
-
-            $resource('/getCurrentCustomer').get(
-                    successHandler,
-                    errorHandler);
-
-            /////////////////////////////////
-
-            function successHandler(response) {
-                $rootScope.currentCustomer = response;
-            }
-
-
-            function errorHandler(response) {
-                console.log(response);
-            }
-
+            $rootScope.currentCustomer = sessionResource.getSessionData();
         }
+
+        function updateCustomer(id, data) {
+            userResource.updateUser(id, data);
+        }
+
 
         function updateUsername(username) {
 
             var postUsername = {username: username};
+
 
             $resource('/updateUsername').save(postUsername,
                     successHandler,
@@ -96,6 +87,8 @@
 
             };
 
+
+
             $resource('/updatePassword').save(postPassword,
                     successHandler,
                     errorHandler);
@@ -113,26 +106,16 @@
 
         function deleteCustomer() {
 
-            $resource('/deleteCustomer').get(
-                    successHandler,
-                    errorHandler);
-
-            //////////////////////////////
-
-            function successHandler() {
+            sessionResource.deleteUser().$promise.then(function () {
                 $rootScope.userSession = null;
-                console.log('User was deleted!');
-            }
-
-            function errorHandler() {
-
-            }
+                $state.go('home');
+            });
 
         }
 
         function getOrder() {
 
-            $resource('/getCustomerOrder', { isArray : true }).query(
+            $resource('/getCustomerOrder', {isArray: true}).query(
                     successHandler,
                     errorHandler);
 
@@ -141,7 +124,7 @@
             function successHandler(responseOrder) {
 
 
-                $resource('/pizzen', { isArray : true }).query(
+                $resource('/pizzen', {isArray: true}).query(
                         successHandler2,
                         errorHandler);
 

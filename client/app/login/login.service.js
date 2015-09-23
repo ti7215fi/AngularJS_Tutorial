@@ -10,9 +10,9 @@
             .module("app.login")
             .factory("loginHandler", loginHandler);
 
-    loginHandler.$inject = ['$rootScope', '$state', '$resource'];
+    loginHandler.$inject = ['$rootScope', '$state', 'sessionResource'];
 
-    function loginHandler($rootScope, $state, $resource)
+    function loginHandler($rootScope, $state, sessionResource)
     {
 
         var actions = {
@@ -28,39 +28,15 @@
 
             var credentials = {username: username, password: password};
 
-            $resource('/login').save(credentials,
-                    successHandler,
-                    errorHandler);
-
-            ///////////////////////////////////
-
-            function successHandler(response) {
-                console.log(response);
+            sessionResource.login(credentials).$promise.then(function(success) {
+                console.log(success);
                 getUserData();
-            }
-
-            function errorHandler(response) {
-                console.log(response);
-            }
-
+            });
         }
-
 
         function getUserData() {
 
-            $resource('/getUserData').get(
-                    successHandler,
-                    errorHandler);
-
-            /////////////////////////////
-
-            function successHandler(response) {
-                $rootScope.userSession = response;
-            }
-
-            function errorHandler(response) {
-                console.log(response);
-            }
+            $rootScope.userSession = sessionResource.getSessionData();
 
         }
 
@@ -72,21 +48,10 @@
 
         function logout() {
 
-            $resource('/logout').get(
-                    successHandler,
-                    errorHandler);
-                    
-            //////////////////////////////////        
-
-            function successHandler(response) {
+            sessionResource.logout().$promise.then(function () {
                 $rootScope.userSession = null;
                 $state.go('home');
-                console.log(response);
-            }
-
-            function errorHandler(response) {
-                console.log(response);
-            }
+            });
 
         }
 

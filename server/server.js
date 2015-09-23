@@ -2,7 +2,7 @@
  * 
  * Setup ExpressJS + Middleware
  */
-                       
+
 var bodyParser = require('body-parser');                    // read request bodies
 var express = require('express');                           //import ExpressJS Drivers
 var cookieParser = require('cookie-parser');
@@ -45,39 +45,40 @@ server.use(cookieParser());
 
 
 // globals
-var sessionStorage  = {};
-var sessionID       = 0;
-var SESSION_NAME    = 'timSessionId';
+var sessionStorage = {};
+var sessionID = 0;
+var SESSION_NAME = 'timSessionId';
 
-function generateSessionId(){
+function generateSessionId() {
     return ++sessionID;
-};
+}
+;
 
-server.use(function(req, res, next){
-   
-   var sessionId = req.cookies[SESSION_NAME];
-   
-    if( !sessionStorage[sessionId] ){
+server.use(function (req, res, next) {
+
+    var sessionId = req.cookies[SESSION_NAME];
+
+    if (!sessionStorage[sessionId]) {
         sessionId = generateSessionId();
-        
+
         res.cookie(SESSION_NAME, sessionId);
         req.cookies[SESSION_NAME] = sessionId;
-        
+
         sessionStorage[sessionId] = {};
     }
-    
+
     req.currentTimSession = sessionStorage[sessionId];
-    
+
     next();
 });
 
-server.get('/sessionCounter', function(req, res){
-    if (req.currentTimSession.counter){
+server.get('/sessionCounter', function (req, res) {
+    if (req.currentTimSession.counter) {
         ++req.currentTimSession.counter;
     } else {
         req.currentTimSession.counter = 1;
     }
-    
+
     //res.status(200).send(sessionStorage[sessionId].counter);
     res.status(200).send('blub ' + req.currentTimSession.counter);
 });
@@ -91,7 +92,7 @@ server.get('/sessionCounter', function(req, res){
  * @param {type} param2
  * 
  */
-server.get('/pizzen', function (req, res) {
+server.get('/pizza', function (req, res) {
 
     var db = req.db;
     var collection = db.collection('pizza');
@@ -115,7 +116,7 @@ server.get('/pizzen', function (req, res) {
                         BinaryImageData.push(docs[Index].data.buffer);
                     }
 
-                    collection.aggregate([{ $sort : { _id : 1 } }]).toArray(function (err, docs) {
+                    collection.aggregate([{$sort: {_id: 1}}]).toArray(function (err, docs) {
 
                         if (!err) {
 
@@ -146,48 +147,65 @@ server.get('/pizzen', function (req, res) {
     }); // end CollectionsFind
 });
 
-
-server.post('/editArticle', function (req, res) {
-   
-    var db = req.db;
-    var collectionPizza = db.collection('pizza');
-    var price =  (req.body.price).substr(0, 4);
-    price = parseFloat(price);
-
-    collectionPizza.update({ _id : req.body._id },
-                           { $set : { 
-                                        name : req.body.name, 
-                                        price : price  
-                                    }}, function(err, count, status){
-                                                    
-                                            if(!err){
-                                                console.log('OK!');
-                                                res.status(200).send(status);
-                                                db.close();
-                                                        
-                                            }else{
-                                                throw err;
-                                            }
-                                                    
-                                        });
-     
-    
-    
-});
-
-server.post('/deleteArticle', function(req, res){
+server.get('/pizza/:Id', function(req, res){
    
     var db = req.db;
     var collectionPizza = db.collection('pizza');
     
-    collectionPizza.deleteOne({_id : req.body._id}, function(err, result){
+    collectionPizza.find({ _id : req.params.Id }).toArray(function(err, doc){
         
         if(!err){
-            res.status(200).send('Pizza was deleted!');
+            res.status(200).send(doc);
+            db.close();
         }else{
+            db.close();
             throw err;
         }
         
+    });
+    
+});
+
+
+server.put('/pizza/:Id', function (req, res) {
+
+    var db = req.db;
+    var collectionPizza = db.collection('pizza');
+    var price = (req.body.price).substr(0, 4);
+    price = parseFloat(price);
+
+    collectionPizza.update({_id: req.body._id},
+    {$set: {
+            name: req.body.name,
+            price: price
+        }}, function (err, count, status) {
+
+        if (!err) {
+            console.log('OK!');
+            res.status(200).send(status);
+            db.close();
+
+        } else {
+            throw err;
+        }
+
+    });
+
+});
+
+server.delete('/pizza/:Id', function (req, res) {
+
+    var db = req.db;
+    var collectionPizza = db.collection('pizza');
+
+    collectionPizza.deleteOne({_id: req.param.Id}, function (err, result) {
+
+        if (!err) {
+            res.status(200).send('Pizza was deleted!');
+        } else {
+            throw err;
+        }
+
     });// end collectionPizza.delete()
 
 });
@@ -198,16 +216,16 @@ server.post('/deleteArticle', function(req, res){
  * @param {type} response
  */
 server.post('/orderFood', function (req, res) {
-   
+
     var db = req.db;
     var collection = db.collection('user');
     var collectionPizza = db.collection('pizza');
 
-    collection.find({_id : req.currentTimSession.userData.ID}).toArray(function (err, docs) {
+    collection.find({_id: req.currentTimSession.userData.ID}).toArray(function (err, docs) {
 
         if (!err)
         {
-            
+
             var orderID = docs[0].order.length;
             var order = [];
 
@@ -215,29 +233,29 @@ server.post('/orderFood', function (req, res) {
             {
                 order.push({pizza_id: req.body[Index]._id,
                     quantity: req.body[Index].quantity});
-            }    
-                
-            collectionPizza.aggregate([{ $sort : { _id : 1 } }]).toArray(function(err, result){
-                    
-                    if(!err){
-                        
-                        var sum = 0;
-                        
-                        for(var itemIndex = 0; itemIndex < order.length; ++itemIndex){
-                            
-                            sum += order[itemIndex].quantity * result[order[itemIndex].pizza_id - 1].price;
-                            
-                        }
-                        
-                        
-                        insertOrderIntoDatabase(orderID, order, sum);
-                        db.close();
-                        console.log("sum", sum);
-                        
-                    }else{
-                        throw err;
+            }
+
+            collectionPizza.aggregate([{$sort: {_id: 1}}]).toArray(function (err, result) {
+
+                if (!err) {
+
+                    var sum = 0;
+
+                    for (var itemIndex = 0; itemIndex < order.length; ++itemIndex) {
+
+                        sum += order[itemIndex].quantity * result[order[itemIndex].pizza_id - 1].price;
+
                     }
-                    
+
+
+                    insertOrderIntoDatabase(orderID, order, sum);
+                    db.close();
+                    console.log("sum", sum);
+
+                } else {
+                    throw err;
+                }
+
             });
         }
         else
@@ -249,554 +267,575 @@ server.post('/orderFood', function (req, res) {
     function insertOrderIntoDatabase(OrderID, order, sum)
     {
         collection.update(
-            {_id : req.currentTimSession.userData.ID },
-            {$push : { order : { ordernumber : OrderID + 1, date : Date(), sum : sum ,items :  order }}}
-    );
-    };
+                {_id: req.currentTimSession.userData.ID},
+        {$push: {order: {ordernumber: OrderID + 1, date: Date(), sum: sum, items: order}}}
+        );
+    }
+    ;
 
 });
 
-server.post('/login' ,function (req, res) {
-   
+server.post('/sessionData', function (req, res) {
+
     var db = req.db;
     var username = req.body.username;
     var password = req.body.password;
     var collectionUser = db.collection('user');
-    
-    collectionUser.find().toArray(function(err, docs) {
-        
-       if(!err){
-           
-            collectionUser.aggregate([{ $match : 
-                                        { 'login.username' : username, 
-                                          'login.password' : password } }]).toArray(function(err, result){
-              
-            if(!err){
-                  
-                if(result.length === 1){
-                    console.log('User %s wurde gefunden', username);
-                    
-                    var userData;
-                    
-                    if(username !== 'admin'){
-                    
-                    userData = { ID : result[0]._id,
-                                     firstname : result[0].firstname,
-                                     lastname : result[0].lastname,
-                                     group : result[0].group,
-                                     address : result[0].address,
-                                     order : result[0].order 
-                                   };   
+
+    collectionUser.find().toArray(function (err, docs) {
+
+        if (!err) {
+
+            collectionUser.aggregate([{$match:
+                            {'login.username': username,
+                                'login.password': password}}]).toArray(function (err, result) {
+
+                if (!err) {
+
+                    if (result.length === 1) {
+                        console.log('User %s wurde gefunden', username);
+
+                        var userData;
+
+                        if (username !== 'admin') {
+
+                            userData = {ID: result[0]._id,
+                                firstname: result[0].firstname,
+                                lastname: result[0].lastname,
+                                group: result[0].group,
+                                address: result[0].address,
+                                order: result[0].order
+                            };
+                        } else {
+
+                            userData = {group: result[0].group};
+
+                        }
+
+                        req.currentTimSession.userData = userData;
+
+                        res.status(200).send('User was found!');
+                        db.close();
                     } else {
-                     
-                     userData = { group : result[0].group };
-                         
+                        res.status(401).send('Invalid user data!');
+                        console.log('User %s wurde nicht gefunden bzw. fehlerhafte Daten', username);
                     }
-                    
-                    req.currentTimSession.userData = userData;
- 
-                    res.status(200).send('User was found!');
-                    db.close();
-                }else{
-                    res.status(401).send('Invalid user data!');
-                    console.log('User %s wurde nicht gefunden bzw. fehlerhafte Daten', username);
+
+                } else {
+                    throw err;
                 }
-                  
-            }else{
-            throw err;
-            }
-              
+
             });// end aggregate to Array
-       
-       } else{
-           
-           throw err;
-       };
-        
+
+        } else {
+
+            throw err;
+        }
+        ;
+
     });// end find to Array
 });
 
-server.get('/logout', function(req, res){
-  
-  delete req.currentTimSession.userData; 
-  res.status(200).send('Logout successful!');
-    
+server.delete('/sessionData', function (req, res) {
+
+    delete req.currentTimSession.userData;
+    res.status(200).send('Logout successful!');
+
 });
 
-server.get('/getUserData', function(req, res){
-   
-       res.status(200).send(req.currentTimSession.userData);
-       
-});
-
-server.post('/registerCustomer', function(req, res){
-    
-   var db = req.db;
-   var collectionUser = db.collection('user');
-   var customerData = {};
-   
-   collectionUser.find().toArray(function(err, docs){
-      
-       if(!err){
-           var customerId = docs.length;
-           console.log(req.body);
-           
-           collectionUser.insert({
-              
-               _id : customerId,
-               firstname : req.body.firstname,
-               lastname : req.body.lastname,
-               group : 'customer',
-               address : {
-                   
-                   zip : req.body.zip,
-                   city : req.body.city,
-                   street : req.body.street + ' ' + req.body.streetnumber
-                   
-               },
-               login : {
-                   
-                   username : req.body.username,
-                   password : req.body.password
-                   
-               },
-               order : []
-               
-           });
-           
-           res.status(200).send('User %s is now available!', req.body.username);
-           
-       }else{
-           throw err;
-       }
-       
-   });
-    
-});
-
-server.get('/getOrders', function(req, res){
-   
-   var db = req.db;
-   var collectionUser = db.collection('user');
-   
-   collectionUser.aggregate([{ $match : { group : 'customer' } }]).toArray( function(err, result){
-       
-       if(!err){
-           
-           var collectionPizza = db.collection('pizza');
-           var orders = [];
-           var customerOrder = {};
-
-           for(var userIndex = 0; userIndex < result.length; ++userIndex){
-               
-                customerOrder = {
-                 
-                        id         : result[userIndex]._id,
-                        firstname  : result[userIndex].firstname,
-                        lastname   : result[userIndex].lastname,
-                        order      : result[userIndex].order 
-                    };
-                
-                orders.push(customerOrder);
-
-           }
-               
-               //ToDo: Pizza auslesen
-               collectionPizza.aggregate([{ $sort : { _id : 1 } }]).toArray(function(err, result){
-                  
-                   if(!err){
-                       
-                       var pizza = [];
-                       
-                       for(var pizzaIndex = 0; pizzaIndex < result.length; ++pizzaIndex){
-                           
-                           pizza.push({
-                               
-                               id       : result[pizzaIndex]._id,
-                               name     : result[pizzaIndex].name,
-                               price    : result[pizzaIndex].price
-                               
-                           });
-                           
-                       }
-                       
-                       console.log("pizza", pizza);
-                       
-                       for(var userIndex = 0; userIndex < orders.length; ++userIndex){
-                           
-                           for(var orderIndex = 0; 
-                           orderIndex < orders[userIndex].order.length; 
-                           ++orderIndex){
-                               
-                               for(var itemIndex = 0;
-                               itemIndex < orders[userIndex].order[orderIndex].items.length;
-                               ++itemIndex){
-                                   
-                                   var item1 =  orders[userIndex].order[orderIndex].items[itemIndex];
-                                   
-                                   if(typeof pizza[item1.pizza_id -1] !== 'undefined'){
-                                        item1.name = pizza[item1.pizza_id -1].name;
-                                        item1.price = pizza[item1.pizza_id -1].price;
-                                   }
-                                   
-                                   console.log('item1', item1);
-
-                               }
-                               
-                           }
-                           
-                       }
-                       
-                       var responseOrder = [];
-                       var date;
-
-                       var item = "";
-                       var customerId;
-                                         
-                                                   
-                       for(userIndex = 0; userIndex < orders.length; ++userIndex){
-                         
-                            customerId = orders[userIndex].id;
-                            
-                            for(orderIndex = 0; orderIndex < orders[userIndex].order.length; ++orderIndex){
-                                
-                                date = orders[userIndex].order[orderIndex].date;
-                                date = new Date(date);
-                                
-                                for(itemIndex = 0; itemIndex < orders[userIndex].order[orderIndex].items.length; ++itemIndex){
-                                
-                                   var item2 = orders[userIndex].order[orderIndex].items[itemIndex];
-                                   
-                                    console.log("item2", item2);
-
-                                    item += item2.quantity + 'x ' + item2.name + ', ';
-                                    
-                                }
-                                
-                                
-                           responseOrder.push({
-                                id  : customerId,
-                                date : date.getDay() + '.' + date.getMonth() + '.' + date.getFullYear(),
-                                time : date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds(),
-                                sum : orders[userIndex].order[orderIndex].sum,
-                                items  : item
-                            });
-                               item = '';
-                           
-                            }
-                            
-                       };
-                       
-                       
-                      res.status(200).send(responseOrder);
-                       
-                   }else{
-                       throw err;
-                   }
-                   
-               });// end collectionPizza.find();
-              
-    
-           
-       } else{
-           throw err;
-       }
-       
-   });// end collectionUser.aggregate
-   
-});
-
-server.get('/getCustomers', function(req, res){
+server.delete('/sessionData12', function(req, res){
    
     var db = req.db;
     var collectionUser = db.collection('user');
     
-    
-    collectionUser.find().toArray(function (err, docs){
-       
-        if(!err){
-            
-            var customers = [];
-            
-            for(var userIndex = 0; userIndex < docs.length; ++userIndex){
-                
-                if(docs[userIndex].group !== 'admin'){
-                
-                    customers.push({
-                        id              : docs[userIndex]._id,
-                        firstname       : docs[userIndex].firstname,
-                        lastname        : docs[userIndex].lastname,
-                        address         : docs[userIndex].address
-                    });
-                }
-                
-            }
-            
-            res.status(200).send(customers);
-            
-        }else{
-           throw err; 
+    collectionUser.update({_id: req.currentTimSession.userData.ID}, {
+        $unset: {
+            firstname: "",
+            lastname: "",
+            group: "",
+            address: "",
+            login: ""
         }
-        
-    }); // end collectionUser.find()
-    
 
-    
-});
+    }, function (err, result) {
 
-server.get('/getCustomer/:Id', function(req, res) {
-    
-   var db = req.db;
-   var collectionUser = db.collection('user');
-   
-   collectionUser.aggregate([{ $match : { _id : parseInt(req.params.Id) } }]).toArray(function(err, result) {
-       
-       if(!err){
-           console.log(req.params.Id);
-           console.log(typeof req.params.Id);
-           
-           var date = new Date(result[0].order[result[0].order.length -1 ].date);
-           
-           res.status(200).send({
-              
-               id : result[0]._id,
-               lastname : result[0].lastname,
-               firstname : result[0].firstname,
-               address : result[0].address,
-               orderCount : result[0].order.length,
-               lastOrder : date.getDay() + '.' + date.getMonth() + '.' + date.getFullYear() + ', ' +
-                           date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
-           });
-       }else {
-           throw err;   
-       }
-   });
-    
-});
+        if (!err) {
+            res.status(200).send(result);
+            db.close();
+        } else {
+            db.close();
+            throw err;
+        }
 
-server.get('/getCurrentCustomer', function(req, res){
-   
-    var db = req.db;
-    var collectionUser = db.collection('user');
-    
-    collectionUser.find({ _id : req.currentTimSession.userData.ID }).toArray(function(err, doc){
-        
-       if(!err){
-           
-           console.log(doc);
-           
-           var responseData = {
-             
-                firstname   : doc[0].firstname,
-                lastname    : doc[0].lastname,
-                address     : doc[0].address,
-                login       : doc[0].login
-                
-           };
-           
-           res.status(200).send(responseData);
-           db.close();
-           
-       }else{
-           db.close();
-           throw err;
-       }
-        
     });
     
-    
 });
 
-server.post('/updateUsername', function(req, res){
-    
-   var db = req.db;
-   var collectionUser = db.collection('user');
-   
-   collectionUser.find().toArray(function(err, docs){
-       
-       if(!err){
-           
-           var userExist = false;
-           
-           for(var docIndex = 0; docIndex < docs.length; ++docIndex){
-             
-             if( docs[docIndex].login !== undefined ){
-               if(docs[docIndex].login.username === req.body.username){
-                   
-                   userExist = true;
-                   break;
-       
+server.get('/sessionData', function (req, res) {
+
+    res.status(200).send(req.currentTimSession.userData);
+
+});
+
+server.post('/user', function (req, res) {
+
+    var db = req.db;
+    var collectionUser = db.collection('user');
+    var customerData = {};
+
+    collectionUser.find().toArray(function (err, docs) {
+
+        if (!err) {
+            var customerId = docs.length;
+            console.log(req.body);
+
+            collectionUser.insert({
+                _id: customerId,
+                firstname: req.body.firstname,
+                lastname: req.body.lastname,
+                group: 'customer',
+                address: {
+                    zip: req.body.zip,
+                    city: req.body.city,
+                    street: req.body.street + ' ' + req.body.streetnumber
+
+                },
+                login: {
+                    username: req.body.username,
+                    password: req.body.password
+
+                },
+                order: []
+
+            });
+
+            res.status(200).send('User %s is now available!', req.body.username);
+
+        } else {
+            throw err;
+        }
+
+    });
+
+});
+
+server.get('/getOrders', function (req, res) {
+
+    var db = req.db;
+    var collectionUser = db.collection('user');
+
+    collectionUser.aggregate([{$match: {group: 'customer'}}]).toArray(function (err, result) {
+
+        if (!err) {
+
+            var collectionPizza = db.collection('pizza');
+            var orders = [];
+            var customerOrder = {};
+
+            for (var userIndex = 0; userIndex < result.length; ++userIndex) {
+
+                customerOrder = {
+                    id: result[userIndex]._id,
+                    firstname: result[userIndex].firstname,
+                    lastname: result[userIndex].lastname,
+                    order: result[userIndex].order
+                };
+
+                orders.push(customerOrder);
+
+            }
+
+            //ToDo: Pizza auslesen
+            collectionPizza.aggregate([{$sort: {_id: 1}}]).toArray(function (err, result) {
+
+                if (!err) {
+
+                    var pizza = [];
+
+                    for (var pizzaIndex = 0; pizzaIndex < result.length; ++pizzaIndex) {
+
+                        pizza.push({
+                            id: result[pizzaIndex]._id,
+                            name: result[pizzaIndex].name,
+                            price: result[pizzaIndex].price
+
+                        });
+
+                    }
+
+                    console.log("pizza", pizza);
+
+                    for (var userIndex = 0; userIndex < orders.length; ++userIndex) {
+
+                        for (var orderIndex = 0;
+                                orderIndex < orders[userIndex].order.length;
+                                ++orderIndex) {
+
+                            for (var itemIndex = 0;
+                                    itemIndex < orders[userIndex].order[orderIndex].items.length;
+                                    ++itemIndex) {
+
+                                var item1 = orders[userIndex].order[orderIndex].items[itemIndex];
+
+                                if (typeof pizza[item1.pizza_id - 1] !== 'undefined') {
+                                    item1.name = pizza[item1.pizza_id - 1].name;
+                                    item1.price = pizza[item1.pizza_id - 1].price;
+                                }
+
+                                console.log('item1', item1);
+
+                            }
+
+                        }
+
+                    }
+
+                    var responseOrder = [];
+                    var date;
+
+                    var item = "";
+                    var customerId;
+
+
+                    for (userIndex = 0; userIndex < orders.length; ++userIndex) {
+
+                        customerId = orders[userIndex].id;
+
+                        for (orderIndex = 0; orderIndex < orders[userIndex].order.length; ++orderIndex) {
+
+                            date = orders[userIndex].order[orderIndex].date;
+                            date = new Date(date);
+
+                            for (itemIndex = 0; itemIndex < orders[userIndex].order[orderIndex].items.length; ++itemIndex) {
+
+                                var item2 = orders[userIndex].order[orderIndex].items[itemIndex];
+
+                                console.log("item2", item2);
+
+                                item += item2.quantity + 'x ' + item2.name + ', ';
+
+                            }
+
+
+                            responseOrder.push({
+                                id: customerId,
+                                date: date.getDay() + '.' + date.getMonth() + '.' + date.getFullYear(),
+                                time: date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds(),
+                                sum: orders[userIndex].order[orderIndex].sum,
+                                items: item
+                            });
+                            item = '';
+
+                        }
+
+                    }
+                    ;
+
+
+                    res.status(200).send(responseOrder);
+
+                } else {
+                    throw err;
                 }
-               }
-           };
-           
-           if(userExist === true){
-               res.status(403).send('Username already exist!');
-           }else{
-               
+
+            });// end collectionPizza.find();
+
+
+
+        } else {
+            throw err;
+        }
+
+    });// end collectionUser.aggregate
+
+});
+
+server.get('/user', function (req, res) {
+
+    var db = req.db;
+    var collectionUser = db.collection('user');
+
+
+    collectionUser.find().toArray(function (err, docs) {
+
+        if (!err) {
+
+            var customers = [];
+
+            for (var userIndex = 0; userIndex < docs.length; ++userIndex) {
+
+                if (docs[userIndex].group !== 'admin') {
+
+                    customers.push({
+                        id: docs[userIndex]._id,
+                        firstname: docs[userIndex].firstname,
+                        lastname: docs[userIndex].lastname,
+                        address: docs[userIndex].address,
+                        order : docs[userIndex].order
+                    });
+                }
+
+            }
+
+            res.status(200).send(customers);
+
+        } else {
+            throw err;
+        }
+
+    }); // end collectionUser.find()
+
+
+
+});
+
+server.get('/user/:Id', function (req, res) {
+
+    var db = req.db;
+    var collectionUser = db.collection('user');
+
+    collectionUser.aggregate([{$match: {_id: parseInt(req.params.Id)}}]).toArray(function (err, result) {
+
+        if (!err) {
+            console.log(req.params.Id);
+            console.log(typeof req.params.Id);
+
+            var date = new Date(result[0].order[result[0].order.length - 1 ].date);
+
+            res.status(200).send({
+                id: result[0]._id,
+                lastname: result[0].lastname,
+                firstname: result[0].firstname,
+                address: result[0].address,
+                orderCount: result[0].order.length,
+                lastOrder: date.getDay() + '.' + date.getMonth() + '.' + date.getFullYear() + ', ' +
+                        date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
+            });
+        } else {
+            throw err;
+        }
+    });
+
+});
+
+server.get('/getCurrentCustomer', function (req, res) {
+
+    var db = req.db;
+    var collectionUser = db.collection('user');
+
+    collectionUser.find({_id: req.currentTimSession.userData.ID}).toArray(function (err, doc) {
+
+        if (!err) {
+
+            console.log(doc);
+
+            var responseData = {
+                firstname: doc[0].firstname,
+                lastname: doc[0].lastname,
+                address: doc[0].address,
+                login: doc[0].login
+
+            };
+
+            res.status(200).send(responseData);
+            db.close();
+
+        } else {
+            db.close();
+            throw err;
+        }
+
+    });
+
+
+});
+
+server.post('/updateUsername', function (req, res) {
+
+    var db = req.db;
+    var collectionUser = db.collection('user');
+
+    collectionUser.find().toArray(function (err, docs) {
+
+        if (!err) {
+
+            var userExist = false;
+
+            for (var docIndex = 0; docIndex < docs.length; ++docIndex) {
+
+                if (docs[docIndex].login !== undefined) {
+                    if (docs[docIndex].login.username === req.body.username) {
+
+                        userExist = true;
+                        break;
+
+                    }
+                }
+            }
+            ;
+
+            if (userExist === true) {
+                res.status(403).send('Username already exist!');
+            } else {
+
                 collectionUser.update(
-                  
-                       { _id : req.currentTimSession.userData.ID },
-                       { $set : { 'login.username' : req.body.username } }
-                       
-                , function(err, status){
-                    
-                    if(!err){
+                        {_id: req.currentTimSession.userData.ID},
+                {$set: {'login.username': req.body.username}}
+
+                , function (err, status) {
+
+                    if (!err) {
                         res.status(200).send(status);
-                        db.close();                        
-                    }else{
+                        db.close();
+                    } else {
                         db.close();
                         throw err;
                     }
-                    
+
                 }); //end update
-               
-           }
-           
-       }else{
-           db.close();
-           throw err;
-       }
-       
-   }); // end collectionUser.find()
-    
+
+            }
+
+        } else {
+            db.close();
+            throw err;
+        }
+
+    }); // end collectionUser.find()
+
 });
 
-server.post('/updateAddress', function(req, res){
-    
-   var db = req.db;
-   var collectionUser = db.collection('user');
-   
-   collectionUser.update({ _id : req.currentTimSession.userData.ID }, {
-       
-      $set : { 'address.zip'    : req.body.address.zip, 
-               'address.street' : req.body.address.street,
-               'address.city'   : req.body.address.city
-             } 
-       
-   }, function(err, result){
-       
-       if(!err){
-           res.status(200).send(result);
-           db.close();
-       }else{
-           db.close();
-           throw err;
-       }
-       
-   });
-    
+server.post('/updateAddress', function (req, res) {
+
+    var db = req.db;
+    var collectionUser = db.collection('user');
+
+    collectionUser.update({_id: req.currentTimSession.userData.ID}, {
+        $set: {'address.zip': req.body.address.zip,
+            'address.street': req.body.address.street,
+            'address.city': req.body.address.city
+        }
+
+    }, function (err, result) {
+
+        if (!err) {
+            res.status(200).send(result);
+            db.close();
+        } else {
+            db.close();
+            throw err;
+        }
+
+    });
+
 });
 
-server.post('/updatePassword', function(req, res){
-    
-   var db = req.db;
-   var collectionUser = db.collection('user');
-   
-   collectionUser.find({ _id : req.currentTimSession.userData.ID }).toArray(function(err, doc){
-       
-       if(!err){
-           
-           if(doc[0].login.password === req.body.oldPassword &&
-              req.body.newPassword === req.body.newPasswordConfirm){
-          
-              collectionUser.update({ _id : req.currentTimSession.userData.ID },{
-                 
-                    $set : { 'login.password' : req.body.newPassword  }
-                    
-              }, function(err, result){
-                  
-                  if(!err){
-                      res.status(200).send(result);
-                      db.close();
-                  }else{
-                      db.close();
-                      throw err;
-                  }
-                  
-              });
-          
-           }
-           
-       }else{
-           db.close();
-           throw err;
-       }
-       
-       
-   }); // end collectionUser.find
-    
-    
+server.post('/updatePassword', function (req, res) {
+
+    var db = req.db;
+    var collectionUser = db.collection('user');
+
+    collectionUser.find({_id: req.currentTimSession.userData.ID}).toArray(function (err, doc) {
+
+        if (!err) {
+
+            if (doc[0].login.password === req.body.oldPassword &&
+                    req.body.newPassword === req.body.newPasswordConfirm) {
+
+                collectionUser.update({_id: req.currentTimSession.userData.ID}, {
+                    $set: {'login.password': req.body.newPassword}
+
+                }, function (err, result) {
+
+                    if (!err) {
+                        res.status(200).send(result);
+                        db.close();
+                    } else {
+                        db.close();
+                        throw err;
+                    }
+
+                });
+
+            }
+
+        } else {
+            db.close();
+            throw err;
+        }
+
+
+    }); // end collectionUser.find
+
+
 });
 
-server.get('/deleteCustomer', function(req, res){
-    
-   var db = req.db;
-   var collectionUser = db.collection('user');
-   
-   collectionUser.update({ _id : req.currentTimSession.userData.ID }, {
-       
-      $unset : {
-          
-          firstname : "",
-          lastname  : "",
-          group     : "",
-          address   : "",
-          login     : ""
-      } 
-       
-   }, function(err, result){
-       
-       if(!err){
-           res.status(200).send(result);
-           db.close();
-       }else{
-           db.close();
-           throw err;
-       }
-       
-   });
-    
+server.get('/deleteCustomer', function (req, res) {
+
+    var db = req.db;
+    var collectionUser = db.collection('user');
+
+    collectionUser.update({_id: req.currentTimSession.userData.ID}, {
+        $unset: {
+            firstname: "",
+            lastname: "",
+            group: "",
+            address: "",
+            login: ""
+        }
+
+    }, function (err, result) {
+
+        if (!err) {
+            res.status(200).send(result);
+            db.close();
+        } else {
+            db.close();
+            throw err;
+        }
+
+    });
+
 });
 
-server.get('/getCustomerOrder', function(req, res){
-    
-   var db = req.db;
-   var collectionUser = db.collection('user');
-   
-   collectionUser.find({ _id : req.currentTimSession.userData.ID }).toArray(function(err, docs){
-       
-       if(!err){
-           
-           var responseOrder = [];
-           var date;
-           
-           for(var orderIndex = 0; orderIndex < docs[0].order.length; ++orderIndex){
-               
+server.get('/getCustomerOrder', function (req, res) {
+
+    var db = req.db;
+    var collectionUser = db.collection('user');
+
+    collectionUser.find({_id: req.currentTimSession.userData.ID}).toArray(function (err, docs) {
+
+        if (!err) {
+
+            var responseOrder = [];
+            var date;
+
+            for (var orderIndex = 0; orderIndex < docs[0].order.length; ++orderIndex) {
+
                 date = new Date(docs[0].order[orderIndex].date);
-                  
+
                 responseOrder.push({
-                      ordernumber   : docs[0].order[orderIndex].ordernumber,
-                      date          : date.getDay() + '.' + date.getMonth() + '.' + date.getFullYear() + ', ' +
-                                      date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds(),
-                      sum           : docs[0].order[orderIndex].sum,
-                      items         : docs[0].order[orderIndex].items
-                      
-                  });
-           }
-           
-           res.status(200).send(responseOrder);
-           db.close();
-       }else{
-           db.close();
-           throw err;
-       }
-       
-   });
-    
+                    ordernumber: docs[0].order[orderIndex].ordernumber,
+                    date: date.getDay() + '.' + date.getMonth() + '.' + date.getFullYear() + ', ' +
+                            date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds(),
+                    sum: docs[0].order[orderIndex].sum,
+                    items: docs[0].order[orderIndex].items
+
+                });
+            }
+
+            res.status(200).send(responseOrder);
+            db.close();
+        } else {
+            db.close();
+            throw err;
+        }
+
+    });
+
 });
 
-server.post('/saveImage', function (req, res) {
+server.post('/pizza/:Id', function (req, res) {
     var db = req.db;
     var collectionPizza = db.collection('pizza');
 
@@ -827,6 +866,7 @@ server.post('/saveImage', function (req, res) {
                         );
 
                         console.log("Pizza hinzugefügt!");
+                        res.status(200).send('Add pizza successful!');
                         db.close();
                     }
                     ;
@@ -846,7 +886,7 @@ server.post('/saveImage', function (req, res) {
 
 });
 
-server.post('/saveLocation', function (req, res) {
+server.post('/location', function (req, res) {
 
     var db = req.db;
     var collectionLocations = db.collection('location');
@@ -905,7 +945,7 @@ server.post('/saveLocation', function (req, res) {
 
 });
 
-server.get('/locations', function (req, res) {
+server.get('/location', function (req, res) {
     var db = req.db;
     var collectionLocation = db.collection('location');
 
@@ -930,7 +970,7 @@ server.get('/locations', function (req, res) {
     });
 });
 
-server.post('/getLocation', function (req, res) {
+server.get('/location/:name', function (req, res) {
     var db = req.db;
     var collectionLocation = db.collection('location');
     var location = req.body.location;
@@ -962,7 +1002,7 @@ server.post('/getLocation', function (req, res) {
 
                         distances.push({distance: result.results[index].dis,
                             city: result.results[index].obj.city,
-                            coordinates : result.results[index].obj.geoData.coordinates});
+                            coordinates: result.results[index].obj.geoData.coordinates});
                     }
 
                     console.log("distances: ", distances);
@@ -981,11 +1021,6 @@ server.post('/getLocation', function (req, res) {
             throw err;
         }
     });
-
-
-
-
-
 
 });
 

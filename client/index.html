@@ -39,10 +39,11 @@ and open the template in the editor.
 
                     </form>
 
-                    <div ng-controller="LoginController as vm" ng-show="userSession !== null && userSession !== undefined">
+                    <div ng-controller="LoginController as vm" ng-show="userSession !== null && userSession !== undefined && userSession !== {}">
 
                         <p class="navbar-text " >Angemeldet als  
                             <strong>
+               
                             {{ userSession.firstname || userSession.group}}
                             {{ userSession.lastname}}
                             </strong>
@@ -133,6 +134,13 @@ and open the template in the editor.
 
 
         <script language="javascript" type="text/javascript" src="static/app/core/routerhelper.provider.js"></script>
+        
+        <script language="javascript" type="text/javascript" src="static/app/core/location.resource.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/core/pizza.resource.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/core/user.resource.js"></script>
+        <script language="javascript" type="text/javascript" src="static/app/core/session.resource.js"></script>
+
+
         <!---Routes-->
         <script language="javascript" type="text/javascript" src="static/app/start/start.routes.js"></script>
         <script language="javascript" type="text/javascript" src="static/app/user/admin/admin.routes.js"></script>

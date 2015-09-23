@@ -2,56 +2,40 @@
  * @namespace Service
  * @description Organize and verify the data of the registration.
  */
-(function(){
-    
+(function () {
+
     'use strict';
-    
+
     angular
             .module('app.register')
             .factory('registerhandler', registerhandler);
-    
-    registerhandler.$inject = ['$rootScope', '$resource'];
-    
-    function registerhandler($rootScope, $resource){
-        
+
+    registerhandler.$inject = ['$rootScope', 'userResource'];
+
+    function registerhandler($rootScope, userResource) {
+
         var actions = {
-            abort : abort,
-            saveRegistration : saveRegistration
+            abort: abort,
+            saveRegistration: saveRegistration
         };
         return actions;
-        
+
         /////////////////////
-        
-        function abort(){
-          
+
+        function abort() {
+
             $rootScope.registerPopup.close();
-            
+
         }
-        
-        function saveRegistration(registerModel){
-          
-            console.log(registerModel);
-            $resource('/registerCustomer').save(registerModel,
-                    successHandler,
-                    errorHandler);
+
+        function saveRegistration(registerModel) {
             
-            ///////////////////////////////////////////
-            
-            function successHandler(response){
-              
-                console.log(response);
+            userResource.addUser(registerModel).$promise.then(function() {
                 $rootScope.registerPopup.close();
                 
-            }
-            
-            function errorHandler(response){
-              
-                console.log(response);
-                
-            }
-            
+            });
         }
-        
+
     }
-   
+
 })();

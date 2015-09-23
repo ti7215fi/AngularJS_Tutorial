@@ -11,14 +11,14 @@
             .factory('articlehandler', articlehandler);
             
     
-    articlehandler.$inject = ['$resource'];
+    articlehandler.$inject = ['pizzaResource'];
     
-    function articlehandler($resource){
+    function articlehandler(pizzaResource){
       
         var actions = {
             
             deleteArticle : deleteArticle,
-            editArticle : editArticle,            
+            editArticle : editArticle            
         };
         return actions;
         
@@ -27,24 +27,7 @@
         
         function deleteArticle(article){
           
-            $resource('/deleteArticle').save(article,
-                    successHandler,
-                    errorHandler);
-            
-            
-            ////////////////////////////////////
-            
-            function successHandler(){
-              
-                console.log('Delete article %s successful', article);
-                
-            }
-            
-            function errorHandler(){
-              
-                console.log('POST /deleteArticle failed!');
-                
-            }
+          pizzaResource.deletePizzaById(article._id);
             
         }
         
