@@ -11,17 +11,17 @@
             .value('items', []);
 
 
-    carthandler.$inject = ['$resource', 'items', '$rootScope', '$modal'];
+    carthandler.$inject = ['userResource', 'items', '$rootScope', '$modal'];
 
     /**
      * 
-     * @param {type} $resource
+     * @param {type} userResource
      * @param {type} items
      * @param {type} $rootScope
      * @param {type} $modal
      * @returns {carthandler.service_L6.carthandler.actions}
      */
-    function carthandler($resource, items, $rootScope, $modal) {
+    function carthandler(userResource, items, $rootScope, $modal) {
 
         var actions = {
             getItems: getItems,
@@ -109,35 +109,25 @@
 
         function insertOrderIntoDatabase()
         {
-
+            
             if ($rootScope.userSession !== null) {
 
                 var data = JSON.stringify(getItems());
 
-                $resource('/orderFood').save(data,
-                        successHandler,
-                        errorHandler);
+                userResource.update(data).$promise.then(function(){
+                   
+                    items.length = 0;
+                    
+                });
+
             } else {
 
                 $rootScope.registerPopup = $modal.open({
                     templateUrl: '/static/app/register/registerpopup.view.html',
                     controller: 'RegisterController',
-                    controllerAs: 'vm',
-                    //    bindToController : true
-
+                    controllerAs: 'vm'
                 });
 
-            }
-
-            /////////////////////////////////////
-
-            function successHandler() {
-                console.log("POST successful");
-                items.length = 0;
-            }
-
-            function errorHandler() {
-                console.log("Error");
             }
 
         }

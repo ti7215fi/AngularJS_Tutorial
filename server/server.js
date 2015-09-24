@@ -147,23 +147,23 @@ server.get('/pizza', function (req, res) {
     }); // end CollectionsFind
 });
 
-server.get('/pizza/:Id', function(req, res){
-   
+server.get('/pizza/:Id', function (req, res) {
+
     var db = req.db;
     var collectionPizza = db.collection('pizza');
-    
-    collectionPizza.find({ _id : req.params.Id }).toArray(function(err, doc){
-        
-        if(!err){
+
+    collectionPizza.find({_id: req.params.Id}).toArray(function (err, doc) {
+
+        if (!err) {
             res.status(200).send(doc);
             db.close();
-        }else{
+        } else {
             db.close();
             throw err;
         }
-        
+
     });
-    
+
 });
 
 
@@ -215,7 +215,7 @@ server.delete('/pizza/:Id', function (req, res) {
  * @param {type} request
  * @param {type} response
  */
-server.post('/orderFood', function (req, res) {
+server.put('/user', function (req, res) {
 
     var db = req.db;
     var collection = db.collection('user');
@@ -275,79 +275,149 @@ server.post('/orderFood', function (req, res) {
 
 });
 
-server.post('/sessionData', function (req, res) {
+server.put('/user/:Id', function (req, res) {
 
     var db = req.db;
-    var username = req.body.username;
-    var password = req.body.password;
     var collectionUser = db.collection('user');
+    var id = parseInt(req.params.Id);
 
-    collectionUser.find().toArray(function (err, docs) {
+    collectionUser.find({_id: id}).toArray(function (err, doc) {
 
-        if (!err) {
+        var currentAddress  = doc[0].address,
+            currentUsername = doc[0].login.username,
+            currentPassword = doc[0].login.password;
 
-            collectionUser.aggregate([{$match:
-                            {'login.username': username,
-                                'login.password': password}}]).toArray(function (err, result) {
+        var newPassword     = currentPassword, 
+            newUsername     = currentUsername, 
+            newAddress      = currentAddress;
 
-                if (!err) {
+        switch(req.body.update){
+            case 'address':
+                newAddress  = req.body.address;
+                break;
+            case 'username':
+                newUsername = req.body.username;
+                break;
+            case 'password':
+                if(req.body.newPassword === req.body.newPasswordConfirm){
+                    newPassword = req.body.newPassword;
+                }else{
+                    res.status(200).send({ message : 'Passwords dont match!' });
+                }
+                break;
+            default:
+                break;
+        } // end switch
 
-                    if (result.length === 1) {
-                        console.log('User %s wurde gefunden', username);
+        collectionUser.update(
+                {
+                    _id: req.currentTimSession.userData.ID
+                },
+        {
+            $set: {
+                'login.password': newPassword,
+                'login.username': newUsername,
+                'address' : newAddress
+            }
+        }
 
-                        var userData;
+        , function (err, status) {
 
-                        if (username !== 'admin') {
+            if (!err) {
+                req.currentTimSession.userData.address = newAddress;
+                req.currentTimSession.userData.username = newUsername;
+                res.status(200).send(status);
+                db.close();
+            } else {
+                db.close();
+                throw err;
+            }
 
-                            userData = {ID: result[0]._id,
-                                firstname: result[0].firstname,
-                                lastname: result[0].lastname,
-                                group: result[0].group,
-                                address: result[0].address,
-                                order: result[0].order
-                            };
+        }); //end update
+
+    });
+
+});
+
+server.post('/sessionData', function (req, res) {
+
+
+    var logout = req.body.delete;
+
+    if (logout === false)
+    {
+
+        var db = req.db;
+        var username = req.body.username;
+        var password = req.body.password;
+        var collectionUser = db.collection('user');
+
+
+
+        collectionUser.find().toArray(function (err, docs) {
+
+            if (!err) {
+
+                collectionUser.aggregate([{$match:
+                                {'login.username': username,
+                                    'login.password': password}}]).toArray(function (err, result) {
+
+                    if (!err) {
+
+                        if (result.length === 1) {
+                            console.log('User %s wurde gefunden', username);
+
+                            var userData;
+
+                            if (username !== 'admin') {
+
+                                userData = {ID: result[0]._id,
+                                    username : username,
+                                    firstname: result[0].firstname,
+                                    lastname: result[0].lastname,
+                                    group: result[0].group,
+                                    address: result[0].address,
+                                    order: result[0].order
+                                };
+                            } else {
+
+                                userData = {group: result[0].group};
+
+                            }
+
+                            req.currentTimSession.userData = userData;
+
+                            res.status(200).send({message: 'User was found!'});
+                            db.close();
                         } else {
-
-                            userData = {group: result[0].group};
-
+                            res.status(401).send('Invalid user data!');
+                            console.log('User %s wurde nicht gefunden bzw. fehlerhafte Daten', username);
                         }
 
-                        req.currentTimSession.userData = userData;
-
-                        res.status(200).send('User was found!');
-                        db.close();
                     } else {
-                        res.status(401).send('Invalid user data!');
-                        console.log('User %s wurde nicht gefunden bzw. fehlerhafte Daten', username);
+                        throw err;
                     }
 
-                } else {
-                    throw err;
-                }
+                });// end aggregate to Array
 
-            });// end aggregate to Array
+            } else {
 
-        } else {
+                throw err;
+            }
+            ;
 
-            throw err;
-        }
-        ;
-
-    });// end find to Array
+        });// end find to Array
+    } else {
+        delete req.currentTimSession.userData;
+        res.status(200).send({message: 'Logout successful'});
+    }
 });
 
 server.delete('/sessionData', function (req, res) {
 
-    delete req.currentTimSession.userData;
-    res.status(200).send('Logout successful!');
-
-});
-
-server.delete('/sessionData12', function(req, res){
-   
     var db = req.db;
     var collectionUser = db.collection('user');
-    
+
     collectionUser.update({_id: req.currentTimSession.userData.ID}, {
         $unset: {
             firstname: "",
@@ -368,7 +438,7 @@ server.delete('/sessionData12', function(req, res){
         }
 
     });
-    
+
 });
 
 server.get('/sessionData', function (req, res) {
@@ -571,7 +641,7 @@ server.get('/user', function (req, res) {
                         firstname: docs[userIndex].firstname,
                         lastname: docs[userIndex].lastname,
                         address: docs[userIndex].address,
-                        order : docs[userIndex].order
+                        order: docs[userIndex].order
                     });
                 }
 
@@ -958,9 +1028,9 @@ server.get('/location', function (req, res) {
                 locations.push(docs[index].city);
             }
 
-            console.log("Locations: ", locations);
+            console.log("Locations: ", docs);
 
-            res.status(200).send(locations);
+            res.status(200).send(docs);
 
             db.close();
         } else {

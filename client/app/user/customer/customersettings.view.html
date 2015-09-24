@@ -17,7 +17,7 @@
                                ng-init="changeUsername = false;
                                        changeAddress = false;
                                        changePassword = false;
-                                       vm.customerModel.username = currentCustomer.login.username;
+                                       vm.customerModel.username = currentCustomer.username;
                                        vm.customerModel.address.street = currentCustomer.address.street;
                                        vm.customerModel.address.zip = currentCustomer.address.zip;
                                        vm.customerModel.address.city = currentCustomer.address.city;
@@ -27,7 +27,7 @@
                                 <tr>
                                     <td>Benutzername</td>
                                     <td>
-                                        <p ng-hide="changeUsername" >{{ currentCustomer.login.username}}</p>
+                                        <p ng-hide="changeUsername" >{{ currentCustomer.username}}</p>
                                         <input type="text" placeholder="Neuer Benutzername" ng-show="changeUsername" 
                                                value="{{ vm.customerModel.username }}" 
                                                ng-model="vm.customerModel.username">

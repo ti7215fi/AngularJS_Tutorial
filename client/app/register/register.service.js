@@ -30,7 +30,7 @@
 
         function saveRegistration(registerModel) {
             
-            userResource.addUser(registerModel).$promise.then(function() {
+            userResource.save(registerModel).$promise.then(function() {
                 $rootScope.registerPopup.close();
                 
             });

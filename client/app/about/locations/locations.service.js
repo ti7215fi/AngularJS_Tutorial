@@ -66,45 +66,39 @@
 
         function getLocations() {
             
-            $rootScope.locations = locationResource.getLocations();
-            
+            $rootScope.locations = locationResource.query();
+            console.log($rootScope.locations);
         }
 
+        //ToDo: auslesen der locations aus der datenbank, verschieben der auswahl
         function changeCity(city) {
 
-            console.log("city: ", city);
+            var locations = $rootScope.locations;
+            
 
-            $resource('/getLocation').save({location: city},
-                    successHandler,
-                    errorHandler);
-
-            ////////////////////////////////////
-
-            function successHandler(response) {
-                distances = response;
-                var coordinates = [];
-
-                console.log("distances ", distances);
-
-                for (var index = 0; index < distances.length; ++index) {
-
-                    if (distances[index].city === city) {
-                        coordinates[0] = distances[index].coordinates[0];
-                        coordinates[1] = distances[index].coordinates[1];
-                        delete distances[index];
+            if(locations !== null && locations !== undefined && locations !== {}){
+                
+                
+                for(var distancesIndex = 0; distancesIndex < distances.length; ++distancesIndex){
+                    
+                    if(distances[distancesIndex].city === city){
+                        delete distances[distancesIndex];
                         break;
                     }
-
+                    
                 }
-
-
-                changeMapView(coordinates);
-
-                console.log("POST /getLocation successful!");
-            }
-
-            function errorHandler() {
-                console.log("POST /getLocation failed");
+                
+                for(var locationIndex = 0; locationIndex < locations.length; ++locationIndex){
+                    if(locations[locationIndex].city === city){
+                        
+                        var location = locations[locationIndex].geoData;
+                        
+                        changeMapView(location.coordinates);
+                        
+                        break;
+                    }
+                }
+                
             }
         }
 

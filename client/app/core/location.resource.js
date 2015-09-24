@@ -8,40 +8,13 @@
     
     angular
             .module('app.core')
-            .value('resourceLocation', null)
-            .service('locationResource', locationResource);
+            .factory('locationResource', locationResource);
     
-    locationResource.$inject = ['$resource', 'resourceLocation'];
+    locationResource.$inject = ['$resource'];
     
-    function locationResource($resource, resourceLocation){
+    function locationResource($resource){
         
-        resourceLocation = $resource('/location/:name');
-        
-        var actions = {
-            getLocations        : getLocations,
-            getLocationByName   : getLocationByName,
-            addLocation         : addLocation,
-            deleteLocationByName: deleteLocationByName
-        };
-        return actions; 
-        
-        //////////////////////////////////////////////
-        
-        function getLocationByName(name){
-            return resourceLocation.get({ name:name });
-        }
-        
-        function getLocations(){
-            return resourceLocation.query();
-        }
-        
-        function addLocation(location){
-            resourceLocation.save(location);
-        }
-        
-        function deleteLocationByName(name){
-            resourceLocation.delete({ name:name });
-        }
+        return $resource('/location/:name');
         
     }
     

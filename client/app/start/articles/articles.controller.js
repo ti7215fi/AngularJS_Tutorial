@@ -28,7 +28,7 @@
 
         function activate() {
 
-            var response = pizzaResource.getPizza();
+            var response = pizzaResource.query();
 
             response.$promise.then(function (result) {
                 

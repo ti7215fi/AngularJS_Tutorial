@@ -10,9 +10,9 @@
             .module('app.user.customer')
             .factory('customerAreaHandler', customerAreaHandler);
 
-    customerAreaHandler.$inject = ['$resource', '$rootScope', 'userResource', 'sessionResource', '$state'];
+    customerAreaHandler.$inject = ['$resource', '$rootScope', 'userResource', 'sessionResource', '$state', 'pizzaResource'];
 
-    function customerAreaHandler($resource, $rootScope, userResource, sessionResource, $state) {
+    function customerAreaHandler($resource, $rootScope, userResource, sessionResource, $state, pizzaResource) {
 
         var actions = {
             getCustomerData: getCustomerData,
@@ -27,86 +27,58 @@
         /////////////////////////////
 
         function getCustomerData() {
-            $rootScope.currentCustomer = sessionResource.getSessionData();
+            $rootScope.currentCustomer = sessionResource.get();
         }
-
-        function updateCustomer(id, data) {
-            userResource.updateUser(id, data);
-        }
-
 
         function updateUsername(username) {
 
-            var postUsername = {username: username};
+            var postUsername = {
+                update: 'username',
+                username: username
+            };
 
+            var id = $rootScope.currentCustomer.ID;
 
-            $resource('/updateUsername').save(postUsername,
-                    successHandler,
-                    errorHandler);
-
-            ///////////////////////////////////////////        
-
-            function successHandler(response) {
+            userResource.update({Id: id}, postUsername).$promise.then(function () {
                 getCustomerData();
-                console.log(response);
-            }
-
-            function errorHandler(response) {
-                console.log(response);
-            }
-
+            });
         }
 
         function updateAddress(address) {
 
-            var postAddress = {address: address};
+            var postAddress = {
+                update: 'address',
+                address: address
+            };
 
-            $resource('/updateAddress').save(postAddress,
-                    successHandler,
-                    errorHandler);
+            var id = $rootScope.currentCustomer.ID;
 
-            //////////////////////////////////////////
-
-            function successHandler(response) {
+            userResource.update({Id: id}, postAddress).$promise.then(function () {
                 getCustomerData();
-                console.log(response);
-            }
-
-            function errorHandler(response) {
-                console.log(response);
-            }
+            });
 
         }
 
         function updatePassword(oldPassword, newPassword, newPasswordConfirm) {
 
             var postPassword = {
+                update: 'password',
                 oldPassword: oldPassword,
                 newPassword: newPassword,
                 newPasswordConfirm: newPasswordConfirm
-
             };
 
+            var id = $rootScope.currentCustomer.ID;
 
-
-            $resource('/updatePassword').save(postPassword,
-                    successHandler,
-                    errorHandler);
-
-            function successHandler() {
-                console.log('Password was updated!');
+            userResource.update({Id: id}, postPassword).$promise.then(function () {
                 getCustomerData();
-            }
-
-            function errorHandler() {
-                console.log("An error occured! Password was not updated!");
-            }
+            });
 
         }
 
         function deleteCustomer() {
 
-            sessionResource.deleteUser().$promise.then(function () {
+            sessionResource.delete().$promise.then(function () {
                 $rootScope.userSession = null;
                 $state.go('home');
             });
@@ -115,52 +87,45 @@
 
         function getOrder() {
 
-            $resource('/getCustomerOrder', {isArray: true}).query(
-                    successHandler,
-                    errorHandler);
-
-            ///////////////////////////////
-
-            function successHandler(responseOrder) {
-
-
-                $resource('/pizzen', {isArray: true}).query(
-                        successHandler2,
-                        errorHandler);
-
-                /////////////////////////////
-
-                function successHandler2(responsePizzen) {
-
-                    var item = "";
-
-
-                    for (var orderIndex = 0; orderIndex < responseOrder.length; ++orderIndex) {
-                        for (var itemIndex = 0; itemIndex < responseOrder[orderIndex].items.length; ++itemIndex) {
-                            for (var pizzaIndex = 0; pizzaIndex < responsePizzen.length; ++pizzaIndex) {
-                                item = responseOrder[orderIndex].items[itemIndex];
-
-                                if (item.pizza_id === responsePizzen[pizzaIndex]._id) {
-                                    responseOrder[orderIndex].items[itemIndex].name = responsePizzen[pizzaIndex].name;
-                                } // end if
-                            } // end for 3
-                        } // end for 2
-                    }// end for 1
-
-                    $rootScope.customerOrder = responseOrder;
-                    console.log('/getCustomerOrder successful!');
-                }
-
-                function errorHandler() {
-                    console.log('/pizzen failed!');
-                }
-
-
+            if ($rootScope.currentCustomer === 'undefined') {
+                getCustomerData();
             }
 
-            function errorHandler() {
-                console.log('/getCustomerOrder failed!');
-            }
+            pizzaResource.query().$promise.then(function (success) {
+
+                var order = $rootScope.currentCustomer.order;
+                var viewOrder = [];
+
+                for (var orderIndex = 0; orderIndex < order.length; ++orderIndex) {
+                    for (var itemIndex = 0; itemIndex < order[orderIndex].items.length; ++itemIndex) {
+                        
+                        var items = order[orderIndex].items;
+                        
+                        for (var pizzaIndex = 0; pizzaIndex < success.length; ++pizzaIndex) {
+
+                            var item = order[orderIndex].items[itemIndex];
+                            
+                            if(item.pizza_id === success[pizzaIndex]._id){
+                                items[itemIndex].push(success[pizzaIndex].name);
+                                break;
+                            }
+
+                        }
+
+                        viewOrder.push({
+                            ordernumber: order[orderIndex].ordernumber,
+                            date: order[orderIndex].date,
+                            sum: order[orderIndex].sum,
+                            items : items
+                        });
+
+                    }
+                }
+
+                $rootScope.customerOrder = viewOrder;
+
+            });
+
 
         }
 

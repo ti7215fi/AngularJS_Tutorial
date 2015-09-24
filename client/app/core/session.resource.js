@@ -4,40 +4,14 @@
     
     angular
             .module('app.core')
-            .value('resourceSession', null)
-            .service('sessionResource', sessionResource);
+            .factory('sessionResource', sessionResource);
     
-    sessionResource.$inject = ['$resource', 'resourceSession'];
+    sessionResource.$inject = ['$resource'];
     
-    function sessionResource($resource, resourceSession){
+    function sessionResource($resource){
         
-        resourceSession = $resource('/sessionData');
+        return $resource('/sessionData');
         
-        var actions = {
-            getSessionData  : getSessionData,
-            login           : login,
-            logout          : logout,
-            deleteUser      : deleteUser
-        };
-        return actions;
-        
-        ///////////////////////////////////
-        
-        function getSessionData(){
-            return resourceSession.get();
-        }
-        
-        function login(credentials){
-            return resourceSession.save(credentials);
-        }
-        
-        function logout(){
-            return resourceSession.remove();
-        }
-        
-        function deleteUser(){
-            return resourceSession.delete();
-        }
     }
     
 })();

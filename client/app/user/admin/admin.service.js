@@ -54,7 +54,7 @@
 
                 postPizza = JSON.stringify(pizza);
 
-                pizzaResource.addPizza(postPizza);
+                pizzaResource.save(postPizza);
 
             }
 
@@ -69,7 +69,7 @@
                 coordinates: coordinates
             };
 
-            locationResource.addLocation(postLocation);
+            locationResource.save(postLocation);
         }
 
         //ToDo
@@ -80,7 +80,7 @@
 
         function getCustomers() {
 
-            var response = userResource.getUsers();
+            var response = userResource.query();
 
             for (var index = 0; index < response.length; ++index) {
                 response[index].edit = false;
@@ -96,7 +96,7 @@
 
         function getCustomerById(Id) {
 
-            userResource.getUserById(Id).$promise.then(function (response) {
+            userResource.get({ Id:Id}).$promise.then(function (response) {
                 if (typeof response.firstname === "undefined") {
 
                     response.deleted = true;

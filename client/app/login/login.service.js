@@ -26,9 +26,9 @@
 
         function authentication(username, password) {
 
-            var credentials = {username: username, password: password};
+            var credentials = {username: username, password: password, delete : false};
 
-            sessionResource.login(credentials).$promise.then(function(success) {
+            sessionResource.save(credentials).$promise.then(function(success) {
                 console.log(success);
                 getUserData();
             });
@@ -36,7 +36,7 @@
 
         function getUserData() {
 
-            $rootScope.userSession = sessionResource.getSessionData();
+            $rootScope.userSession = sessionResource.get();
 
         }
 
@@ -45,10 +45,10 @@
             return $rootScope.userSession;
 
         }
-
+        
         function logout() {
 
-            sessionResource.logout().$promise.then(function () {
+            sessionResource.save({ 'delete' : true }).$promise.then(function () {
                 $rootScope.userSession = null;
                 $state.go('home');
             });

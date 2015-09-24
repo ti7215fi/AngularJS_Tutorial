@@ -25,10 +25,14 @@
 
     function runApp(sessionResource, $rootScope, $state) {
 
-        sessionResource.getSessionData().$promise.then(function (success) {
+        sessionResource.get().$promise.then(function (success) {
+            if (success.ID === 'undefined') {
+                $rootScope.userSession = null;
+            } else {
+                $rootScope.userSession = success;
+            }
             $state.go('home');
-            $rootScope.userSession = null;
-           
+
         });
 
     }
