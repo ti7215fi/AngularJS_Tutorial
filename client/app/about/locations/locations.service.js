@@ -11,9 +11,9 @@
             .factory('locationHandler', locationHandler)
             .value('distances', []);
 
-    locationHandler.$inject = ['$resource', '$rootScope', 'map', 'L', 'distances', 'locationResource'];
+    locationHandler.$inject = ['$rootScope', 'map', 'L', 'distances', 'locationResource'];
 
-    function locationHandler($resource, $rootScope, map, L, distances, locationResource) {
+    function locationHandler($rootScope, map, L, distances, locationResource) {
 
         var actions = {
             getLocations: getLocations,

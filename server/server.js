@@ -905,7 +905,7 @@ server.get('/getCustomerOrder', function (req, res) {
 
 });
 
-server.post('/pizza/:Id', function (req, res) {
+server.post('/pizza', function (req, res) {
     var db = req.db;
     var collectionPizza = db.collection('pizza');
 

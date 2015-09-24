@@ -8,7 +8,7 @@
 
     describe('Test the customerAreaHandler Factory', function () {
 
-        var $httpBackend, $rootScope, customerAreaHandler;
+        var $httpBackend, $rootScope, customerAreaHandler, userResource, $state;
 
         //load the core module for the routerHelper
         beforeEach(module('app.core'));
@@ -25,9 +25,13 @@
             //mock the rootScope service
             $rootScope = $injector.get('$rootScope');
 
+            //mock the userResource service
+            userResource = $injector.get('userResource');
+
             //mock the customerAreaHandler service
             customerAreaHandler = $injector.get('customerAreaHandler');
 
+            $state = $injector.get('$state');
         }));
 
         //verify the $httpBackend service after each test
@@ -43,21 +47,27 @@
                 lastname: "Mustermann"
             };
 
-            $httpBackend.expectGET('/getCurrentCustomer').respond(200, customerData);
+            $httpBackend.expectGET('/sessionData').respond(200, customerData);
             customerAreaHandler.getCustomerData();
             $httpBackend.flush();
 
             expect($rootScope.currentCustomer).toBeDefined();
-            expect($rootScope.currentCustomer).toEqual(customerData);
+            expect($rootScope.currentCustomer.id).toEqual(customerData.id);
+            expect($rootScope.currentCustomer.firstname).toEqual(customerData.firstname);
+            expect($rootScope.currentCustomer.lastname).toEqual(customerData.lastname);
+
         });
 
         it('should not exist a variable called "currentCustomer"', function () {
 
-            $httpBackend.expectGET('/getCurrentCustomer').respond(500, '');
+            $httpBackend.expectGET('/sessionData').respond(500, '');
             customerAreaHandler.getCustomerData();
             $httpBackend.flush();
 
-            expect($rootScope.currentCustomer).toBeUndefined();
+            expect($rootScope.currentCustomer.id).toBeUndefined();
+            expect($rootScope.currentCustomer.firstname).toBeUndefined();
+            expect($rootScope.currentCustomer.lastname).toBeUndefined();
+
         });
 
         describe('test updateUsername(username)', function () {
@@ -66,7 +76,7 @@
 
             beforeEach(function () {
 
-                username = {username: 'newusername'};
+                username = {username: 'newusername', update: 'username'};
                 userData = {
                     id: 1,
                     firstname: "Max",
@@ -76,38 +86,42 @@
                     }
                 };
 
-
+                $rootScope.currentCustomer = {
+                    ID: 1
+                };
             });
 
             it('should do a HTTP-POST and HTTP-GET', function () {
 
-                $httpBackend.expectPOST('/updateUsername', username).respond(200, '');
-                $httpBackend.expectGET('/getCurrentCustomer').respond(200, userData);
+
+                $httpBackend.expectPUT('/user/1', username).respond(200, '');
+                $httpBackend.expectGET('/sessionData').respond(200, userData);
                 customerAreaHandler.updateUsername('newusername');
                 $httpBackend.flush();
 
-                expect($rootScope.currentCustomer).toEqual(userData);
+                expect($rootScope.currentCustomer.login.username).toEqual(userData.login.username);
 
             });
 
             it('should do only one HTTP_POST', function () {
 
-                $httpBackend.expectPOST('/updateUsername', username).respond(500, 'fail');
+
+                $httpBackend.expectPUT('/user/1', username).respond(500, 'fail');
                 customerAreaHandler.updateUsername('newusername');
                 $httpBackend.flush();
 
-                expect($rootScope.currentCustomer).toBeUndefined();
+                expect($rootScope.currentCustomer.login).toBeUndefined();
 
             });
 
             it('should do a HTTP-POST and a HTTP-GET and fail', function () {
 
-                $httpBackend.expectPOST('/updateUsername', username).respond(200, '');
-                $httpBackend.expectGET('/getCurrentCustomer').respond(500, '');
+                $httpBackend.expectPUT('/user/1', username).respond(200, '');
+                $httpBackend.expectGET('/sessionData').respond(500, '');
                 customerAreaHandler.updateUsername('newusername');
                 $httpBackend.flush();
 
-                expect($rootScope.currentCustomer).toBeUndefined();
+                expect($rootScope.currentCustomer.login).toBeUndefined();
 
             });
 
@@ -119,11 +133,18 @@
 
             beforeEach(function () {
 
-                newAddress = {address: {
+                newAddress = {
+                    address: {
                         street: 'teststreet 92',
                         zip: 09090,
                         city: 'test'
-                    }};
+                    },
+                    update : 'address'};
+
+                $rootScope.currentCustomer = {
+                    ID: 1
+                };
+
             });
 
 
@@ -136,8 +157,8 @@
                     address: newAddress
                 };
 
-                $httpBackend.expectPOST('/updateAddress', newAddress).respond(200, '');
-                $httpBackend.expectGET('/getCurrentCustomer').respond(200, userData);
+                $httpBackend.expectPUT('/user/1', newAddress).respond(200, '');
+                $httpBackend.expectGET('/sessionData').respond(200, userData);
                 customerAreaHandler.updateAddress({
                     street: 'teststreet 92',
                     zip: 09090,
@@ -145,13 +166,13 @@
                 });
                 $httpBackend.flush();
 
-                expect($rootScope.currentCustomer).toEqual(userData);
+                expect($rootScope.currentCustomer.address).toEqual(userData.address);
 
             });
 
             it('should do a POST and a GET with an error', function () {
 
-                $httpBackend.expectPOST('/updateAddress', newAddress).respond(500, '');
+                $httpBackend.expectPUT('/user/1', newAddress).respond(500, '');
                 customerAreaHandler.updateAddress({
                     street: 'teststreet 92',
                     zip: 09090,
@@ -159,7 +180,7 @@
                 });
                 $httpBackend.flush();
 
-                expect($rootScope.currentCustomer).toBeUndefined();
+                expect($rootScope.currentCustomer.address).toBeUndefined();
 
             });
 
@@ -171,6 +192,7 @@
 
             beforeEach(function () {
                 newPassword = {
+                    update : 'password',
                     oldPassword: 'oldie',
                     newPassword: 'newbie',
                     newPasswordConfirm: 'newbie'
@@ -184,41 +206,52 @@
                         password: 'newbie'
                     }
                 };
+
+                $rootScope.currentCustomer = {
+                    ID: 1
+                };
             });
 
             it('should successful do a POST and a GET', function () {
 
-                $httpBackend.expectPOST('/updatePassword', newPassword).respond(200, '');
-                $httpBackend.expectGET('/getCurrentCustomer').respond(200, userData);
+                $httpBackend.expectPUT('/user/1', newPassword).respond(200, '');
+                $httpBackend.expectGET('/sessionData').respond(200, userData);
                 customerAreaHandler.updatePassword(
                         'oldie',
                         'newbie',
                         'newbie');
                 $httpBackend.flush();
 
-                expect($rootScope.currentCustomer).toEqual(userData);
+                expect($rootScope.currentCustomer.login.password).toEqual(userData.login.password);
 
             });
 
             it('should successful do a POST and a GET', function () {
 
-                $httpBackend.expectPOST('/updatePassword', newPassword).respond(500, '');
+                $httpBackend.expectPUT('/user/1', newPassword).respond(500, '');
                 customerAreaHandler.updatePassword(
                         'oldie',
                         'newbie',
                         'newbie');
                 $httpBackend.flush();
 
-                expect($rootScope.currentCustomer).toBeUndefined();
+                expect($rootScope.currentCustomer.login).toBeUndefined();
 
             });
 
         });
 
         describe('test deleteCustomer()', function () {
+
+            beforeEach(function () {
+                spyOn($state, 'go').and.callFake(function () {
+                    return 0;
+                });
+            })
+
             it('should update the value of the "usersession"-variable to null', function () {
 
-                $httpBackend.expectGET('/deleteCustomer').respond(200, '');
+                $httpBackend.expectDELETE('/sessionData').respond(200, '');
                 customerAreaHandler.deleteCustomer();
                 $httpBackend.flush();
 
@@ -236,7 +269,7 @@
                     login: {}
                 };
 
-                $httpBackend.expectGET('/deleteCustomer').respond(500, '');
+                $httpBackend.expectDELETE('/sessionData').respond(500, '');
                 customerAreaHandler.deleteCustomer();
                 $httpBackend.flush();
 
@@ -260,7 +293,8 @@
                     login: {}
                 };
 
-                $httpBackend.expectGET('/deleteCustomer').respond(200, '');
+
+                $httpBackend.expectDELETE('/sessionData').respond(200, '');
                 customerAreaHandler.deleteCustomer();
                 $httpBackend.flush();
 
@@ -268,121 +302,131 @@
                 expect($rootScope.userSession).toEqual(null);
             });
         });
-        
-        describe('test getOrder', function(){
-            
-           
-            it('should have after two HTTP-GET an array with orders and the name of the pizza', function(){
-                
-                var order =  [
-                      {
-                          ordernumber : 1,
-                          sum : 25.50,
-                          items : [
-                              {
-                                  pizza_id : 1,
-                                  quantity: 2
-                              },
-                              {
-                                  pizza_id : 2,
-                                  quantity : 1
-                              }
-                          ]
-                      },
-                      {
-                        ordernumber : 2,
-                        sum : 15,
-                        items : [
+
+        describe('test getOrder', function () {
+
+
+            it('should have after two HTTP-GET an array with orders and the name of the pizza', function () {
+
+                var data = {
+                    
+                    id : 1,
+                    firstname : 'Max',
+                    lastname : 'Mustermann',
+                    order : [
+                    {
+                        ordernumber: 1,
+                        sum: 25.50,
+                        items: [
                             {
-                                pizza_id : 2,
-                                quantity : 1
+                                pizza_id: 1,
+                                quantity: 2
                             },
                             {
-                                pizza_id : 1,
-                                quantity : 1
+                                pizza_id: 2,
+                                quantity: 1
                             }
                         ]
-                      }
-                  ]  
-                ;
-                
+                    },
+                    {
+                        ordernumber: 2,
+                        sum: 15,
+                        items: [
+                            {
+                                pizza_id: 2,
+                                quantity: 1
+                            },
+                            {
+                                pizza_id: 1,
+                                quantity: 1
+                            }
+                        ]
+                    }
+                ]}
+                        ;
+
                 var responsePizzen = [
-                {
-                    _id : 1,
-                    name : 'Salami'
-                },
-                {
-                    _id : 2,
-                    name : 'Pilze'
-                }];
-                
-                $httpBackend.expectGET('/getCustomerOrder').respond(200, order);
-                $httpBackend.expectGET('/pizzen').respond(200, responsePizzen);
+                    {
+                        _id: 1,
+                        name: 'Salami'
+                    },
+                    {
+                        _id: 2,
+                        name: 'Pilze'
+                    }];
+
+                $httpBackend.expectGET('/sessionData').respond(200, data);
+                $httpBackend.expectGET('/pizza').respond(200, responsePizzen);
                 customerAreaHandler.getOrder();
                 $httpBackend.flush();
-                
+
                 expect($rootScope.customerOrder[0].items[0].name).toEqual(responsePizzen[0].name);
                 expect($rootScope.customerOrder[0].items[1].name).toEqual(responsePizzen[1].name);
                 expect($rootScope.customerOrder[1].items[0].name).toEqual(responsePizzen[1].name);
                 expect($rootScope.customerOrder[1].items[1].name).toEqual(responsePizzen[0].name);
 
-                
+
             });
-            
-            it('should not have an declared and initialized rootScope-variable, called "customerOrder"', function(){
-                
-               $httpBackend.expectGET('/getCustomerOrder').respond(500, '');
-               customerAreaHandler.getOrder();
-               $httpBackend.flush();
-               
-               expect($rootScope.customerOrder).toBeUndefined();
-                
+
+            it('should not have an declared and initialized rootScope-variable, called "customerOrder"', function () {
+
+                $httpBackend.expectGET('/sessionData').respond(200, {});
+                $httpBackend.expectGET('/pizza').respond(500, '');
+                customerAreaHandler.getOrder();
+                $httpBackend.flush();
+
+                expect($rootScope.customerOrder).toBeUndefined();
+
             });
-            
-            it('should not have an declared and initialized rootScope-variable, called "customerOrder" - 2', function(){
-                
-                var order =  [
-                      {
-                          ordernumber : 1,
-                          sum : 25.50,
-                          items : [
-                              {
-                                  pizza_id : 1,
-                                  quantity: 2
-                              },
-                              {
-                                  pizza_id : 2,
-                                  quantity : 1
-                              }
-                          ]
-                      },
-                      {
-                        ordernumber : 2,
-                        sum : 15,
-                        items : [
+
+            it('should not have an declared and initialized rootScope-variable, called "customerOrder" - 2', function () {
+
+                var data = {
+                    id : 1,
+                    firstname : 'Max',
+                    lastname : 'Mustermann',
+                    order : [
+                    {
+                        ordernumber: 1,
+                        sum: 25.50,
+                        items: [
                             {
-                                pizza_id : 2,
-                                quantity : 1
+                                pizza_id: 1,
+                                quantity: 2
                             },
                             {
-                                pizza_id : 1,
-                                quantity : 1
+                                pizza_id: 2,
+                                quantity: 1
                             }
                         ]
-                      }
-                  ]  
-                ;                
-                
-               $httpBackend.expectGET('/getCustomerOrder').respond(200, order);
-               $httpBackend.expectGET('/pizzen').respond(500, '');
-               customerAreaHandler.getOrder();
-               $httpBackend.flush();
-               
-               expect($rootScope.customerOrder).toBeUndefined();
-                
+                    },
+                    {
+                        ordernumber: 2,
+                        sum: 15,
+                        items: [
+                            {
+                                pizza_id: 2,
+                                quantity: 1
+                            },
+                            {
+                                pizza_id: 1,
+                                quantity: 1
+                            }
+                        ]
+                    }
+                ]}
+                        ;
+
+                $httpBackend.expectGET('/sessionData').respond(200, data);
+                $httpBackend.expectGET('/pizza').respond(500, '');
+                customerAreaHandler.getOrder();
+                $httpBackend.flush();
+
+                expect($rootScope.customerOrder).toBeUndefined();
+
             });
-            
-            
+
+
         });
 
     });

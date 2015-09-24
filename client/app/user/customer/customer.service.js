@@ -10,9 +10,9 @@
             .module('app.user.customer')
             .factory('customerAreaHandler', customerAreaHandler);
 
-    customerAreaHandler.$inject = ['$resource', '$rootScope', 'userResource', 'sessionResource', '$state', 'pizzaResource'];
+    customerAreaHandler.$inject = ['$rootScope', 'userResource', 'sessionResource', '$state', 'pizzaResource'];
 
-    function customerAreaHandler($resource, $rootScope, userResource, sessionResource, $state, pizzaResource) {
+    function customerAreaHandler($rootScope, userResource, sessionResource, $state, pizzaResource) {
 
         var actions = {
             getCustomerData: getCustomerData,
@@ -87,7 +87,7 @@
 
         function getOrder() {
 
-            if ($rootScope.currentCustomer === 'undefined') {
+            if ($rootScope.currentCustomer === undefined) {
                 getCustomerData();
             }
 
@@ -106,22 +106,25 @@
                             var item = order[orderIndex].items[itemIndex];
                             
                             if(item.pizza_id === success[pizzaIndex]._id){
-                                items[itemIndex].push(success[pizzaIndex].name);
+                                items[itemIndex].name = success[pizzaIndex].name;
                                 break;
                             }
-
                         }
-
+                    }
+                    
+                    var date = new Date(order[orderIndex].date);
+                    
+                    date = date.getDate() + '.' + date.getMonth() + '.' + date.getFullYear() + ' ' +
+                            date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+                   
                         viewOrder.push({
                             ordernumber: order[orderIndex].ordernumber,
-                            date: order[orderIndex].date,
+                            date: date,
                             sum: order[orderIndex].sum,
                             items : items
                         });
-
-                    }
                 }
-
+                
                 $rootScope.customerOrder = viewOrder;
 
             });

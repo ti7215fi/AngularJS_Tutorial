@@ -11,10 +11,10 @@
             .value('modalInstance', null)
             .factory('adminHandler', adminHandler);
 
-    adminHandler.$inject = ['$resource', 'modalInstance', '$rootScope', '$modal',
+    adminHandler.$inject = ['$state', 'modalInstance', '$rootScope', '$modal',
         'locationResource', 'pizzaResource', 'userResource'];
 
-    function adminHandler($resource, modalInstance, $rootScope, $modal,
+    function adminHandler($state, modalInstance, $rootScope, $modal,
             locationResource, pizzaResource, userResource) {
 
         var actions = {
@@ -54,7 +54,9 @@
 
                 postPizza = JSON.stringify(pizza);
 
-                pizzaResource.save(postPizza);
+                pizzaResource.save(postPizza).$promise.then(function(success){
+                    $state.go('home');
+                });
 
             }
 
@@ -75,7 +77,56 @@
         //ToDo
         function getOrders() {
 
-                $rootScope.orders = $resource('/getOrders').query();
+            var customers = userResource.query();
+            var pizzen = pizzaResource.query();
+            var items = '';
+            var date, time, sum;
+
+            var orders = [];
+
+            customers.$promise.then(function () {
+                pizzen.$promise.then(function () {
+
+
+                    for (var userIndex = 0; userIndex < customers.length; ++userIndex) {
+                        for (var orderIndex = 0; orderIndex < customers[userIndex].order.length; ++orderIndex) {
+
+                            date = new Date(customers[userIndex].order[orderIndex].date);
+                            time = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+                            date = date.getDate() + '.' + date.getMonth() + '.' + date.getFullYear();
+                            sum = customers[userIndex].order[orderIndex].sum;
+
+                            for (var itemIndex = 0; itemIndex < customers[userIndex].order[orderIndex].items.length; ++itemIndex) {
+
+                                var item = customers[userIndex].order[orderIndex].items[itemIndex];
+
+                                for (var pizzaIndex = 0; pizzaIndex < pizzen.length; ++pizzaIndex) {
+                                    if (item.pizza_id === pizzen[pizzaIndex]._id) {
+                                        items += item.quantity + 'x ' + pizzen[pizzaIndex].name + ', ';
+                                    }
+                                }//end for 4
+                            }//end for 3
+                            orders.push({
+                                id: customers[userIndex].id,
+                                date: date,
+                                time: time,
+                                sum: sum,
+                                items: items
+                            });
+                            
+                            items = '';
+
+                        }//end for 2
+
+
+
+                    }//end for 1
+
+                    $rootScope.orders = orders;
+                });
+            });
+
+
         }
 
         function getCustomers() {
@@ -96,7 +147,7 @@
 
         function getCustomerById(Id) {
 
-            userResource.get({ Id:Id}).$promise.then(function (response) {
+            userResource.get({Id: Id}).$promise.then(function (response) {
                 if (typeof response.firstname === "undefined") {
 
                     response.deleted = true;
