@@ -42,7 +42,7 @@
                 location: "Erfurt",
                 coordinates: [50.038262, 12.238262]
             };
-            $httpBackend.expectPOST('/saveLocation', request).respond(200, '');
+            $httpBackend.expectPOST('/location', request).respond(200, '');
             adminHandler.saveLocation("Erfurt", 50.038262, 12.238262);
             $httpBackend.flush();
         });
@@ -110,7 +110,11 @@
                     },
                 ];
             });
-            it('should create a new rootScope-variable, called "orders" and init it with the response', function () {
+            it('should create a new rootScope-variable, called "orders" and init it with the data', function () {
+
+                var date2 = new Date();
+                var expectedDate = date2.getDate() + '.' + date2.getMonth() + '.' + date2.getFullYear();
+                var expectedTime = date2.getHours() + ':' + date2.getMinutes() + ':' + date2.getSeconds();
 
                 $httpBackend.expectGET('/user').respond(200, response);
                 $httpBackend.expectGET('/pizza').respond(200, [{
@@ -128,7 +132,10 @@
                 adminHandler.getOrders();
                 $httpBackend.flush();
                 expect($rootScope.orders).toBeDefined();
-                expect($rootScope.orders).toEqual(0);
+                expect($rootScope.orders[0].items).toEqual('3x Salami, 2x Schinken, ');
+                expect($rootScope.orders[0].date).toEqual(expectedDate);
+                expect($rootScope.orders[0].time).toEqual(expectedTime);
+                expect($rootScope.orders[1].items).toEqual('1x Schinken, 2x Gyros, ');
             });
             it('should not create a new rootScope-variable, called "orders"', function () {
 

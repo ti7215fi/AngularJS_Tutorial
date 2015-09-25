@@ -16,16 +16,19 @@
 
         //mock the constants
         beforeEach(module(function ($provide) {
-            
+
             var mockL = {
-                LatLng : function Constr(){ return Constr; }
+                LatLng: function Constr() {
+                    return Constr;
+                }
             };
-            
+
             var mockMap = {
-              
-                setView : function(){return 0;}
+                setView: function () {
+                    return 0;
+                }
             };
-            
+
             $provide.constant('L', mockL);
             $provide.constant('map', mockMap);
         }));
@@ -46,79 +49,63 @@
             $httpBackend.verifyNoOutstandingRequest();
         });
 
-        it('should have a "distances" variable initialized with an empty array', function(){
-           
+        it('should have a "distances" variable initialized with an empty array', function () {
+
             expect(locationHandler.getDistances()).toEqual([]);
-            
+
         });
-        
-        it('should initialize an variable called "locations" in the rootScope', function(){
-            
-            var response =  ['Erfurt', 'Jena', 'Weimar'];
-            
-            $httpBackend.expectGET('/locations').respond(200,response);
+
+        it('should initialize an variable called "locations" in the rootScope', function () {
+
+            var response = ['Erfurt', 'Jena', 'Weimar'];
+
+            $httpBackend.expectGET('/location').respond(200, response);
             locationHandler.getLocations();
             $httpBackend.flush();
-            
-            var expectedValue = [
-                { city : 'Erfurt'   },
-                { city : 'Jena'     },  
-                { city : 'Weimar'   }  
-            ];
-            
-            expect($rootScope.locations).toEqual(expectedValue);
-            
+
+            expect($rootScope.locations.length >= 3).toBe(true);
+
         });
-        
-        it('should init the "distances" variable with some value', function(){
-           
-           var city = "Erfurt";
-           var response = [
-               {
-                   city : "Erfurt",
-                   coordinates : [
-                       50.023937,
-                       11.393272
-                   ]
-               },
-               {
-                   city : "Jena",
-                   coordinates : [
-                       51.203922,
-                       11.548326
-                   ]
-               },
-               {
-                   city : "Weimar",
-                   coordinates : [
-                       50.182256,
-                       11.483252
-                   ]
-               }
-           ];
-           
-            $httpBackend.expectPOST('/getLocation', { location : city } ).respond(200, response);
-            locationHandler.changeCity(city);
-            $httpBackend.flush();
-            
-            expect(locationHandler.getDistances()).toEqual([
-                ,
+
+        it('should init the "distances" variable with some value', function () {
+
+            var city = "Erfurt";
+            var response = [
                 {
-                   city : "Jena",
-                   coordinates : [
-                       51.203922,
-                       11.548326
-                   ]
-               },
-               {
-                   city : "Weimar",
-                   coordinates : [
-                       50.182256,
-                       11.483252
-                   ]
-               }
-            ]);
-            
+                    city: "Erfurt",
+                    geoData : {
+                    coordinates: [
+                        50.023937,
+                        11.393272
+                    ]
+                }
+                },
+                {
+                    city: "Jena",
+                    geoData : {
+                    coordinates: [
+                        51.203922,
+                        11.548326
+                    ]
+                }
+                },
+                {
+                    city: "Weimar",
+                    geoData : {
+                    coordinates: [
+                        50.182256,
+                        11.483252
+                    ]
+                }
+                }
+            ];
+
+            $rootScope.locations = response;
+            distances = ['Erfurt', 'Jena', 'Weimar'];
+            var coordinates = locationHandler.changeCity(city);
+
+            expect(coordinates).toEqual(response[0].geoData.coordinates);
+
         });
 
 

@@ -32,12 +32,12 @@
 
         it('should delete the article successful', function () {
             var article = {
-                id : 1,
+                _id : 1,
                 name : "Salami",
                 price : 5.00
             };
             
-            $httpBackend.expectPOST('/deleteArticle', article).respond(200, '');
+            $httpBackend.expectDELETE('/pizza/1').respond(200, '');
             articlehandler.deleteArticle(article);
             $httpBackend.flush();
         });
@@ -59,7 +59,7 @@
                 price : 5.10
             };
             
-            $httpBackend.expectPOST('/editArticle', expectedPost).respond(200,'');
+            $httpBackend.expectPUT('/pizza/1', expectedPost).respond(200,'');
             articlehandler.editArticle(name, price, article);
             $httpBackend.flush();
             

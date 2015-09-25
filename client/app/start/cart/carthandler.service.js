@@ -112,7 +112,7 @@
             
             if ($rootScope.userSession !== null) {
 
-                var data = JSON.stringify(getItems());
+                var data = getItems();
 
                 userResource.update(data).$promise.then(function(){
                    

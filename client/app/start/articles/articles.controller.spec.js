@@ -58,27 +58,17 @@
                 }
             ];
             
-            $httpBackend.expectGET('/pizzen').respond(200, response);
-            controller.activate();
+            $httpBackend.expectGET('/pizza').respond(200, response);
+            //controller.refreshArticles();
             $httpBackend.flush();
             
             expect(controller.articles).toBeDefined();
-            expect(controller.articles).toEqual({
-                    _id     : 1,
-                    name    : "Salami",
-                    price   : 5.00,
-                    edit    : false
-                },
-                {
-                    _id     : 2,
-                    name    : "Schinken",
-                    price   : 5.00,
-                    edit    : false
-                });
+            expect(controller.articles[0].edit).toEqual(false)
+            expect(controller.articles[1].edit).toEqual(false);
         });
 
         it('should have an defined cart variable', function () {
-            $httpBackend.expectGET('/pizzen').respond(200, '');
+            $httpBackend.expectGET('/pizza').respond(200, '');
             $httpBackend.flush();
             
             expect(controller.cart).toBeDefined();
@@ -86,6 +76,9 @@
         });
         
         it('should have a function refreshArticles', function(){
+           
+           $httpBackend.expectGET('/pizza').respond(200, []);
+           $httpBackend.flush();
            
             expect(controller.refreshArticles).toBeDefined();
             

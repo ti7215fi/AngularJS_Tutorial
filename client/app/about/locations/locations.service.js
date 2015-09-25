@@ -94,7 +94,7 @@
                         var location = locations[locationIndex].geoData;
                         
                         changeMapView(location.coordinates);
-                        
+                        return location.coordinates;
                         break;
                     }
                 }

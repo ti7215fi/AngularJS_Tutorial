@@ -43,7 +43,6 @@
 
             function loadFunction(e) {
 
-                var postPizza = [];
                 price = parseFloat(price);
 
                 var pizza = {
@@ -52,9 +51,7 @@
                     image: e.target.result
                 };
 
-                postPizza = JSON.stringify(pizza);
-
-                pizzaResource.save(postPizza).$promise.then(function(success){
+                pizzaResource.save(pizza).$promise.then(function(success){
                     $state.go('home');
                 });
 

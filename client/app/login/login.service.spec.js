@@ -6,7 +6,7 @@
 
     'use strict';
 
-    var $httpBackend, $rootScope, loginHandler;
+    var $httpBackend, $rootScope, loginHandler, $state;
 
     describe('Test the loginHandler-Factory', function () {
 
@@ -26,6 +26,10 @@
             $rootScope = $injector.get('$rootScope');
             //set up the carthandler mock factory
             loginHandler = $injector.get('loginHandler');
+            //set up the $state service
+            $state = $injector.get('$state');
+            
+            spyOn($state, 'go').and.callFake( function(){ return 0 });
 
             console.log(loginHandler);
         }));
@@ -45,14 +49,17 @@
 
             };
 
-            var login = {username: "MaxMu", password: 123123};
-            $httpBackend.expectPOST('/login', login).respond(200, 'POST successful');
-            $httpBackend.expectGET('/getUserData').respond(200, userData);
+            var login = {username: "MaxMu", password: 123123, delete : false};
+            $httpBackend.expectPOST('/sessionData', login).respond(200, 'POST successful');
+            $httpBackend.expectGET('/sessionData').respond(200, userData);
             loginHandler.authentication("MaxMu", 123123);
             $httpBackend.flush();
 
             expect($rootScope.userSession).toBeDefined();
-            expect($rootScope.userSession).toEqual(userData);
+            expect($rootScope.userSession.id).toEqual(userData.id);
+            expect($rootScope.userSession.firstname).toEqual(userData.firstname);
+            expect($rootScope.userSession.lastname).toEqual(userData.lastname);
+
         });
 
         it('should return some userData', function () {
@@ -64,18 +71,21 @@
 
             };
 
-            var login = {username: "MaxMu", password: 123123};
-            $httpBackend.expectPOST('/login', login).respond(200, 'POST successful');
-            $httpBackend.expectGET('/getUserData').respond(200, userData);
+            var login = {username: "MaxMu", password: 123123, delete : false};
+            $httpBackend.expectPOST('/sessionData', login).respond(200, 'POST successful');
+            $httpBackend.expectGET('/sessionData').respond(200, userData);
             loginHandler.authentication("MaxMu", 123123);
             $httpBackend.flush();
 
-            expect(loginHandler.getUserInformation()).toEqual(userData);
+            expect(loginHandler.getUserInformation().id).toEqual(userData.id);
+            expect(loginHandler.getUserInformation().firstname).toEqual(userData.firstname);
+            expect(loginHandler.getUserInformation().lastname).toEqual(userData.lastname);
+
         });
 
         it('should initialize the rootScope-variable "userSession" with null', function () {
 
-            $httpBackend.expectGET('/logout').respond(200, '');
+            $httpBackend.expectPOST('/sessionData', { delete : true }).respond(200, '');
             loginHandler.logout();
             $httpBackend.flush();
 

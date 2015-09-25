@@ -25,7 +25,7 @@
     function runApp(sessionResource, $rootScope, $state) {
 
         sessionResource.get().$promise.then(function (success) {
-            if (success.ID === 'undefined') {
+            if (typeof success.group === 'undefined') {
                 $rootScope.userSession = null;
             } else {
                 $rootScope.userSession = success;

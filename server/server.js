@@ -249,8 +249,19 @@ server.put('/user', function (req, res) {
 
 
                     insertOrderIntoDatabase(orderID, order, sum);
+                    req.currentTimSession.userData.order.push({
+                        ordernumber : orderID +1,
+                        date : Date(),
+                        sum : sum,
+                        items : order
+                    });
                     db.close();
-                    console.log("sum", sum);
+                    res.status(200).send({
+                        ordernumber : orderID +1,
+                        date : Date(),
+                        sum : sum,
+                        items : order
+                    });
 
                 } else {
                     throw err;
