@@ -7,7 +7,7 @@ db.createCollection('location');
 db.getCollection('location').createIndex( { geoData : "2dsphere" } );
 
 db.getCollection('user').insert({
-    _id : NumberInt(2),
+    _id : NumberInt(1),
     firstname : "Maria",
     lastname : "Musterfrau",
     address : {
